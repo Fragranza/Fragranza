@@ -428,6 +428,35 @@ body {
 }
 .btn-add:active { background: var(--accent2); }
 
+
+/* Delivery */
+.delivery-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 10px;
+}
+.delivery-opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.delivery-card {
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  text-align: center;
+}
+.del-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.del-price { font-size: 18px; font-weight: 500; color: var(--accent); font-family: 'Cormorant Garamond', serif; }
+.del-total { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.btn-copy-inside { background: rgba(92,158,106,0.1); border-color: rgba(92,158,106,0.3); color: #7ec98e; }
+.btn-copy-inside:active { background: rgba(92,158,106,0.2); }
+.btn-copy-outside { background: rgba(100,140,200,0.1); border-color: rgba(100,140,200,0.3); color: #8ab0e8; }
+.btn-copy-outside:active { background: rgba(100,140,200,0.2); }
+
 /* Toast */
 .toast {
   position: fixed;
@@ -648,6 +677,8 @@ function renderOrder() {
     `<div class="sum-row"><span>${esc(g.name.split(' ').slice(0,2).join(' '))} ${g.size}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
   ).join('');
 
+  const insideTotal = total + 85;
+  const outsideTotal = total + 125;
   sumEl.innerHTML = `<div class="summary-box">
     <div class="sum-title">Order Summary</div>
     ${rows}
@@ -656,9 +687,34 @@ function renderOrder() {
       <span class="sum-total-amt">৳${total.toLocaleString()}</span>
     </div>
   </div>
-  <button class="btn-copy" onclick="copyOrder()">
+
+  <div class="delivery-box">
+    <div class="sum-title" style="margin-bottom:10px;">Delivery Charge</div>
+    <div class="delivery-opts">
+      <div class="delivery-card">
+        <div class="del-label">🛵 Inside Dhaka</div>
+        <div class="del-price">৳85</div>
+        <div class="del-total">Total ৳${insideTotal.toLocaleString()}</div>
+      </div>
+      <div class="delivery-card">
+        <div class="del-label">🚚 Outside Dhaka</div>
+        <div class="del-price">৳125</div>
+        <div class="del-total">Total ৳${outsideTotal.toLocaleString()}</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-copy" onclick="copyOrder(null)" style="opacity:0.7;">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-    Copy for WhatsApp
+    Copy — No Delivery
+  </button>
+  <button class="btn-copy btn-copy-inside" onclick="copyOrder('inside')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    Copy + Inside Dhaka — ৳${insideTotal.toLocaleString()}
+  </button>
+  <button class="btn-copy btn-copy-outside" onclick="copyOrder('outside')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    Copy + Outside Dhaka — ৳${outsideTotal.toLocaleString()}
   </button>
   <button class="btn-clear" onclick="clearOrder()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
@@ -666,7 +722,7 @@ function renderOrder() {
   </button>`;
 }
 
-function copyOrder() {
+function copyOrder(delivery) {
   if (!order.length) return;
   const map = {};
   order.forEach(o => {
@@ -677,10 +733,14 @@ function copyOrder() {
   const lines = Object.values(map).map(g =>
     `• ${g.name} ${g.size}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
   );
-  const total = order.reduce((s, o) => s + o.price, 0);
+  const subtotal = order.reduce((s, o) => s + o.price, 0);
   const totalMl = order.reduce((s, o) => s + o.size, 0);
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\n*Total: ৳${total.toLocaleString()}* (${totalMl}ml)`;
-  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
+  let deliveryLine = '';
+  let grandTotal = subtotal;
+  if (delivery === 'inside') { deliveryLine = '\n🛵 Delivery (Inside Dhaka): ৳85'; grandTotal += 85; }
+  if (delivery === 'outside') { deliveryLine = '\n🚚 Delivery (Outside Dhaka): ৳125'; grandTotal += 125; }
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\n🧴 Subtotal: ৳${subtotal.toLocaleString()}${deliveryLine}\n\n*Grand Total: ৳${grandTotal.toLocaleString()}* (${totalMl}ml)`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied! Paste in WhatsApp')).catch(() => showToast('Could not copy'));
 }
 
 /* ---- MANAGE ---- */
