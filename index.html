@@ -766,18 +766,18 @@ function renderOrder() {
     <div class="step-label">Select Delivery</div>
     <div class="delivery-opts">
       <div class="delivery-card" id="del-card-none" onclick="selectDelivery('none')" style="border-color:var(--accent);">
-        <div class="del-icon">🏪</div>
-        <div class="del-name">No Delivery</div>
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">PICKUP</div>
+        
         <div class="del-price">৳0</div>
       </div>
       <div class="delivery-card" id="del-card-inside" onclick="selectDelivery('inside')">
-        <div class="del-icon">🛵</div>
-        <div class="del-name">Inside Dhaka</div>
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">INSIDE</div>
+        
         <div class="del-price">৳85</div>
       </div>
       <div class="delivery-card" id="del-card-outside" onclick="selectDelivery('outside')">
-        <div class="del-icon">🚚</div>
-        <div class="del-name">Outside Dhaka</div>
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">OUTSIDE</div>
+        
         <div class="del-price">৳125</div>
       </div>
     </div>
@@ -893,7 +893,7 @@ function recalc() {
     if (dueBillTotal) dueBillTotal.textContent = '৳' + grandTotal.toLocaleString();
     if (dueAdv) dueAdv.textContent = '- ৳' + advance.toLocaleString();
     if (dueFinal) {
-      dueFinal.textContent = '৳' + Math.abs(due).toLocaleString() + (due < 0 ? ' (overpaid)' : due === 0 ? ' ✓' : '');
+      dueFinal.textContent = '৳' + Math.abs(due).toLocaleString() + (due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : '');
       dueFinal.style.color = due < 0 ? '#8ab0e8' : due === 0 ? 'var(--success)' : '#e05555';
     }
   } else {
@@ -920,9 +920,9 @@ function copyFull() {
   const totalMl = order.reduce((s, o) => s + o.size, 0);
   const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
   const grandTotal = perfumeTotal + delAmt;
-  const delLine = delAmt > 0 ? `\n${selectedDelivery === 'inside' ? '🛵 Delivery (Inside Dhaka)' : '🚚 Delivery (Outside Dhaka)'}: ৳${delAmt}` : '';
+  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
   const lines = getOrderLines();
-  const text = `*Fragranza Order* 🌿\n\n${lines.join('\n')}\n\n🧴 Perfume total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\n*Total bill: ৳${grandTotal.toLocaleString()}*`;
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}`;
   navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
@@ -934,9 +934,9 @@ function copyWithTransaction() {
   const grandTotal = perfumeTotal + delAmt;
   const advance = parseFloat(document.getElementById('advance-input').value) || 0;
   const due = grandTotal - advance;
-  const delLine = delAmt > 0 ? `\n${selectedDelivery === 'inside' ? '🛵 Delivery (Inside Dhaka)' : '🚚 Delivery (Outside Dhaka)'}: ৳${delAmt}` : '';
+  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
   const lines = getOrderLines();
-  const text = `*Fragranza Order* 🌿\n\n${lines.join('\n')}\n\n🧴 Perfume total: ৳${perfumeTotal.toLocaleString()}${delLine}\n*Total bill: ৳${grandTotal.toLocaleString()}*\n\n💵 Advance paid: ৳${advance.toLocaleString()}\n💳 Due bill: ৳${Math.abs(due).toLocaleString()}${due < 0 ? ' (overpaid)' : due === 0 ? ' ✓ Settled' : ''}`;
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\nTotal Bill: ৳${grandTotal.toLocaleString()}\n\nAdvance Paid: ৳${advance.toLocaleString()}\nDue Bill: ৳${Math.abs(due).toLocaleString()}${due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : ''}`;
   navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
