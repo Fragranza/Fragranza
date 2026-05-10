@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="theme-color" content="#0a0a0a" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Fragranza" />
+<title>Fragranza — Price Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #141414;
+  --bg3: #1e1e1e;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f0ede8;
+  --muted: #888;
+  --accent: #c8a96e;
+  --accent2: #e8c98e;
+  --danger: #e05555;
+  --success: #5c9e6a;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --tab-h: 64px;
+  --header-h: 70px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Header */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  height: var(--header-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.logo span { color: var(--accent); }
+
+.cart-pill {
+  background: var(--accent);
+  color: #0a0a0a;
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  border: none;
+  transition: background 0.2s;
+}
+.cart-pill:hover { background: var(--accent2); }
+.cart-pill svg { width: 14px; height: 14px; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  position: sticky;
+  top: var(--header-h);
+  z-index: 99;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 1;
+  min-width: 80px;
+  padding: 14px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 1.5px solid transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: none;
+  background: none;
+}
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Content */
+.content {
+  padding: 20px 16px;
+  padding-bottom: calc(var(--tab-h) + 20px);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Search */
+.search-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  width: 16px; height: 16px;
+}
+.search-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px 12px 40px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  outline: none;
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { border-color: var(--border2); }
+
+/* Perfume cards in catalog */
+.p-card {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+.p-card:active { border-color: var(--border2); }
+.p-card.out-of-stock { opacity: 0.45; }
+
+.p-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.p-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  flex: 1;
+  line-height: 1.3;
+}
+.badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 99px;
+  margin-left: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.badge-sale { background: rgba(200,169,110,0.15); color: var(--accent); border: 0.5px solid rgba(200,169,110,0.3); }
+.badge-out { background: rgba(224,85,85,0.1); color: var(--danger); border: 0.5px solid rgba(224,85,85,0.3); }
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.size-btn {
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+.size-btn:active { transform: scale(0.95); background: rgba(200,169,110,0.15); border-color: var(--accent); }
+.size-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.size-ml { font-size: 13px; font-weight: 500; display: block; }
+.size-price { font-size: 10px; color: var(--accent); display: block; margin-top: 2px; }
+
+/* Order items */
+.order-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.order-empty svg { width: 48px; height: 48px; opacity: 0.3; margin-bottom: 16px; display: block; margin-left: auto; margin-right: auto; }
+.order-empty p { font-size: 14px; }
+
+.order-item {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 12px;
+}
+.oi-info { flex: 1; min-width: 0; }
+.oi-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oi-size { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.oi-price { font-size: 16px; font-weight: 500; color: var(--accent); white-space: nowrap; }
+.oi-remove {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex; align-items: center;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.oi-remove:active { color: var(--danger); }
+.oi-remove svg { width: 16px; height: 16px; }
+
+/* Summary */
+.summary-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 12px;
+}
+.sum-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.sum-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+  font-size: 13px;
+  color: var(--muted);
+}
+.sum-row:last-of-type { border-bottom: none; }
+.sum-row span:last-child { color: var(--text); }
+.sum-total {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 14px;
+  margin-top: 8px;
+  border-top: 0.5px solid var(--border2);
+}
+.sum-total-label { font-size: 14px; color: var(--muted); }
+.sum-total-amt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--accent);
+}
+.btn-clear {
+  width: 100%;
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-clear:active { border-color: var(--danger); color: var(--danger); }
+
+.btn-copy {
+  width: 100%;
+  background: rgba(200,169,110,0.1);
+  border: 0.5px solid rgba(200,169,110,0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--accent);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-copy:active { background: rgba(200,169,110,0.2); }
+
+/* Manage tab */
+.section-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+.section-label:first-child { margin-top: 0; }
+
+.manage-item {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+.manage-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px;
+}
+.manage-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.m-btn {
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.m-btn:active { border-color: var(--border2); color: var(--text); }
+.m-btn.danger:active { border-color: var(--danger); color: var(--danger); }
+.m-btn.out-active { border-color: rgba(224,85,85,0.4); color: var(--danger); }
+
+.edit-prices {
+  padding: 10px 14px 14px;
+  border-top: 0.5px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.edit-field label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 4px; }
+.edit-field input {
+  width: 100%;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 6px;
+  color: var(--text);
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+  outline: none;
+}
+.edit-field input:focus { border-color: var(--accent); }
+
+/* Add form */
+.add-form {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 4px;
+}
+.add-form-name {
+  width: 100%;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  outline: none;
+  margin-bottom: 10px;
+}
+.add-form-name::placeholder { color: var(--muted); }
+.add-form-name:focus { border-color: var(--border2); }
+.add-form-prices {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.add-form-prices .edit-field input { padding: 8px 4px; }
+.btn-add {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 13px;
+  color: #0a0a0a;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-add:active { background: var(--accent2); }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: calc(var(--tab-h) + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg3);
+  border: 0.5px solid var(--border2);
+  border-radius: 99px;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: var(--text);
+  opacity: 0;
+  transition: all 0.25s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Quantity control in order */
+.qty-ctrl { display: flex; align-items: center; gap: 8px; }
+.qty-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  color: var(--text);
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; line-height: 1;
+}
+.qty-num { font-size: 14px; min-width: 16px; text-align: center; }
+
+/* Page hidden class */
+.page { display: none; }
+.page.active { display: block; }
+
+/* No results */
+.no-results { text-align: center; padding: 40px 0; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">Frag<span>ranza</span></div>
+  <button class="cart-pill" onclick="goTab('order')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span id="cart-count">0</span> items
+  </button>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" onclick="goTab('catalog')" id="tab-catalog">Catalog</button>
+  <button class="tab" onclick="goTab('order')" id="tab-order">Order</button>
+  <button class="tab" onclick="goTab('manage')" id="tab-manage">Manage</button>
+</nav>
+
+<main class="content">
+
+  <!-- CATALOG -->
+  <div class="page active" id="page-catalog">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search-input" type="text" id="search" placeholder="Search perfumes…" oninput="renderCatalog()" autocomplete="off" />
+    </div>
+    <div id="catalog"></div>
+  </div>
+
+  <!-- ORDER -->
+  <div class="page" id="page-order">
+    <div id="order-list"></div>
+    <div id="order-summary"></div>
+  </div>
+
+  <!-- MANAGE -->
+  <div class="page" id="page-manage">
+    <p class="section-label">Stock & Prices</p>
+    <div id="manage-list"></div>
+    <p class="section-label">Add New Perfume</p>
+    <div class="add-form">
+      <input class="add-form-name" type="text" id="new-name" placeholder="Perfume name…" autocomplete="off" />
+      <div class="add-form-prices" id="add-price-fields"></div>
+      <button class="btn-add" onclick="addPerfume()">Add Perfume</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SIZES = [2, 5, 10, 15, 30];
+
+let perfumes = [
+  { id:1,  name:'Hawas Ice',                     prices:{2:100,5:260,10:440,15:640,30:1320},  out:false, sale:false },
+  { id:2,  name:'Rayhaan Tropical Vibe',          prices:{2:80,5:180,10:340,15:480,30:1000},   out:false, sale:false },
+  { id:3,  name:"Supremacy Collector's Edition",  prices:{2:200,5:460,10:820,15:1180,30:2480}, out:false, sale:false },
+  { id:4,  name:'Hawas Black',                    prices:{2:100,5:220,10:380,15:560,30:1160},  out:false, sale:false },
+  { id:5,  name:'Nautica Voyage',                 prices:{2:80,5:180,10:300,15:440,30:920},    out:false, sale:false },
+  { id:6,  name:'Atralia Absolute Noir',          prices:{2:100,5:200,10:340,15:480,30:1000},  out:false, sale:false },
+  { id:7,  name:'French Avenue Atlantis Extrait', prices:{2:140,5:300,10:540,15:780,30:1620},  out:false, sale:false },
+  { id:8,  name:'Gulf Orchid Naseem',             prices:{2:80,5:180,10:320,15:460,30:960},    out:false, sale:false },
+  { id:9,  name:'Rayhaan Wolf',                   prices:{2:80,5:180,10:320,15:460,30:960},    out:false, sale:false },
+  { id:10, name:'Rayhaan Obsidian',               prices:{2:80,5:180,10:320,15:460,30:960},    out:false, sale:false },
+  { id:11, name:'Rayhaan Lion',                   prices:{2:80,5:180,10:320,15:460,30:960},    out:false, sale:false },
+  { id:12, name:'Lattafa Qaed Al Fursan',         prices:{2:60,5:160,10:260,15:380,30:800},    out:false, sale:false },
+  { id:13, name:'Hawas Kobra',                    prices:{2:100,5:220,10:380,15:560,30:1160},  out:false, sale:false },
+  { id:14, name:'Rasasi Fattan',                  prices:{2:120,5:300,10:530,15:780,30:1620},  out:false, sale:false },
+  { id:15, name:'Rayhaan Italia',                 prices:{2:80,5:180,10:340,15:480,30:1000},   out:false, sale:false },
+  { id:16, name:'Rayhaan Nocturno Elixir',        prices:{2:80,5:180,10:340,15:460,30:980},    out:false, sale:false },
+  { id:17, name:'Lattafa Dynasty',                prices:{2:120,5:280,10:480,15:700,30:1460},  out:false, sale:false },
+  { id:18, name:'Hawas for Him',                  prices:{2:100,5:240,10:420,15:600,30:1240},  out:false, sale:false },
+  { id:19, name:'Rayhaan Aquatica',               prices:{2:126,5:270,10:513,15:747,30:1350},  out:false, sale:true  },
+  { id:20, name:'Ahmed Al Maghribi Kaaf',         prices:{2:120,5:260,10:460,15:660,30:1380},  out:false, sale:false },
+  { id:21, name:'Lattafa Asad',                   prices:{2:80,5:200,10:360,15:520,30:1060},   out:false, sale:false },
+];
+let nextId = 22;
+let order = []; // [{pid, size, price, name}]
+let editingId = null;
+
+/* ---- NAV ---- */
+function goTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('page-'+name).classList.add('active');
+  if (name === 'order') renderOrder();
+  if (name === 'manage') renderManage();
+  if (name === 'catalog') renderCatalog();
+}
+
+/* ---- CATALOG ---- */
+function renderCatalog() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const el = document.getElementById('catalog');
+  const list = perfumes.filter(p => p.name.toLowerCase().includes(q));
+  if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
+  el.innerHTML = list.map(p => {
+    const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
+    const btns = SIZES.map(s => {
+      const pr = p.prices[s];
+      if (!pr && pr !== 0) return `<div></div>`;
+      return `<button class="size-btn" onclick="addToOrder(${p.id},${s})" ${p.out ? 'disabled' : ''}>
+        <span class="size-ml">${s}ml</span>
+        <span class="size-price">৳${pr.toLocaleString()}</span>
+      </button>`;
+    }).join('');
+    return `<div class="p-card ${p.out ? 'out-of-stock' : ''}">
+      <div class="p-header">
+        <div class="p-name">${esc(p.name)}</div>
+        <div>${badges}</div>
+      </div>
+      <div class="size-grid">${btns}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ---- ORDER ---- */
+function addToOrder(pid, size) {
+  const p = perfumes.find(x => x.id === pid);
+  if (!p || p.out) return;
+  order.push({ pid, size, price: p.prices[size], name: p.name });
+  updateBadge();
+  showToast(p.name.split(' ')[0] + ' ' + size + 'ml added');
+}
+
+function removeFromOrder(idx) {
+  order.splice(idx, 1);
+  updateBadge();
+  renderOrder();
+}
+
+function clearOrder() {
+  order = [];
+  updateBadge();
+  renderOrder();
+}
+
+function updateBadge() {
+  document.getElementById('cart-count').textContent = order.length;
+}
+
+function renderOrder() {
+  const listEl = document.getElementById('order-list');
+  const sumEl = document.getElementById('order-summary');
+  if (!order.length) {
+    listEl.innerHTML = `<div class="order-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <p>No items yet.<br>Go to Catalog to add.</p>
+    </div>`;
+    sumEl.innerHTML = '';
+    return;
+  }
+  listEl.innerHTML = order.map((o, i) => `
+    <div class="order-item">
+      <div class="oi-info">
+        <div class="oi-name">${esc(o.name)}</div>
+        <div class="oi-size">${o.size} ml</div>
+      </div>
+      <div class="oi-price">৳${o.price.toLocaleString()}</div>
+      <button class="oi-remove" onclick="removeFromOrder(${i})" aria-label="Remove">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>`).join('');
+
+  const total = order.reduce((s, o) => s + o.price, 0);
+  const totalMl = order.reduce((s, o) => s + o.size, 0);
+
+  // group for summary
+  const map = {};
+  order.forEach(o => {
+    const k = o.pid + '-' + o.size;
+    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
+    map[k].qty++;
+  });
+  const rows = Object.values(map).map(g =>
+    `<div class="sum-row"><span>${esc(g.name.split(' ').slice(0,2).join(' '))} ${g.size}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
+  ).join('');
+
+  sumEl.innerHTML = `<div class="summary-box">
+    <div class="sum-title">Order Summary</div>
+    ${rows}
+    <div class="sum-total">
+      <span class="sum-total-label">${order.length} item${order.length !== 1 ? 's' : ''} · ${totalMl}ml total</span>
+      <span class="sum-total-amt">৳${total.toLocaleString()}</span>
+    </div>
+  </div>
+  <button class="btn-copy" onclick="copyOrder()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    Copy for WhatsApp
+  </button>
+  <button class="btn-clear" onclick="clearOrder()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    Clear order
+  </button>`;
+}
+
+function copyOrder() {
+  if (!order.length) return;
+  const map = {};
+  order.forEach(o => {
+    const k = o.pid + '-' + o.size;
+    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
+    map[k].qty++;
+  });
+  const lines = Object.values(map).map(g =>
+    `• ${g.name} ${g.size}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
+  );
+  const total = order.reduce((s, o) => s + o.price, 0);
+  const totalMl = order.reduce((s, o) => s + o.size, 0);
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\n*Total: ৳${total.toLocaleString()}* (${totalMl}ml)`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
+}
+
+/* ---- MANAGE ---- */
+function renderManage() {
+  const el = document.getElementById('manage-list');
+  el.innerHTML = perfumes.map(p => {
+    const editing = editingId === p.id;
+    const editBlock = editing ? `<div class="edit-prices">${SIZES.map(s =>
+      `<div class="edit-field"><label>${s}ml</label><input type="number" min="0" value="${p.prices[s] || ''}" oninput="setPr(${p.id},${s},this.value)" inputmode="numeric" /></div>`
+    ).join('')}</div>` : '';
+    return `<div class="manage-item">
+      <div class="manage-row">
+        <span class="manage-name">${esc(p.name)}</span>
+        <button class="m-btn" onclick="toggleEdit(${p.id})">${editing ? 'Done' : 'Prices'}</button>
+        <button class="m-btn ${p.out ? 'out-active' : ''}" onclick="toggleOut(${p.id})">${p.out ? 'Out' : 'In stock'}</button>
+        <button class="m-btn danger" onclick="deletePerfume(${p.id})">✕</button>
+      </div>
+      ${editBlock}
+    </div>`;
+  }).join('');
+
+  // Build add price fields
+  const pf = document.getElementById('add-price-fields');
+  pf.innerHTML = SIZES.map(s =>
+    `<div class="edit-field"><label>${s}ml ৳</label><input type="number" min="0" id="new-${s}" placeholder="0" inputmode="numeric" /></div>`
+  ).join('');
+}
+
+function toggleEdit(id) {
+  editingId = editingId === id ? null : id;
+  renderManage();
+}
+
+function setPr(id, size, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) { p.prices[size] = parseInt(val) || 0; }
+}
+
+function toggleOut(id) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) { p.out = !p.out; renderManage(); renderCatalog(); }
+}
+
+function deletePerfume(id) {
+  if (!confirm('Delete this perfume?')) return;
+  perfumes = perfumes.filter(x => x.id !== id);
+  order = order.filter(o => o.pid !== id);
+  updateBadge();
+  renderManage();
+  renderCatalog();
+}
+
+function addPerfume() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) { showToast('Enter a perfume name'); return; }
+  const prices = {};
+  SIZES.forEach(s => { prices[s] = parseInt(document.getElementById('new-' + s).value) || 0; });
+  perfumes.push({ id: nextId++, name, prices, out: false, sale: false });
+  document.getElementById('new-name').value = '';
+  SIZES.forEach(s => { document.getElementById('new-' + s).value = ''; });
+  showToast(name + ' added!');
+  renderManage();
+  renderCatalog();
+}
+
+/* ---- UTILS ---- */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+/* ---- INIT ---- */
+renderCatalog();
+renderManage();
+</script>
+</body>
+</html>
