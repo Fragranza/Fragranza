@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Fragranza" />
-<title>Fragranza — Price Calculator</title>
+<title>Fragranza — Owner Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
 :root {
@@ -457,6 +457,77 @@ body {
 .btn-copy-outside { background: rgba(100,140,200,0.1); border-color: rgba(100,140,200,0.3); color: #8ab0e8; }
 .btn-copy-outside:active { background: rgba(100,140,200,0.2); }
 
+
+
+/* Bill summary lines */
+.bill-line {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.bill-line:last-of-type { border-bottom: none; }
+.bill-line-total {
+  padding-top: 10px;
+  margin-top: 2px;
+  border-bottom: none !important;
+}
+.bill-lbl { font-size: 13px; color: var(--muted); }
+.bill-val { font-size: 14px; color: var(--text); font-weight: 500; }
+.bill-total-amt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--accent);
+}
+.bill-divider {
+  border-top: 0.5px solid var(--border2);
+  margin: 12px 0;
+}
+
+/* Advance & Due */
+.advance-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 10px;
+}
+.advance-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.advance-label { font-size: 13px; color: var(--muted); flex: 1; }
+.advance-input {
+  width: 130px;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--accent);
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  text-align: right;
+  outline: none;
+  flex-shrink: 0;
+}
+.advance-input:focus { border-color: var(--accent); }
+.due-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-top: 4px;
+}
+.due-label { font-size: 13px; color: var(--muted); }
+.due-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+}
+.due-amount.positive { color: #e05555; }
+.due-amount.zero { color: var(--success); }
+.due-amount.overpaid { color: #8ab0e8; }
+
 /* Toast */
 .toast {
   position: fixed;
@@ -502,7 +573,7 @@ body {
 <body>
 
 <header class="header">
-  <div class="logo">Frag<span>ranza</span></div>
+  <div class="logo">Frag<span>ranza</span> <span style="font-size:11px;font-family:'DM Sans',sans-serif;background:rgba(200,169,110,0.15);color:var(--accent);border:0.5px solid rgba(200,169,110,0.3);border-radius:99px;padding:2px 8px;vertical-align:middle;letter-spacing:0.06em;">OWNER</span></div>
   <button class="cart-pill" onclick="goTab('order')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
     <span id="cart-count">0</span> items
@@ -576,6 +647,7 @@ let perfumes = [
 ];
 let nextId = 22;
 let order = []; // [{pid, size, price, name}]
+let currentGrandTotal = 0;
 let editingId = null;
 
 /* ---- NAV ---- */
@@ -663,84 +735,209 @@ function renderOrder() {
       </button>
     </div>`).join('');
 
-  const total = order.reduce((s, o) => s + o.price, 0);
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
   const totalMl = order.reduce((s, o) => s + o.size, 0);
+  currentGrandTotal = perfumeTotal;
 
-  // group for summary
+  // group for item list
   const map = {};
   order.forEach(o => {
     const k = o.pid + '-' + o.size;
     if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
     map[k].qty++;
   });
-  const rows = Object.values(map).map(g =>
-    `<div class="sum-row"><span>${esc(g.name.split(' ').slice(0,2).join(' '))} ${g.size}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
+  const itemRows = Object.values(map).map(g =>
+    `<div class="sum-row"><span>${esc(g.name)} ${g.size}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
   ).join('');
 
-  const insideTotal = total + 85;
-  const outsideTotal = total + 125;
-  sumEl.innerHTML = `<div class="summary-box">
-    <div class="sum-title">Order Summary</div>
-    ${rows}
-    <div class="sum-total">
-      <span class="sum-total-label">${order.length} item${order.length !== 1 ? 's' : ''} · ${totalMl}ml total</span>
-      <span class="sum-total-amt">৳${total.toLocaleString()}</span>
-    </div>
-  </div>
+  sumEl.innerHTML = `
 
-  <div class="delivery-box">
-    <div class="sum-title" style="margin-bottom:10px;">Delivery Charge</div>
+    <!-- STEP 1: Items -->
+    <div class="summary-box">
+      <div class="sum-title">Items</div>
+      ${itemRows}
+      <div class="sum-total">
+        <span class="sum-total-label">${order.length} item${order.length !== 1 ? 's' : ''} · ${totalMl}ml</span>
+        <span class="sum-total-amt">৳${perfumeTotal.toLocaleString()}</span>
+      </div>
+    </div>
+
+    <!-- STEP 2: Delivery -->
+    <div class="step-label">Select Delivery</div>
     <div class="delivery-opts">
-      <div class="delivery-card">
-        <div class="del-label">🛵 Inside Dhaka</div>
-        <div class="del-price">৳85</div>
-        <div class="del-total">Total ৳${insideTotal.toLocaleString()}</div>
+      <div class="delivery-card" id="del-card-none" onclick="selectDelivery('none')" style="border-color:var(--accent);">
+        <div class="del-icon">🏪</div>
+        <div class="del-name">No Delivery</div>
+        <div class="del-price">৳0</div>
       </div>
-      <div class="delivery-card">
-        <div class="del-label">🚚 Outside Dhaka</div>
+      <div class="delivery-card" id="del-card-inside" onclick="selectDelivery('inside')">
+        <div class="del-icon">🛵</div>
+        <div class="del-name">Inside Dhaka</div>
+        <div class="del-price">৳85</div>
+      </div>
+      <div class="delivery-card" id="del-card-outside" onclick="selectDelivery('outside')">
+        <div class="del-icon">🚚</div>
+        <div class="del-name">Outside Dhaka</div>
         <div class="del-price">৳125</div>
-        <div class="del-total">Total ৳${outsideTotal.toLocaleString()}</div>
       </div>
     </div>
-  </div>
 
-  <button class="btn-copy" onclick="copyOrder(null)" style="opacity:0.7;">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-    Copy — No Delivery
-  </button>
-  <button class="btn-copy btn-copy-inside" onclick="copyOrder('inside')">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-    Copy + Inside Dhaka — ৳${insideTotal.toLocaleString()}
-  </button>
-  <button class="btn-copy btn-copy-outside" onclick="copyOrder('outside')">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-    Copy + Outside Dhaka — ৳${outsideTotal.toLocaleString()}
-  </button>
-  <button class="btn-clear" onclick="clearOrder()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-    Clear order
-  </button>`;
+    <!-- STEP 3: Bill breakdown -->
+    <div class="step-label">Bill</div>
+    <div class="bill-breakdown">
+      <div class="bb-row">
+        <span class="bb-lbl">Perfume total</span>
+        <span class="bb-val">৳${perfumeTotal.toLocaleString()}</span>
+      </div>
+      <div class="bb-row" id="bb-del-row" style="display:none;">
+        <span class="bb-lbl" id="bb-del-lbl">Delivery</span>
+        <span class="bb-val" id="bb-del-val">—</span>
+      </div>
+      <div class="bb-row bb-total-row">
+        <span class="bb-total-lbl">Total bill</span>
+        <span class="bb-total-val" id="bb-total">৳${perfumeTotal.toLocaleString()}</span>
+      </div>
+    </div>
+
+    <!-- STEP 4: Advance -->
+    <div class="step-label">Advance Paid</div>
+    <div class="advance-section">
+      <div class="advance-input-row">
+        <span class="adv-currency">৳</span>
+        <input class="adv-input" type="number" min="0" id="advance-input" placeholder="0" inputmode="numeric" oninput="recalc()" />
+      </div>
+    </div>
+
+    <!-- STEP 5: Deducted & Due -->
+    <div class="due-section" id="due-section" style="display:none;">
+      <div class="due-breakdown">
+        <div class="bb-row">
+          <span class="bb-lbl">Total bill</span>
+          <span class="bb-val" id="due-bill-total">—</span>
+        </div>
+        <div class="bb-row">
+          <span class="bb-lbl">Advance paid</span>
+          <span class="bb-val adv-color" id="due-adv">—</span>
+        </div>
+        <div class="bb-row bb-total-row">
+          <span class="bb-total-lbl">Due bill</span>
+          <span class="bb-total-val due-color" id="due-final">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: Copy buttons -->
+    <div class="step-label">Send to Customer</div>
+    <button class="btn-copy" onclick="copyFull()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Full Order Summary
+    </button>
+    <button class="btn-copy btn-copy-inside" onclick="copyWithTransaction()" id="copy-transaction-btn" style="display:none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy with Advance & Due
+    </button>
+    <button class="btn-clear" onclick="clearOrder()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      Clear order
+    </button>
+  `;
+
+  selectedDelivery = 'none';
+  setTimeout(recalc, 0);
+}
+let selectedDelivery = 'none';
+
+function selectDelivery(type) {
+  selectedDelivery = type;
+  ['none','inside','outside'].forEach(t => {
+    const c = document.getElementById('del-card-' + t);
+    if (c) c.style.borderColor = t === type ? 'var(--accent)' : 'var(--border)';
+  });
+  recalc();
 }
 
-function copyOrder(delivery) {
-  if (!order.length) return;
+function recalc() {
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  currentGrandTotal = grandTotal;
+
+  // delivery row
+  const delRow = document.getElementById('bb-del-row');
+  const delLbl = document.getElementById('bb-del-lbl');
+  const delVal = document.getElementById('bb-del-val');
+  if (delRow) {
+    if (delAmt > 0) {
+      delRow.style.display = 'flex';
+      delLbl.textContent = selectedDelivery === 'inside' ? '🛵 Inside Dhaka' : '🚚 Outside Dhaka';
+      delVal.textContent = '৳' + delAmt.toLocaleString();
+    } else {
+      delRow.style.display = 'none';
+    }
+  }
+  const bbTotal = document.getElementById('bb-total');
+  if (bbTotal) bbTotal.textContent = '৳' + grandTotal.toLocaleString();
+
+  // advance & due
+  const advEl = document.getElementById('advance-input');
+  const advance = advEl ? (parseFloat(advEl.value) || 0) : 0;
+  const dueSection = document.getElementById('due-section');
+  const copyTxBtn = document.getElementById('copy-transaction-btn');
+  if (advance > 0) {
+    const due = grandTotal - advance;
+    if (dueSection) dueSection.style.display = 'block';
+    if (copyTxBtn) copyTxBtn.style.display = 'flex';
+    const dueBillTotal = document.getElementById('due-bill-total');
+    const dueAdv = document.getElementById('due-adv');
+    const dueFinal = document.getElementById('due-final');
+    if (dueBillTotal) dueBillTotal.textContent = '৳' + grandTotal.toLocaleString();
+    if (dueAdv) dueAdv.textContent = '- ৳' + advance.toLocaleString();
+    if (dueFinal) {
+      dueFinal.textContent = '৳' + Math.abs(due).toLocaleString() + (due < 0 ? ' (overpaid)' : due === 0 ? ' ✓' : '');
+      dueFinal.style.color = due < 0 ? '#8ab0e8' : due === 0 ? 'var(--success)' : '#e05555';
+    }
+  } else {
+    if (dueSection) dueSection.style.display = 'none';
+    if (copyTxBtn) copyTxBtn.style.display = 'none';
+  }
+}
+
+function getOrderLines() {
   const map = {};
   order.forEach(o => {
     const k = o.pid + '-' + o.size;
     if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
     map[k].qty++;
   });
-  const lines = Object.values(map).map(g =>
+  return Object.values(map).map(g =>
     `• ${g.name} ${g.size}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
   );
-  const subtotal = order.reduce((s, o) => s + o.price, 0);
+}
+
+function copyFull() {
+  if (!order.length) return;
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
   const totalMl = order.reduce((s, o) => s + o.size, 0);
-  let deliveryLine = '';
-  let grandTotal = subtotal;
-  if (delivery === 'inside') { deliveryLine = '\n🛵 Delivery (Inside Dhaka): ৳85'; grandTotal += 85; }
-  if (delivery === 'outside') { deliveryLine = '\n🚚 Delivery (Outside Dhaka): ৳125'; grandTotal += 125; }
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\n🧴 Subtotal: ৳${subtotal.toLocaleString()}${deliveryLine}\n\n*Grand Total: ৳${grandTotal.toLocaleString()}* (${totalMl}ml)`;
-  navigator.clipboard.writeText(text).then(() => showToast('Copied! Paste in WhatsApp')).catch(() => showToast('Could not copy'));
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  const delLine = delAmt > 0 ? `\n${selectedDelivery === 'inside' ? '🛵 Delivery (Inside Dhaka)' : '🚚 Delivery (Outside Dhaka)'}: ৳${delAmt}` : '';
+  const lines = getOrderLines();
+  const text = `*Fragranza Order* 🌿\n\n${lines.join('\n')}\n\n🧴 Perfume total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\n*Total bill: ৳${grandTotal.toLocaleString()}*`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
+}
+
+function copyWithTransaction() {
+  if (!order.length) return;
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const totalMl = order.reduce((s, o) => s + o.size, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  const advance = parseFloat(document.getElementById('advance-input').value) || 0;
+  const due = grandTotal - advance;
+  const delLine = delAmt > 0 ? `\n${selectedDelivery === 'inside' ? '🛵 Delivery (Inside Dhaka)' : '🚚 Delivery (Outside Dhaka)'}: ৳${delAmt}` : '';
+  const lines = getOrderLines();
+  const text = `*Fragranza Order* 🌿\n\n${lines.join('\n')}\n\n🧴 Perfume total: ৳${perfumeTotal.toLocaleString()}${delLine}\n*Total bill: ৳${grandTotal.toLocaleString()}*\n\n💵 Advance paid: ৳${advance.toLocaleString()}\n💳 Due bill: ৳${Math.abs(due).toLocaleString()}${due < 0 ? ' (overpaid)' : due === 0 ? ' ✓ Settled' : ''}`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
 /* ---- MANAGE ---- */
@@ -805,6 +1002,7 @@ function addPerfume() {
   renderManage();
   renderCatalog();
 }
+
 
 /* ---- UTILS ---- */
 function esc(s) {
