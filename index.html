@@ -567,6 +567,25 @@ body {
 .page.active { display: block; }
 
 /* No results */
+
+.copy-price-btn {
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 9px;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.copy-price-btn:active { border-color: var(--accent); color: var(--accent); }
+
 .no-results { text-align: center; padding: 40px 0; color: var(--muted); font-size: 14px; }
 </style>
 </head>
@@ -665,7 +684,7 @@ function goTab(name) {
 function renderCatalog() {
   const q = (document.getElementById('search').value || '').toLowerCase();
   const el = document.getElementById('catalog');
-  const list = perfumes.filter(p => p.name.toLowerCase().includes(q));
+  const list = perfumes.filter(p => p.name.toLowerCase().includes(q)).sort((a,b) => a.name.localeCompare(b.name));
   if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
   el.innerHTML = list.map(p => {
     const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
@@ -943,7 +962,7 @@ function copyWithTransaction() {
 /* ---- MANAGE ---- */
 function renderManage() {
   const el = document.getElementById('manage-list');
-  el.innerHTML = perfumes.map(p => {
+  el.innerHTML = [...perfumes].sort((a,b) => a.name.localeCompare(b.name)).map(p => {
     const editing = editingId === p.id;
     const editBlock = editing ? `<div class="edit-prices">${SIZES.map(s =>
       `<div class="edit-field"><label>${s}ml</label><input type="number" min="0" value="${p.prices[s] || ''}" oninput="setPr(${p.id},${s},this.value)" inputmode="numeric" /></div>`
@@ -1005,6 +1024,18 @@ function addPerfume() {
 
 
 /* ---- UTILS ---- */
+
+function copyPriceList(pid) {
+  const p = perfumes.find(x => x.id === pid);
+  if (!p) return;
+  const lines = [p.name, ''];
+  [2, 5, 10, 15, 30].forEach(s => {
+    if (p.prices[s]) lines.push(s + ' ml — ৳' + p.prices[s].toLocaleString());
+  });
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => showToast('Price list copied!')).catch(() => showToast('Could not copy'));
+}
+
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
