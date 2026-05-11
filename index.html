@@ -1062,7 +1062,7 @@ function copyPriceList(pid) {
 /* ---- PRICE CARD ---- */
 function generateCard() {
   // Filter out out-of-stock perfumes
-  const sorted = [...perfumes].filter(p => !p.out).sort((a,b) => a.name.localeCompare(b.name));
+  const sorted = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
   const today = new Date();
   const dateStr = today.getDate() + '-' + today.toLocaleString('en',{month:'short'}) + '-' + String(today.getFullYear()).slice(2);
 
@@ -1080,38 +1080,34 @@ function generateCard() {
   ctx.fillStyle = '#f5f3ef';
   ctx.fillRect(0, 0, W, H);
 
-  // Left dark sidebar for branding
+  // Left dark sidebar — slim
+  const SIDEBAR_W = 72;
   ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(0, 0, 200, H);
+  ctx.fillRect(0, 0, SIDEBAR_W, H);
 
-  // Gold accent line on sidebar
+  // Gold accent line
   ctx.fillStyle = '#c8a96e';
-  ctx.fillRect(196, 0, 4, H);
+  ctx.fillRect(SIDEBAR_W - 3, 0, 3, H);
 
   // ── Brand in sidebar ────────────────────────────────────────────
   ctx.save();
-  ctx.translate(100, H/2);
+  ctx.translate(SIDEBAR_W/2, H/2);
   ctx.rotate(-Math.PI/2);
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 36px Georgia, serif';
+  ctx.font = 'bold 22px Georgia, serif';
   ctx.textAlign = 'center';
   ctx.fillText('FRAGRANZA', 0, 0);
   ctx.restore();
 
   ctx.fillStyle = '#c8a96e';
-  ctx.font = 'bold 11px Arial, sans-serif';
+  ctx.font = 'bold 8px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('DECANT', 100, H - 80);
-  ctx.fillText('PRICE LIST', 100, H - 65);
-
-  ctx.fillStyle = '#555555';
-  ctx.font = '10px Arial, sans-serif';
-  ctx.fillText('ESTD 2026', 100, H - 40);
+  ctx.fillText('2026', SIDEBAR_W/2, H - 16);
 
   // ── Table area ──────────────────────────────────────────────────
-  const TABLE_X = 210;
-  const TABLE_W = W - TABLE_X - 14;
-  const TABLE_Y = 14;
+  const TABLE_X = SIDEBAR_W + 6;
+  const TABLE_W = W - TABLE_X - 8;
+  const TABLE_Y = 8;
 
   // Title row
   ctx.fillStyle = '#1a1a1a';
@@ -1131,7 +1127,7 @@ function generateCard() {
   let hx = TABLE_X;
   COLS.forEach((h, i) => {
     ctx.fillStyle = i === 6 ? '#c8a96e' : '#f0ede8';
-    ctx.font = 'bold 12px Arial, sans-serif';
+    ctx.font = 'bold 15px Arial, sans-serif';
     ctx.textAlign = i === 0 ? 'left' : 'center';
     const tx = i === 0 ? hx + 10 : hx + scaledW[i]/2;
     ctx.fillText(h, tx, TABLE_Y + 30);
@@ -1140,7 +1136,7 @@ function generateCard() {
 
   // ── Rows ─────────────────────────────────────────────────────────
   const availH = H - TABLE_Y - 46 - 30; // 30 for footer
-  const ROW_H = Math.min(Math.floor(availH / sorted.length), 38);
+  const ROW_H = Math.min(Math.floor(availH / sorted.length), 44);
   const startY = TABLE_Y + 46;
 
   sorted.forEach((p, rowIdx) => {
@@ -1160,26 +1156,26 @@ function generateCard() {
 
     let cx = TABLE_X;
 
-    // Name cell
-    ctx.fillStyle = '#1a1a1a';
+    // Name cell — red if out of stock
+    ctx.fillStyle = p.out ? '#ee6b6e' : '#1a1a1a';
     ctx.textAlign = 'left';
-    const nameStr = p.name;
+    const nameStr = p.name + (p.out ? ' (Out)' : '');
     const maxNameW = scaledW[0] - 20;
-    ctx.font = '11px Arial, sans-serif';
+    ctx.font = '13px Arial, sans-serif';
     if (ctx.measureText(nameStr).width > maxNameW) {
-      // two lines
       const words = nameStr.split(' ');
       let l1 = '', l2 = '';
       let done = false;
+      ctx.font = '13px Arial, sans-serif';
       words.forEach(w => {
         if (!done && ctx.measureText(l1+w+' ').width < maxNameW) l1 += w+' ';
         else { done=true; l2+=w+' '; }
       });
-      ctx.font = '10px Arial, sans-serif';
-      ctx.fillText(l1.trim(), cx+10, ry + ROW_H/2 - 3);
-      ctx.fillText(l2.trim(), cx+10, ry + ROW_H/2 + 9);
+      ctx.font = '12px Arial, sans-serif';
+      ctx.fillText(l1.trim(), cx+10, ry + ROW_H/2 - 4);
+      ctx.fillText(l2.trim(), cx+10, ry + ROW_H/2 + 10);
     } else {
-      ctx.font = '11px Arial, sans-serif';
+      ctx.font = '14px Arial, sans-serif';
       ctx.fillText(nameStr, cx+10, ry + ROW_H/2 + 4);
     }
     cx += scaledW[0];
@@ -1188,7 +1184,7 @@ function generateCard() {
     SIZES.forEach((s, si) => {
       const pr = p.prices[s];
       ctx.fillStyle = pr ? '#333333' : '#cccccc';
-      ctx.font = '11px Arial, sans-serif';
+      ctx.font = '14px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(pr ? pr.toLocaleString() : '-', cx + scaledW[si+1]/2, ry + ROW_H/2 + 4);
       cx += scaledW[si+1];
@@ -1197,7 +1193,7 @@ function generateCard() {
     // Offer cell
     if (p.sale) {
       ctx.fillStyle = '#cc3333';
-      ctx.font = 'bold 10px Arial, sans-serif';
+      ctx.font = 'bold 13px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('10% OFF', cx + scaledW[6]/2, ry + ROW_H/2 + 4);
     }
