@@ -1133,7 +1133,7 @@ function generateCard() {
   let hx = TABLE_X;
   COLS.forEach((h, i) => {
     ctx.fillStyle = i === 6 ? '#c8a96e' : '#f0ede8';
-    ctx.font = 'bold 15px Arial, sans-serif';
+    ctx.font = 'bold 17px Arial, sans-serif';
     ctx.textAlign = i === 0 ? 'left' : 'center';
     const tx = i === 0 ? hx + 10 : hx + scaledW[i]/2;
     ctx.fillText(h, tx, TABLE_Y + 30);
@@ -1177,11 +1177,11 @@ function generateCard() {
         if (!done && ctx.measureText(l1+w+' ').width < maxNameW) l1 += w+' ';
         else { done=true; l2+=w+' '; }
       });
-      ctx.font = '12px Arial, sans-serif';
-      ctx.fillText(l1.trim(), cx+10, ry + ROW_H/2 - 4);
-      ctx.fillText(l2.trim(), cx+10, ry + ROW_H/2 + 10);
-    } else {
       ctx.font = '14px Arial, sans-serif';
+      ctx.fillText(l1.trim(), cx+10, ry + ROW_H/2 - 5);
+      ctx.fillText(l2.trim(), cx+10, ry + ROW_H/2 + 11);
+    } else {
+      ctx.font = '16px Arial, sans-serif';
       ctx.fillText(nameStr, cx+10, ry + ROW_H/2 + 4);
     }
     cx += scaledW[0];
@@ -1190,7 +1190,7 @@ function generateCard() {
     SIZES.forEach((s, si) => {
       const pr = p.prices[s];
       ctx.fillStyle = pr ? '#333333' : '#cccccc';
-      ctx.font = '14px Arial, sans-serif';
+      ctx.font = '16px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(pr ? pr.toLocaleString() : '-', cx + scaledW[si+1]/2, ry + ROW_H/2 + 4);
       cx += scaledW[si+1];
@@ -1199,7 +1199,7 @@ function generateCard() {
     // Offer cell
     if (p.sale) {
       ctx.fillStyle = '#cc3333';
-      ctx.font = 'bold 13px Arial, sans-serif';
+      ctx.font = 'bold 15px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('10% OFF', cx + scaledW[6]/2, ry + ROW_H/2 + 4);
     }
@@ -1235,45 +1235,4 @@ function generateCard() {
   ctx.fillStyle = '#999999';
   ctx.font = '10px Arial, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('Prices in BDT — Subject to change without prior notice', TABLE_X, footerY);
-  ctx.textAlign = 'right';
-  ctx.fillText('Last Updated: ' + dateStr, W - 14, footerY);
-
-  // Show preview
-  const img = document.getElementById('card-img');
-  img.src = canvas.toDataURL('image/png');
-  document.getElementById('card-preview').style.display = 'block';
-  document.getElementById('download-btn').disabled = false;
-  showToast('Image generated!');
-}
-
-function downloadCard() {
-  generateCard();
-  const canvas = document.getElementById('price-canvas');
-  const link = document.createElement('a');
-  link.download = 'Fragranza-Price-List-' + new Date().toISOString().slice(0,10) + '.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-  showToast('Downloading...');
-}
-
-
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-/* ---- INIT ---- */
-renderCatalog();
-renderManage();
-</script>
-</body>
-</html>
+  ctx.fillText('Prices in BDT — Subject to change without prior n
