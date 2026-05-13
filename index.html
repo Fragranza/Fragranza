@@ -1235,4 +1235,45 @@ function generateCard() {
   ctx.fillStyle = '#999999';
   ctx.font = '10px Arial, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('Prices in BDT — Subject to change without prior n
+  ctx.fillText('Prices in BDT — Subject to change without prior notice', TABLE_X, footerY);
+  ctx.textAlign = 'right';
+  ctx.fillText('Last Updated: ' + dateStr, W - 14, footerY);
+
+  // Show preview
+  const img = document.getElementById('card-img');
+  img.src = canvas.toDataURL('image/png');
+  document.getElementById('card-preview').style.display = 'block';
+  document.getElementById('download-btn').disabled = false;
+  showToast('Image generated!');
+}
+
+function downloadCard() {
+  generateCard();
+  const canvas = document.getElementById('price-canvas');
+  const link = document.createElement('a');
+  link.download = 'Fragranza-Price-List-' + new Date().toISOString().slice(0,10) + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('Downloading...');
+}
+
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+/* ---- INIT ---- */
+renderCatalog();
+renderManage();
+</script>
+</body>
+</html>
