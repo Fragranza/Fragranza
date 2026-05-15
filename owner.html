@@ -1173,5 +1173,287 @@ function renderManage() {
     `<div class="edit-field"><label>${s}ml ৳</label><input type="number" min="0" id="new-${s}" placeholder="0" inputmode="numeric" /></div>`
   ).join('');
 }
+function toggleEdit(id) {
+  editingId = editingId === id ? null : id;
+  renderManage();
+}
 
+function setPr(id, size, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) p.prices[size] = parseInt(val) || 0;
+}
 
+function toggleOut(id) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) { p.out = !p.out; renderManage(); renderCatalog(); }
+}
+
+function deletePerfume(id) {
+  if (!confirm('Delete this perfume?')) return;
+  perfumes = perfumes.filter(x => x.id !== id);
+  order = order.filter(o => o.pid !== id);
+  updateBadge();
+  renderManage();
+  renderCatalog();
+}
+
+function addPerfume() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) { showToast('Enter a perfume name'); return; }
+  const prices = {};
+  SIZES.forEach(s => { prices[s] = parseInt(document.getElementById('new-' + s).value) || 0; });
+  perfumes.push({ id: nextId++, name, prices, out: false, sale: false, offer: null });
+  document.getElementById('new-name').value = '';
+  SIZES.forEach(s => { document.getElementById('new-' + s).value = ''; });
+  showToast(name + ' added!');
+  renderManage();
+  renderCatalog();
+}
+
+/* ---- OFFER ---- */
+let offerPanelId = null;
+
+function effectivePrice(p, size) {
+  if (!p.offer) return p.prices[size];
+  const s = String(size);
+  if (p.offer.pct && p.offer.pct[s]) return Math.round(p.prices[size] * (1 - p.offer.pct[s] / 100));
+  if (p.offer.manual && p.offer.manual[s]) return p.offer.manual[s];
+  return p.prices[size];
+}
+
+function offerBadgeText(p) {
+  if (!p.offer) return '';
+  const pcts = p.offer.pct ? Object.values(p.offer.pct).filter(v => v > 0) : [];
+  const mans = p.offer.manual ? Object.values(p.offer.manual).filter(v => v > 0) : [];
+  if (pcts.length && mans.length) return 'OFFER';
+  if (pcts.length) { const u = [...new Set(pcts)]; return u.length === 1 ? u[0] + '% OFF' : 'OFFER'; }
+  if (mans.length) return 'SPECIAL';
+  return '';
+}
+
+function toggleOfferPanel(id) {
+  offerPanelId = offerPanelId === id ? null : id;
+  const p = perfumes.find(x => x.id === id);
+  if (offerPanelId && p && !p.offer) p.offer = { pct: {}, manual: {} };
+  renderManage();
+  renderCatalog();
+}
+
+function setSizePct(id, size, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (!p) return;
+  if (!p.offer) p.offer = { pct: {}, manual: {} };
+  if (!p.offer.pct) p.offer.pct = {};
+  const v = parseFloat(val) || 0;
+  if (v > 0) { p.offer.pct[String(size)] = v; if (p.offer.manual) delete p.offer.manual[String(size)]; }
+  else delete p.offer.pct[String(size)];
+  cleanOffer(p);
+  renderCatalog();
+}
+
+function setSizeManual(id, size, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (!p) return;
+  if (!p.offer) p.offer = { pct: {}, manual: {} };
+  if (!p.offer.manual) p.offer.manual = {};
+  const v = parseInt(val) || 0;
+  if (v > 0) { p.offer.manual[String(size)] = v; if (p.offer.pct) delete p.offer.pct[String(size)]; }
+  else delete p.offer.manual[String(size)];
+  cleanOffer(p);
+  renderCatalog();
+}
+
+function cleanOffer(p) {
+  const hasPct = p.offer && p.offer.pct && Object.values(p.offer.pct).some(v => v > 0);
+  const hasMan = p.offer && p.offer.manual && Object.values(p.offer.manual).some(v => v > 0);
+  if (!hasPct && !hasMan) p.offer = null;
+}
+
+function clearOffer(id) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) p.offer = null;
+  offerPanelId = null;
+  renderManage();
+  renderCatalog();
+}
+
+/* ---- PRICE CARD ---- */
+function generateCard() {
+  const sorted = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
+  const today = new Date();
+  const dateStr = today.getDate() + '-' + today.toLocaleString('en',{month:'short'}) + '-' + String(today.getFullYear()).slice(2);
+  const W = 1200, H = 630;
+  const canvas = document.getElementById('price-canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#f5f3ef';
+  ctx.fillRect(0, 0, W, H);
+
+  const SIDEBAR_W = 72;
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(0, 0, SIDEBAR_W, H);
+  ctx.fillStyle = '#c8a96e';
+  ctx.fillRect(SIDEBAR_W - 3, 0, 3, H);
+
+  ctx.save();
+  ctx.translate(SIDEBAR_W/2, H/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 22px Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('FRAGRANZA', 0, 0);
+  ctx.restore();
+
+  ctx.fillStyle = '#c8a96e';
+  ctx.font = 'bold 8px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('2026', SIDEBAR_W/2, H - 16);
+
+  const TABLE_X = SIDEBAR_W + 6;
+  const TABLE_W = W - TABLE_X - 8;
+  const TABLE_Y = 8;
+
+  const COLS = ['Perfume Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml', 'Offer'];
+  const COL_W = [220, 78, 78, 78, 78, 78, 90];
+  const totalCols = COL_W.reduce((a,b)=>a+b,0);
+  const scaleX = TABLE_W / totalCols;
+  const scaledW = COL_W.map(w => Math.round(w * scaleX));
+  scaledW[0] += TABLE_W - scaledW.reduce((a,b)=>a+b,0);
+
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(TABLE_X, TABLE_Y, TABLE_W, 46);
+
+  let hx = TABLE_X;
+  COLS.forEach((h, i) => {
+    ctx.fillStyle = i === 6 ? '#c8a96e' : '#f0ede8';
+    ctx.font = 'bold 17px Arial, sans-serif';
+    ctx.textAlign = i === 0 ? 'left' : 'center';
+    ctx.fillText(h, i === 0 ? hx + 10 : hx + scaledW[i]/2, TABLE_Y + 30);
+    hx += scaledW[i];
+  });
+
+  const availH = H - TABLE_Y - 46 - 30;
+  const ROW_H = Math.min(Math.floor(availH / sorted.length), 44);
+  const startY = TABLE_Y + 46;
+
+  sorted.forEach((p, rowIdx) => {
+    const ry = startY + rowIdx * ROW_H;
+    ctx.fillStyle = rowIdx % 2 === 0 ? '#f9f8f5' : '#ffffff';
+    ctx.fillRect(TABLE_X, ry, TABLE_W, ROW_H);
+
+    const badgeTxt = offerBadgeText(p);
+    if (badgeTxt) {
+      const offerX = TABLE_X + scaledW.slice(0,-1).reduce((a,b)=>a+b,0);
+      ctx.fillStyle = '#fff0f0';
+      ctx.fillRect(offerX, ry, scaledW[6], ROW_H);
+    }
+
+    let cx = TABLE_X;
+    ctx.fillStyle = p.out ? '#ee6b6e' : '#1a1a1a';
+    ctx.textAlign = 'left';
+    const nameStr = p.name + (p.out ? ' (Out)' : '');
+    const maxNameW = scaledW[0] - 20;
+    ctx.font = '13px Arial, sans-serif';
+    if (ctx.measureText(nameStr).width > maxNameW) {
+      const words = nameStr.split(' ');
+      let l1 = '', l2 = '', done = false;
+      words.forEach(w => { if (!done && ctx.measureText(l1+w+' ').width < maxNameW) l1+=w+' '; else { done=true; l2+=w+' '; } });
+      ctx.font = '14px Arial, sans-serif';
+      ctx.fillText(l1.trim(), cx+10, ry + ROW_H/2 - 5);
+      ctx.fillText(l2.trim(), cx+10, ry + ROW_H/2 + 11);
+    } else {
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillText(nameStr, cx+10, ry + ROW_H/2 + 4);
+    }
+    cx += scaledW[0];
+
+    [2,5,10,15,30].forEach((s, si) => {
+      const pr = p.prices[s];
+      const ep = effectivePrice(p, s);
+      ctx.fillStyle = pr ? '#333333' : '#cccccc';
+      ctx.font = '16px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      if (ep !== pr) {
+        ctx.fillStyle = '#aaaaaa';
+        ctx.font = '10px Arial, sans-serif';
+        ctx.fillText('৳' + pr.toLocaleString(), cx + scaledW[si+1]/2, ry + ROW_H/2 - 2);
+        ctx.fillStyle = '#2a7a3a';
+        ctx.font = 'bold 13px Arial, sans-serif';
+        ctx.fillText('৳' + ep.toLocaleString(), cx + scaledW[si+1]/2, ry + ROW_H/2 + 10);
+      } else {
+        ctx.fillText(pr ? pr.toLocaleString() : '-', cx + scaledW[si+1]/2, ry + ROW_H/2 + 4);
+      }
+      cx += scaledW[si+1];
+    });
+
+    if (badgeTxt) {
+      ctx.fillStyle = '#cc3333';
+      ctx.font = 'bold 15px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(badgeTxt, cx + scaledW[6]/2, ry + ROW_H/2 + 4);
+    }
+
+    ctx.strokeStyle = '#e4e0d8';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(TABLE_X, ry + ROW_H);
+    ctx.lineTo(TABLE_X + TABLE_W, ry + ROW_H);
+    ctx.stroke();
+  });
+
+  ctx.strokeStyle = '#dedad2';
+  ctx.lineWidth = 0.5;
+  let dvx = TABLE_X + scaledW[0];
+  for (let i = 1; i < scaledW.length; i++) {
+    ctx.beginPath(); ctx.moveTo(dvx, TABLE_Y+46); ctx.lineTo(dvx, startY+sorted.length*ROW_H); ctx.stroke();
+    dvx += scaledW[i];
+  }
+
+  ctx.strokeStyle = '#c8a96e';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(TABLE_X, TABLE_Y, TABLE_W, sorted.length * ROW_H + 46);
+
+  ctx.fillStyle = '#999999';
+  ctx.font = '10px Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Prices in BDT — Subject to change without prior notice', TABLE_X, H - 10);
+  ctx.textAlign = 'right';
+  ctx.fillText('Last Updated: ' + dateStr, W - 14, H - 10);
+
+  const img = document.getElementById('card-img');
+  img.src = canvas.toDataURL('image/png');
+  document.getElementById('card-preview').style.display = 'block';
+  document.getElementById('download-btn').disabled = false;
+  showToast('Image generated!');
+}
+
+function downloadCard() {
+  generateCard();
+  const canvas = document.getElementById('price-canvas');
+  const link = document.createElement('a');
+  link.download = 'Fragranza-Price-List-' + new Date().toISOString().slice(0,10) + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('Downloading...');
+}
+
+/* ---- UTILS ---- */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ---- INIT ---- */
+loadFromGitHub();
+</script>
+</body>
+</html>
