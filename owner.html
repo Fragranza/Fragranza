@@ -1116,403 +1116,62 @@ function renderManage() {
     const offerOpen = offerPanelId === p.id;
     const offerPct = (p.offer && p.offer.pct) ? p.offer.pct : {};
     const offerMan = (p.offer && p.offer.manual) ? p.offer.manual : {};
-    const offerPanel = offerOpen ? `<div class="offer-panel">
+    const hasAnyOffer = p.offer && (
+      Object.values(offerPct).some(v=>v>0) || Object.values(offerMan).some(v=>v>0)
+    );
+
+    const editBlock = editing ? `<div class="edit-prices">${SIZES.map(s=>
+      `<div class="edit-field"><label>${s}ml</label><input type="number" min="0" value="${p.prices[s]||''}" oninput="setPr(${p.id},${s},this.value)" inputmode="numeric" /></div>`
+    ).join('')}</div>` : '';
+
+    const offerBlock = offerOpen ? `<div class="offer-panel">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span style="font-size:11px;font-weight:500;color:var(--text);">Set Offer Per Size</span>
         <button class="offer-clear-btn" onclick="clearOffer(${p.id})">Clear All</button>
       </div>
       <div class="offer-size-table">
         <div class="offer-size-header">
-          <span>Size</span><span>Original</span><span>% Off</span><span>Manual Price</span><span>Final</span>
+          <span>Size</span><span>Original</span><span>% Off</span><span>Manual ৳</span><span>Final</span>
         </div>
         ${[2,5,10,15,30].map(s => {
           const orig = p.prices[s];
-          const pct = offerPct[s] || '';
-          const man = offerMan[s] || '';
+          const pct = offerPct[String(s)] || '';
+          const man = offerMan[String(s)] || '';
           const ep = effectivePrice(p, s);
           const changed = ep !== orig;
           return `<div class="offer-size-row">
             <span class="osr-size">${s}ml</span>
             <span class="osr-orig">৳${orig.toLocaleString()}</span>
             <div class="osr-pct-wrap">
-              <input class="osr-input" type="number" min="0" max="99" placeholder="0" value="${pct}" oninput="setSizePct(${p.id},${s},this.value)" />
+              <input class="osr-input" type="number" min="0" max="99" placeholder="0" value="${pct}" oninput="setSizePct(${p.id},${s},this.value)" inputmode="numeric" />
               <span class="osr-pct-sym">%</span>
             </div>
-            <input class="osr-input" type="number" min="0" placeholder="—" value="${man}" oninput="setSizeManual(${p.id},${s},this.value)" />
+            <input class="osr-input" type="number" min="0" placeholder="—" value="${man}" oninput="setSizeManual(${p.id},${s},this.value)" inputmode="numeric" />
             <span class="osr-final ${changed ? 'osr-final-active' : ''}">৳${ep.toLocaleString()}</span>
           </div>`;
         }).join('')}
       </div>
-      <p style="font-size:10px;color:var(--muted);margin-top:8px;">% Off and Manual Price can't both be set for same size — manual overrides %.</p>
+      <p style="font-size:10px;color:var(--muted);margin-top:8px;">Manual price overrides % for that size.</p>
     </div>` : '';
-    const editBlock = editing ? `<div class="edit-prices">${SIZES.map(s =>
-      `<div class="edit-field"><label>${s}ml</label><input type="number" min="0" value="${p.prices[s] || ''}" oninput="setPr(${p.id},${s},this.value)" inputmode="numeric" /></div>`
-    ).join('')}</div>` : '';
+
     return `<div class="manage-item">
       <div class="manage-row">
         <span class="manage-name">${esc(p.name)}</span>
         <button class="m-btn" onclick="toggleEdit(${p.id})">${editing ? 'Done' : 'Prices'}</button>
-        <button class="m-btn ${p.offer ? 'out-active' : ''}" style="${p.offer ? 'border-color:rgba(92,158,106,0.4);color:#7ec98e;' : ''}" onclick="toggleOfferPanel(${p.id})">${p.offer ? offerBadgeText(p) : 'Offer'}</button>
+        <button class="m-btn" style="${hasAnyOffer ? 'border-color:rgba(92,158,106,0.4);color:#7ec98e;' : ''}" onclick="toggleOfferPanel(${p.id})">${hasAnyOffer ? offerBadgeText(p) : 'Offer'}</button>
         <button class="m-btn ${p.out ? 'out-active' : ''}" onclick="toggleOut(${p.id})">${p.out ? 'Out' : 'In stock'}</button>
         <button class="m-btn danger" onclick="deletePerfume(${p.id})">✕</button>
       </div>
       ${editBlock}
+      ${offerBlock}
     </div>`;
   }).join('');
 
   // Build add price fields
   const pf = document.getElementById('add-price-fields');
-  pf.innerHTML = SIZES.map(s =>
+  if (pf) pf.innerHTML = SIZES.map(s =>
     `<div class="edit-field"><label>${s}ml ৳</label><input type="number" min="0" id="new-${s}" placeholder="0" inputmode="numeric" /></div>`
   ).join('');
 }
 
 
-let offerPanelId = null;
-
-function toggleOfferPanel(id) {
-  offerPanelId = offerPanelId === id ? null : id;
-  const p = perfumes.find(x => x.id === id);
-  if (offerPanelId && p && !p.offer) {
-    p.offer = { pct: {}, manual: {} };
-  }
-  renderManage();
-  renderCatalog();
-}
-
-function setSizePct(id, size, val) {
-  const p = perfumes.find(x => x.id === id);
-  if (!p) return;
-  if (!p.offer) p.offer = { pct: {}, manual: {} };
-  if (!p.offer.pct) p.offer.pct = {};
-  const v = parseFloat(val) || 0;
-  if (v > 0) p.offer.pct[size] = v; else delete p.offer.pct[size];
-  // clear manual for this size if pct set
-  if (v > 0 && p.offer.manual) delete p.offer.manual[size];
-  cleanOffer(p);
-  // update final price display without full re-render
-  const ep = effectivePrice(p, size);
-  const rows = document.querySelectorAll('.osr-final');
-  renderCatalog();
-}
-
-function setSizeManual(id, size, val) {
-  const p = perfumes.find(x => x.id === id);
-  if (!p) return;
-  if (!p.offer) p.offer = { pct: {}, manual: {} };
-  if (!p.offer.manual) p.offer.manual = {};
-  const v = parseInt(val) || 0;
-  if (v > 0) { p.offer.manual[size] = v; if (p.offer.pct) delete p.offer.pct[size]; }
-  else delete p.offer.manual[size];
-  cleanOffer(p);
-  renderCatalog();
-}
-
-function cleanOffer(p) {
-  // if no offer values set, null it out
-  const hasPct = p.offer && p.offer.pct && Object.values(p.offer.pct).some(v => v > 0);
-  const hasMan = p.offer && p.offer.manual && Object.values(p.offer.manual).some(v => v > 0);
-  if (!hasPct && !hasMan) p.offer = null;
-}
-
-function clearOffer(id) {
-  const p = perfumes.find(x => x.id === id);
-  if (p) p.offer = null;
-  offerPanelId = null;
-  renderManage();
-  renderCatalog();
-}
-
-function toggleEdit(id) {
-  editingId = editingId === id ? null : id;
-  renderManage();
-}
-
-function setPr(id, size, val) {
-  const p = perfumes.find(x => x.id === id);
-  if (p) { p.prices[size] = parseInt(val) || 0; }
-}
-
-function toggleOut(id) {
-  const p = perfumes.find(x => x.id === id);
-  if (p) { p.out = !p.out; renderManage(); renderCatalog(); }
-}
-
-function deletePerfume(id) {
-  if (!confirm('Delete this perfume?')) return;
-  perfumes = perfumes.filter(x => x.id !== id);
-  order = order.filter(o => o.pid !== id);
-  updateBadge();
-  renderManage();
-  renderCatalog();
-}
-
-function addPerfume() {
-  const name = document.getElementById('new-name').value.trim();
-  if (!name) { showToast('Enter a perfume name'); return; }
-  const prices = {};
-  SIZES.forEach(s => { prices[s] = parseInt(document.getElementById('new-' + s).value) || 0; });
-  perfumes.push({ id: nextId++, name, prices, out: false, sale: false });
-  document.getElementById('new-name').value = '';
-  SIZES.forEach(s => { document.getElementById('new-' + s).value = ''; });
-  showToast(name + ' added!');
-  renderManage();
-  renderCatalog();
-}
-
-
-/* ---- UTILS ---- */
-
-function copyPriceList(pid) {
-  const p = perfumes.find(x => x.id === pid);
-  if (!p) return;
-  const lines = [p.name, ''];
-  [2, 5, 10, 15, 30].forEach(s => {
-    if (p.prices[s]) lines.push(s + ' ml — ৳' + p.prices[s].toLocaleString());
-  });
-  const text = lines.join('\n');
-  navigator.clipboard.writeText(text).then(() => showToast('Price list copied!')).catch(() => showToast('Could not copy'));
-}
-
-
-/* ---- PRICE CARD ---- */
-function generateCard() {
-  // Filter out out-of-stock perfumes
-  const sorted = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
-  const today = new Date();
-  const dateStr = today.getDate() + '-' + today.toLocaleString('en',{month:'short'}) + '-' + String(today.getFullYear()).slice(2);
-
-  // Facebook landscape 2026: 1200x630 (1.91:1)
-  const W = 1200;
-  const H = 630;
-  const SIZES = [2, 5, 10, 15, 30];
-
-  const canvas = document.getElementById('price-canvas');
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
-
-  // ── Background ──────────────────────────────────────────────────
-  ctx.fillStyle = '#f5f3ef';
-  ctx.fillRect(0, 0, W, H);
-
-  // Left dark sidebar — slim
-  const SIDEBAR_W = 72;
-  ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(0, 0, SIDEBAR_W, H);
-
-  // Gold accent line
-  ctx.fillStyle = '#c8a96e';
-  ctx.fillRect(SIDEBAR_W - 3, 0, 3, H);
-
-  // ── Brand in sidebar ────────────────────────────────────────────
-  ctx.save();
-  ctx.translate(SIDEBAR_W/2, H/2);
-  ctx.rotate(-Math.PI/2);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 22px Georgia, serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('FRAGRANZA', 0, 0);
-  ctx.restore();
-
-  ctx.fillStyle = '#c8a96e';
-  ctx.font = 'bold 8px Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('2026', SIDEBAR_W/2, H - 16);
-
-  // ── Table area ──────────────────────────────────────────────────
-  const TABLE_X = SIDEBAR_W + 6;
-  const TABLE_W = W - TABLE_X - 8;
-  const TABLE_Y = 8;
-
-  // Title row
-  ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(TABLE_X, TABLE_Y, TABLE_W, 46);
-
-  // Headers
-  const COLS = ['Perfume Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml', 'Offer'];
-  const COL_W = [220, 78, 78, 78, 78, 78, 90];
-  const totalCols = COL_W.reduce((a,b)=>a+b,0);
-  const scaleX = TABLE_W / totalCols;
-  const scaledW = COL_W.map(w => Math.round(w * scaleX));
-
-  // Fix rounding
-  const diff = TABLE_W - scaledW.reduce((a,b)=>a+b,0);
-  scaledW[0] += diff;
-
-  let hx = TABLE_X;
-  COLS.forEach((h, i) => {
-    ctx.fillStyle = i === 6 ? '#c8a96e' : '#f0ede8';
-    ctx.font = 'bold 17px Arial, sans-serif';
-    ctx.textAlign = i === 0 ? 'left' : 'center';
-    const tx = i === 0 ? hx + 10 : hx + scaledW[i]/2;
-    ctx.fillText(h, tx, TABLE_Y + 30);
-    hx += scaledW[i];
-  });
-
-  // ── Rows ─────────────────────────────────────────────────────────
-  const availH = H - TABLE_Y - 46 - 30; // 30 for footer
-  const ROW_H = Math.min(Math.floor(availH / sorted.length), 44);
-  const startY = TABLE_Y + 46;
-
-  sorted.forEach((p, rowIdx) => {
-    const ry = startY + rowIdx * ROW_H;
-    const isEven = rowIdx % 2 === 0;
-
-    // Row bg
-    ctx.fillStyle = isEven ? '#f9f8f5' : '#ffffff';
-    ctx.fillRect(TABLE_X, ry, TABLE_W, ROW_H);
-
-    // Offer column highlight
-    if (p.sale) {
-      const offerX = TABLE_X + scaledW.slice(0,-1).reduce((a,b)=>a+b,0);
-      ctx.fillStyle = '#fff0f0';
-      ctx.fillRect(offerX, ry, scaledW[6], ROW_H);
-    }
-
-    let cx = TABLE_X;
-
-    // Name cell — red if out of stock
-    ctx.fillStyle = p.out ? '#ee6b6e' : '#1a1a1a';
-    ctx.textAlign = 'left';
-    const nameStr = p.name + (p.out ? ' (Out)' : '');
-    const maxNameW = scaledW[0] - 20;
-    ctx.font = '13px Arial, sans-serif';
-    if (ctx.measureText(nameStr).width > maxNameW) {
-      const words = nameStr.split(' ');
-      let l1 = '', l2 = '';
-      let done = false;
-      ctx.font = '13px Arial, sans-serif';
-      words.forEach(w => {
-        if (!done && ctx.measureText(l1+w+' ').width < maxNameW) l1 += w+' ';
-        else { done=true; l2+=w+' '; }
-      });
-      ctx.font = '14px Arial, sans-serif';
-      ctx.fillText(l1.trim(), cx+10, ry + ROW_H/2 - 5);
-      ctx.fillText(l2.trim(), cx+10, ry + ROW_H/2 + 11);
-    } else {
-      ctx.font = '16px Arial, sans-serif';
-      ctx.fillText(nameStr, cx+10, ry + ROW_H/2 + 4);
-    }
-    cx += scaledW[0];
-
-    // Price cells
-    SIZES.forEach((s, si) => {
-      const pr = p.prices[s];
-      ctx.fillStyle = pr ? '#333333' : '#cccccc';
-      ctx.font = '16px Arial, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(pr ? pr.toLocaleString() : '-', cx + scaledW[si+1]/2, ry + ROW_H/2 + 4);
-      cx += scaledW[si+1];
-    });
-
-    // Offer cell
-    if (p.sale) {
-      ctx.fillStyle = '#cc3333';
-      ctx.font = 'bold 15px Arial, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('10% OFF', cx + scaledW[6]/2, ry + ROW_H/2 + 4);
-    }
-
-    // Row divider
-    ctx.strokeStyle = '#e4e0d8';
-    ctx.lineWidth = 0.5;
-    ctx.beginPath();
-    ctx.moveTo(TABLE_X, ry + ROW_H);
-    ctx.lineTo(TABLE_X + TABLE_W, ry + ROW_H);
-    ctx.stroke();
-  });
-
-  // Column dividers
-  ctx.strokeStyle = '#dedad2';
-  ctx.lineWidth = 0.5;
-  let dvx = TABLE_X + scaledW[0];
-  for (let i = 1; i < scaledW.length; i++) {
-    ctx.beginPath();
-    ctx.moveTo(dvx, TABLE_Y + 46);
-    ctx.lineTo(dvx, startY + sorted.length * ROW_H);
-    ctx.stroke();
-    dvx += scaledW[i];
-  }
-
-  // Table border
-  ctx.strokeStyle = '#c8a96e';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(TABLE_X, TABLE_Y, TABLE_W, sorted.length * ROW_H + 46);
-
-  // ── Footer ───────────────────────────────────────────────────────
-  const footerY = H - 24;
-  ctx.fillStyle = '#999999';
-  ctx.font = '10px Arial, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('Prices in BDT — Subject to change without prior notice', TABLE_X, footerY);
-  ctx.textAlign = 'right';
-  ctx.fillText('Last Updated: ' + dateStr, W - 14, footerY);
-
-  // Show preview
-  const img = document.getElementById('card-img');
-  img.src = canvas.toDataURL('image/png');
-  document.getElementById('card-preview').style.display = 'block';
-  document.getElementById('download-btn').disabled = false;
-  showToast('Image generated!');
-}
-
-function downloadCard() {
-  generateCard();
-  const canvas = document.getElementById('price-canvas');
-  const link = document.createElement('a');
-  link.download = 'Fragranza-Price-List-' + new Date().toISOString().slice(0,10) + '.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-  showToast('Downloading...');
-}
-
-
-
-function effectivePrice(p, size) {
-  if (!p.offer) return p.prices[size];
-  const s = String(size);
-  // per-size discount %
-  if (p.offer.pct && p.offer.pct[s]) {
-    return Math.round(p.prices[size] * (1 - p.offer.pct[s] / 100));
-  }
-  // per-size manual price
-  if (p.offer.manual && p.offer.manual[s]) {
-    return p.offer.manual[s];
-  }
-  return p.prices[size];
-}
-
-function offerBadgeText(p) {
-  if (!p.offer) return '';
-  const pcts = p.offer.pct ? Object.values(p.offer.pct).filter(v => v > 0) : [];
-  const mans = p.offer.manual ? Object.values(p.offer.manual).filter(v => v > 0) : [];
-  if (pcts.length && mans.length) return 'OFFER';
-  if (pcts.length) {
-    const unique = [...new Set(pcts)];
-    return unique.length === 1 ? unique[0] + '% OFF' : 'OFFER';
-  }
-  if (mans.length) return 'SPECIAL';
-  return '';
-}
-
-function hasOffer(p) { return !!p.offer; }
-
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-/* ---- INIT ---- */
-loadFromGitHub();
-</script>
-</body>
-</html>
