@@ -110,6 +110,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .fb-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6;}
 
 /* Loading */
+
+.price-original { text-decoration: line-through; color: var(--muted); font-size: 9px; display: block; }
+.offer-badge-sm { font-size: 9px; color: #7ec98e; display: block; margin-top: 1px; }
+.badge-offer { background: rgba(92,158,106,0.15); color: #7ec98e; border: 0.5px solid rgba(92,158,106,0.3); }
+
 .loading{text-align:center;padding:60px 20px;color:var(--muted);}
 .loading svg{width:36px;height:36px;opacity:0.3;display:block;margin:0 auto 12px;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -191,7 +196,8 @@ async function loadPerfumes() {
     const data = await r.json();
     perfumes = data.map(p => ({
       ...p,
-      prices: {2:p.prices['2']||0, 5:p.prices['5']||0, 10:p.prices['10']||0, 15:p.prices['15']||0, 30:p.prices['30']||0}
+      prices: {2:p.prices['2']||0, 5:p.prices['5']||0, 10:p.prices['10']||0, 15:p.prices['15']||0, 30:p.prices['30']||0},
+      offer: p.offer ? { pct: p.offer.pct || {}, manual: p.offer.manual || {} } : null
     }));
     renderCatalog();
   } catch(e) {
@@ -227,7 +233,7 @@ function renderCatalog() {
   if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
   el.innerHTML = '<div class="count-label">' + list.length + ' perfume' + (list.length !== 1 ? 's' : '') + '</div>' +
     list.map(p => {
-      const badges = (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
+      const badges = (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
       const btns = SIZES.map(s => {
         const pr = p.prices[s];
         if (!pr) return '<div></div>';
@@ -247,7 +253,7 @@ function renderCatalog() {
 function addToOrder(pid, size) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, price: p.prices[size], name: p.name });
+  order.push({ pid, size, price: effectivePrice(p, size), name: p.name });
   updateBadge();
   showToast(p.name.split(' ')[0] + ' ' + size + 'ml added');
 }
@@ -390,6 +396,24 @@ function copyOrder() {
   const delLine = delAmt > 0 ? '\nDelivery (' + (selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka') + '): ৳' + delAmt : '';
   const text = 'Fragranza Order\n\n' + lines.join('\n') + '\n\nPerfume Total: ৳' + perfumeTotal.toLocaleString() + delLine + '\n\nTotal Bill: ৳' + grandTotal.toLocaleString();
   navigator.clipboard.writeText(text).then(() => showToast('Copied! Paste on our Facebook page')).catch(() => showToast('Could not copy'));
+}
+
+
+function effectivePrice(p, size) {
+  if (!p.offer) return p.prices[size];
+  const s = String(size);
+  if (p.offer.pct && p.offer.pct[s]) return Math.round(p.prices[size] * (1 - p.offer.pct[s] / 100));
+  if (p.offer.manual && p.offer.manual[s]) return p.offer.manual[s];
+  return p.prices[size];
+}
+function offerBadgeText(p) {
+  if (!p.offer) return '';
+  const pcts = p.offer.pct ? Object.values(p.offer.pct).filter(v => v > 0) : [];
+  const mans = p.offer.manual ? Object.values(p.offer.manual).filter(v => v > 0) : [];
+  if (pcts.length && mans.length) return 'OFFER';
+  if (pcts.length) { const u = [...new Set(pcts)]; return u.length === 1 ? u[0] + '% OFF' : 'OFFER'; }
+  if (mans.length) return 'SPECIAL';
+  return '';
 }
 
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
