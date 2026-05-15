@@ -700,27 +700,40 @@ let   ghFileSha = null; // will be fetched on load
 
 async function loadFromGitHub() {
   try {
-    showToast('Loading from GitHub...');
-    const r = await fetch(GH_API, {
-      headers: { 'Authorization': 'token ' + GH_TOKEN, 'User-Agent': 'Fragranza-App' }
-    });
+    showToast('Loading...');
+    // Use public raw URL — no token needed for reading
+    const rawUrl = 'https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json?t=' + Date.now();
+    const r = await fetch(rawUrl);
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    const data = await r.json();
-    ghFileSha = data.sha;
-    const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
-    // Restore prices with numeric keys
+    const decoded = await r.json();
     perfumes = decoded.map(p => ({
       ...p,
       prices: { 2: p.prices['2']||0, 5: p.prices['5']||0, 10: p.prices['10']||0, 15: p.prices['15']||0, 30: p.prices['30']||0 }
     }));
     nextId = Math.max(...perfumes.map(p => p.id)) + 1;
+    // Also fetch SHA separately for saving (needs token)
+    fetchSha();
     showToast('Loaded ' + perfumes.length + ' perfumes!');
     renderCatalog();
     renderManage();
   } catch(e) {
     showToast('Load failed: ' + e.message);
+    // Fall back to built-in data silently
+    renderCatalog();
+    renderManage();
     console.error(e);
   }
+}
+
+async function fetchSha() {
+  try {
+    const r = await fetch(GH_API, {
+      headers: { 'Authorization': 'token ' + GH_TOKEN, 'User-Agent': 'Fragranza-App' }
+    });
+    if (!r.ok) return;
+    const data = await r.json();
+    ghFileSha = data.sha;
+  } catch(e) { console.error('SHA fetch failed', e); }
 }
 
 async function saveToGitHub() {
