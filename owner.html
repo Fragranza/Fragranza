@@ -1438,6 +1438,47 @@ function downloadCard() {
   showToast('Downloading...');
 }
 
+
+function copyPriceList(pid) {
+  const p = perfumes.find(x => x.id === pid);
+  if (!p) return;
+  const lines = [p.name, ''];
+  [2, 5, 10, 15, 30].forEach(s => {
+    if (p.prices[s]) {
+      const ep = effectivePrice(p, s);
+      const orig = p.prices[s];
+      if (ep !== orig) {
+        lines.push(s + ' ml — ৳' + ep.toLocaleString() + ' (was ৳' + orig.toLocaleString() + ')');
+      } else {
+        lines.push(s + ' ml — ৳' + orig.toLocaleString());
+      }
+    }
+  });
+  const badge = offerBadgeText(p);
+  if (badge) lines.push('\n' + badge + ' offer applied');
+  const text = lines.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Price list copied!'))
+      .catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); showToast('Price list copied!'); }
+  catch(e) { showToast('Could not copy'); }
+  document.body.removeChild(ta);
+}
+
 /* ---- UTILS ---- */
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
