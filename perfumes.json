@@ -280,20 +280,6 @@
     "offer": null
   },
   {
-    "id": 21,
-    "name": "Coolwater EDT",
-    "prices": {
-      "2": 100,
-      "5": 220,
-      "10": 400,
-      "15": 560,
-      "30": 1160
-    },
-    "out": false,
-    "sale": false,
-    "offer": null
-  },
-  {
     "id": 22,
     "name": "Lattafa Yara",
     "prices": {
