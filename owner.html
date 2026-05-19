@@ -1289,6 +1289,12 @@ function generateCard() {
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
+  // Check if any perfume has an active offer
+  const hasAnyOffer = sorted.some(p => p.offer && (
+    (p.offer.pct && Object.values(p.offer.pct).some(v=>v>0)) ||
+    (p.offer.manual && Object.values(p.offer.manual).some(v=>v>0))
+  ));
+
   ctx.fillStyle = '#f5f3ef';
   ctx.fillRect(0, 0, W, H);
 
@@ -1316,19 +1322,26 @@ function generateCard() {
   const TABLE_W = W - TABLE_X - 8;
   const TABLE_Y = 8;
 
-  const COLS = ['Perfume Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml', 'Offer'];
-  const COL_W = [220, 78, 78, 78, 78, 78, 90];
-  const totalCols = COL_W.reduce((a,b)=>a+b,0);
+  // Columns — offer column only if any perfume has an offer
+  const COLS = hasAnyOffer
+    ? ['Perfume Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml', 'Offer']
+    : ['Perfume Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml'];
+  const COL_W_BASE = hasAnyOffer
+    ? [220, 78, 78, 78, 78, 78, 90]
+    : [260, 88, 88, 88, 88, 88];
+
+  const totalCols = COL_W_BASE.reduce((a,b)=>a+b,0);
   const scaleX = TABLE_W / totalCols;
-  const scaledW = COL_W.map(w => Math.round(w * scaleX));
+  const scaledW = COL_W_BASE.map(w => Math.round(w * scaleX));
   scaledW[0] += TABLE_W - scaledW.reduce((a,b)=>a+b,0);
 
+  // Header bar
   ctx.fillStyle = '#1a1a1a';
   ctx.fillRect(TABLE_X, TABLE_Y, TABLE_W, 46);
 
   let hx = TABLE_X;
   COLS.forEach((h, i) => {
-    ctx.fillStyle = i === 6 ? '#c8a96e' : '#f0ede8';
+    ctx.fillStyle = (hasAnyOffer && i === 6) ? '#c8a96e' : '#f0ede8';
     ctx.font = 'bold 17px Arial, sans-serif';
     ctx.textAlign = i === 0 ? 'left' : 'center';
     ctx.fillText(h, i === 0 ? hx + 10 : hx + scaledW[i]/2, TABLE_Y + 30);
@@ -1344,14 +1357,16 @@ function generateCard() {
     ctx.fillStyle = rowIdx % 2 === 0 ? '#f9f8f5' : '#ffffff';
     ctx.fillRect(TABLE_X, ry, TABLE_W, ROW_H);
 
-    const badgeTxt = offerBadgeText(p);
-    if (badgeTxt) {
+    const badgeTxt = hasAnyOffer ? offerBadgeText(p) : '';
+    if (hasAnyOffer && badgeTxt) {
       const offerX = TABLE_X + scaledW.slice(0,-1).reduce((a,b)=>a+b,0);
       ctx.fillStyle = '#fff0f0';
-      ctx.fillRect(offerX, ry, scaledW[6], ROW_H);
+      ctx.fillRect(offerX, ry, scaledW[scaledW.length-1], ROW_H);
     }
 
     let cx = TABLE_X;
+
+    // Name
     ctx.fillStyle = p.out ? '#ee6b6e' : '#1a1a1a';
     ctx.textAlign = 'left';
     const nameStr = p.name + (p.out ? ' (Out)' : '');
@@ -1370,11 +1385,10 @@ function generateCard() {
     }
     cx += scaledW[0];
 
+    // Prices
     [2,5,10,15,30].forEach((s, si) => {
       const pr = p.prices[s];
       const ep = effectivePrice(p, s);
-      ctx.fillStyle = pr ? '#333333' : '#cccccc';
-      ctx.font = '16px Arial, sans-serif';
       ctx.textAlign = 'center';
       if (ep !== pr) {
         ctx.fillStyle = '#aaaaaa';
@@ -1384,18 +1398,22 @@ function generateCard() {
         ctx.font = 'bold 13px Arial, sans-serif';
         ctx.fillText('৳' + ep.toLocaleString(), cx + scaledW[si+1]/2, ry + ROW_H/2 + 10);
       } else {
+        ctx.fillStyle = pr ? '#333333' : '#cccccc';
+        ctx.font = '16px Arial, sans-serif';
         ctx.fillText(pr ? pr.toLocaleString() : '-', cx + scaledW[si+1]/2, ry + ROW_H/2 + 4);
       }
       cx += scaledW[si+1];
     });
 
-    if (badgeTxt) {
+    // Offer badge column
+    if (hasAnyOffer && badgeTxt) {
       ctx.fillStyle = '#cc3333';
       ctx.font = 'bold 15px Arial, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(badgeTxt, cx + scaledW[6]/2, ry + ROW_H/2 + 4);
+      ctx.fillText(badgeTxt, cx + scaledW[scaledW.length-1]/2, ry + ROW_H/2 + 4);
     }
 
+    // Row divider
     ctx.strokeStyle = '#e4e0d8';
     ctx.lineWidth = 0.5;
     ctx.beginPath();
@@ -1404,6 +1422,7 @@ function generateCard() {
     ctx.stroke();
   });
 
+  // Column dividers
   ctx.strokeStyle = '#dedad2';
   ctx.lineWidth = 0.5;
   let dvx = TABLE_X + scaledW[0];
@@ -1412,10 +1431,12 @@ function generateCard() {
     dvx += scaledW[i];
   }
 
+  // Table border
   ctx.strokeStyle = '#c8a96e';
   ctx.lineWidth = 1;
   ctx.strokeRect(TABLE_X, TABLE_Y, TABLE_W, sorted.length * ROW_H + 46);
 
+  // Footer
   ctx.fillStyle = '#999999';
   ctx.font = '10px Arial, sans-serif';
   ctx.textAlign = 'left';
@@ -1429,7 +1450,6 @@ function generateCard() {
   document.getElementById('download-btn').disabled = false;
   showToast('Image generated!');
 }
-
 function downloadCard() {
   generateCard();
   const canvas = document.getElementById('price-canvas');
