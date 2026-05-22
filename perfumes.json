@@ -404,5 +404,33 @@
     "out": false,
     "sale": false,
     "offer": null
+  },
+  {
+    "id": 31,
+    "name": "Club de Nuit EDT",
+    "prices": {
+      "2": 120,
+      "5": 280,
+      "10": 480,
+      "15": 700,
+      "30": 1460
+    },
+    "out": false,
+    "sale": false,
+    "offer": null
+  },
+  {
+    "id": 32,
+    "name": "JPG Le Beau EDT",
+    "prices": {
+      "2": 200,
+      "5": 480,
+      "10": 860,
+      "15": 1220,
+      "30": 2580
+    },
+    "out": false,
+    "sale": false,
+    "offer": null
   }
 ]
