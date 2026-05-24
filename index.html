@@ -421,10 +421,10 @@ function sendToMessenger() {
   const text = 'Fragranza Order\n\n' + lines.join('\n') + '\n\nPerfume Total: ৳' + perfumeTotal.toLocaleString() + delLine + '\n\nTotal Bill: ৳' + grandTotal.toLocaleString();
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).finally(() => {
-      window.open('https://m.me/fragranzabd', '_blank');
+      window.open('https://m.me/fragranzabangladesh', '_blank');
     });
   } else {
-    window.open('https://m.me/fragranzabd', '_blank');
+    window.open('https://m.me/fragranzabangladesh', '_blank');
   }
   showToast('Opening Messenger...');
 }
