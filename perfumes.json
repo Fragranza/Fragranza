@@ -48,14 +48,14 @@
     "id": 4,
     "name": "Rayhaan Aquatica",
     "prices": {
-      "2": 126,
-      "5": 270,
-      "10": 513,
-      "15": 747,
-      "30": 1350
+      "2": 80,
+      "5": 180,
+      "10": 340,
+      "15": 480,
+      "30": 1000
     },
     "out": false,
-    "sale": true,
+    "sale": false,
     "offer": null,
     "gender": "male"
   },
@@ -102,7 +102,7 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "unisex"
   },
   {
     "id": 8,
@@ -177,7 +177,7 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "unisex"
   },
   {
     "id": 13,
@@ -252,7 +252,7 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "male"
   },
   {
     "id": 18,
@@ -417,7 +417,7 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "male"
   },
   {
     "id": 30,
@@ -432,7 +432,7 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "female"
+    "gender": "unisex"
   },
   {
     "id": 31,
