@@ -105,6 +105,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 /* Buttons */
 .btn-copy{width:100%;background:rgba(200,169,110,0.1);border:0.5px solid rgba(200,169,110,0.3);border-radius:var(--radius-sm);padding:14px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:500;transition:all 0.2s;}
 .btn-copy:active{background:rgba(200,169,110,0.2);}
+.btn-messenger{width:100%;background:rgba(0,132,255,0.12);border:0.5px solid rgba(0,132,255,0.3);border-radius:var(--radius-sm);padding:14px;color:#4a9eff;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500;transition:all 0.2s;}
+.btn-messenger:active{background:rgba(0,132,255,0.2);}
 .btn-clear{width:100%;background:none;border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;}
 .btn-clear:active{border-color:var(--danger);color:var(--danger);}
 .fb-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.6;}
@@ -161,6 +163,12 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
       <button class="filter-btn" onclick="setFilter('sale')" id="f-sale">On Sale</button>
       <button class="filter-btn" onclick="setFilter('out')" id="f-out">Out of Stock</button>
     </div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setGenderFilter('all')" id="gf-all">All</button>
+      <button class="filter-btn" onclick="setGenderFilter('male')" id="gf-male">Male</button>
+      <button class="filter-btn" onclick="setGenderFilter('female')" id="gf-female">Female</button>
+      <button class="filter-btn" onclick="setGenderFilter('unisex')" id="gf-unisex">Unisex</button>
+    </div>
     <div id="catalog">
       <div class="loading">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
@@ -185,6 +193,7 @@ const SIZES = [2,5,10,15,30];
 let perfumes = [];
 let order = [];
 let activeFilter = 'all';
+let genderFilter = 'all';
 let selectedDelivery = 'none';
 let currentGrandTotal = 0;
 
@@ -197,7 +206,8 @@ async function loadPerfumes() {
     perfumes = data.map(p => ({
       ...p,
       prices: {2:p.prices['2']||0, 5:p.prices['5']||0, 10:p.prices['10']||0, 15:p.prices['15']||0, 30:p.prices['30']||0},
-      offer: p.offer ? { pct: p.offer.pct || {}, manual: p.offer.manual || {} } : null
+      offer: p.offer ? { pct: p.offer.pct || {}, manual: p.offer.manual || {} } : null,
+      gender: p.gender || 'male'
     }));
     renderCatalog();
   } catch(e) {
@@ -215,6 +225,15 @@ function goTab(name) {
 }
 
 // ── Catalog ──────────────────────────────────────────────────────────────────
+function setGenderFilter(g) {
+  genderFilter = g;
+  ['all','male','female','unisex'].forEach(f => {
+    const b = document.getElementById('gf-' + f);
+    if (b) b.classList.toggle('active', f === g);
+  });
+  renderCatalog();
+}
+
 function setFilter(f) {
   activeFilter = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -229,6 +248,7 @@ function renderCatalog() {
   if (activeFilter === 'available') list = list.filter(p => !p.out);
   if (activeFilter === 'sale') list = list.filter(p => p.sale);
   if (activeFilter === 'out') list = list.filter(p => p.out);
+  if (genderFilter !== 'all') list = list.filter(p => (p.gender || 'male') === genderFilter);
   const el = document.getElementById('catalog');
   if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
   el.innerHTML = '<div class="count-label">' + list.length + ' perfume' + (list.length !== 1 ? 's' : '') + '</div>' +
@@ -369,7 +389,11 @@ function renderOrder() {
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
       'Copy Order Summary' +
     '</button>' +
-    '<p class="fb-note">Copy your order and send it to our Facebook page to place your order.</p>' +
+    '<button class="btn-messenger" onclick="sendToMessenger()">' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.872 1.397 5.444 3.59 7.14V22l3.268-1.793c.872.242 1.797.372 2.742.372 5.523 0 10-4.145 10-9.243C22 6.145 17.523 2 12 2zm1.018 12.443l-2.545-2.714-4.97 2.714 5.467-5.801 2.608 2.714 4.908-2.714-5.468 5.801z"/></svg>' +
+      'Send to Messenger' +
+    '</button>' +
+    '<p class="fb-note">Copy your order summary and send it to us, or tap Send to Messenger to open our chat directly.</p>' +
     '<button class="btn-clear" onclick="clearOrder()">' +
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
       'Start Over' +
@@ -377,6 +401,32 @@ function renderOrder() {
 
   selectedDelivery = 'none';
   setTimeout(recalc, 0);
+}
+
+function sendToMessenger() {
+  // Copy order first then open Messenger
+  const map = {};
+  order.forEach(o => {
+    const k = o.pid + '-' + o.size;
+    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
+    map[k].qty++;
+  });
+  const lines = Object.values(map).map(g =>
+    '- ' + g.name + ' ' + g.size + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
+  );
+  const perfumeTotal = order.reduce((s,o) => s + o.price, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  const delLine = delAmt > 0 ? '\nDelivery (' + (selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka') + '): ৳' + delAmt : '';
+  const text = 'Fragranza Order\n\n' + lines.join('\n') + '\n\nPerfume Total: ৳' + perfumeTotal.toLocaleString() + delLine + '\n\nTotal Bill: ৳' + grandTotal.toLocaleString();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).finally(() => {
+      window.open('https://m.me/fragranzabd', '_blank');
+    });
+  } else {
+    window.open('https://m.me/fragranzabd', '_blank');
+  }
+  showToast('Opening Messenger...');
 }
 
 function copyOrder() {
