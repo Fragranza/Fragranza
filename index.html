@@ -256,10 +256,10 @@ function renderCatalog() {
       const badges = (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
       const btns = SIZES.map(s => {
         const pr = p.prices[s];
-        if (!pr) return '<div></div>';
+        if (!pr || pr === 0) return '<div></div>';
         return '<button class="size-btn" onclick="addToOrder(' + p.id + ',' + s + ')" ' + (p.out ? 'disabled' : '') + '>' +
           '<span class="size-ml">' + s + 'ml</span>' +
-          '<span class="size-price">৳' + pr.toLocaleString() + '</span>' +
+          '<span class="size-price">' + (pr > 0 ? '৳' + pr.toLocaleString() : '—') + '</span>' +
           '</button>';
       }).join('');
       return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + '">' +
