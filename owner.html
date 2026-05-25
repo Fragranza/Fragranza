@@ -704,9 +704,9 @@ let perfumes = [
   { id:9, name:'Rayhaan Wolf', prices:{2:80,5:180,10:340,15:460,30:1000}, out:false, sale:false, offer:null, gender:'male' },
   { id:10, name:'Rayhaan Obsidian', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
   { id:11, name:'Rayhaan Lion', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
-  { id:12, name:'Lattafa Qaed Al Fursan', prices:{2:60,5:160,10:260,15:380,30:800}, out:false, sale:false, offer:null, gender:'unisex' },
+  { id:12, name:'Lattafa Qaed Al Fursan', prices:{2:60,5:160,10:260,15:380,30:0}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:13, name:'Hawas Kobra', prices:{2:100,5:240,10:420,15:600,30:1240}, out:false, sale:false, offer:null, gender:'male' },
-  { id:14, name:'Rasasi Fattan', prices:{2:120,5:300,10:540,15:780,30:1620}, out:false, sale:false, offer:null, gender:'male' },
+  { id:14, name:'Rasasi Fattan', prices:{2:120,5:300,10:540,15:780,30:0}, out:false, sale:false, offer:null, gender:'male' },
   { id:15, name:'Rayhaan Italia', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
   { id:16, name:'Rayhaan Nocturno Elixir', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
   { id:17, name:'Lattafa Dynasty', prices:{2:120,5:280,10:480,15:700,30:1460}, out:false, sale:false, offer:null, gender:'male' },
@@ -724,7 +724,7 @@ let perfumes = [
   { id:30, name:'Khadlaj Dreams', prices:{2:100,5:220,10:400,15:580,30:1200}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:31, name:'Club de Nuit EDT', prices:{2:120,5:280,10:480,15:700,30:1460}, out:false, sale:false, offer:null, gender:'male' },
   { id:32, name:'JPG Le Beau EDT', prices:{2:200,5:480,10:860,15:1220,30:2580}, out:false, sale:false, offer:null, gender:'male' },
-  { id:33, name:'Lattafa Opulent Dubai', prices:{2:80,5:160,10:280,15:400,30:840}, out:false, sale:false, offer:null, gender:'unisex' },
+  { id:33, name:'Lattafa Opulent Dubai', prices:{2:80,5:160,10:280,15:400,30:0}, out:false, sale:false, offer:null, gender:'unisex' },
 ];
 let nextId = 34;
 
@@ -859,7 +859,7 @@ function renderCatalog() {
     const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
     const btns = SIZES.map(s => {
       const pr = p.prices[s];
-      if (!pr && pr !== 0) return `<div></div>`;
+      if (!pr) return `<div></div>`;
       const ep = effectivePrice(p, s);
       const isOffer = ep !== pr;
       return `<button class="size-btn" onclick="addToOrder(${p.id},${s})" ${p.out ? 'disabled' : ''}>
@@ -1323,137 +1323,151 @@ function generateCard() {
   const sorted = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
   const today = new Date();
   const dateStr = today.getDate() + '-' + today.toLocaleString('en',{month:'short'}) + '-' + String(today.getFullYear()).slice(2);
-  const W = 1200, H = 630;
-  const canvas = document.getElementById('price-canvas');
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
 
-  // Check if any perfume has an active offer
   const hasAnyOffer = sorted.some(p => p.offer && (
     (p.offer.pct && Object.values(p.offer.pct).some(v=>v>0)) ||
     (p.offer.manual && Object.values(p.offer.manual).some(v=>v>0))
   ));
 
-  ctx.fillStyle = '#f5f3ef';
+  const ROW_H = 30;
+  const HEADER_H = 46;
+  const TITLE_H = 56;
+  const FOOTER_H = 32;
+  const W = 1400;
+  const H = TITLE_H + HEADER_H + ROW_H * sorted.length + FOOTER_H + 10;
+
+  const canvas = document.getElementById('price-canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, W, H);
 
-  const SIDEBAR_W = 72;
+  // Title bar
   ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(0, 0, SIDEBAR_W, H);
+  ctx.fillRect(0, 0, W, TITLE_H);
   ctx.fillStyle = '#c8a96e';
-  ctx.fillRect(SIDEBAR_W - 3, 0, 3, H);
-
-  ctx.save();
-  ctx.translate(SIDEBAR_W/2, H/2);
-  ctx.rotate(-Math.PI/2);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 22px Georgia, serif';
+  ctx.font = 'bold 26px Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('FRAGRANZA', 22, 36);
+  ctx.fillStyle = '#888888';
+  ctx.font = '12px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('FRAGRANZA', 0, 0);
-  ctx.restore();
+  ctx.fillText('DECANT PRICE LIST — All prices in BDT', W/2, 36);
+  ctx.fillStyle = '#888888';
+  ctx.textAlign = 'right';
+  ctx.fillText('Last Updated: ' + dateStr, W - 18, 36);
 
+  // Column layout
+  const PAD = 14;
+  const TABLE_X = PAD;
+  const TABLE_W = W - PAD * 2;
+  const slW = 40;
+  const offerW = hasAnyOffer ? 90 : 0;
+  const priceW = Math.floor((TABLE_W - slW - offerW) / 6);
+  const nameW = TABLE_W - slW - priceW * 5 - offerW;
+
+  const colX = [
+    TABLE_X,
+    TABLE_X + slW,
+    TABLE_X + slW + nameW,
+    TABLE_X + slW + nameW + priceW,
+    TABLE_X + slW + nameW + priceW*2,
+    TABLE_X + slW + nameW + priceW*3,
+    TABLE_X + slW + nameW + priceW*4,
+  ];
+  if (hasAnyOffer) colX.push(TABLE_X + slW + nameW + priceW*5);
+
+  const HEADERS = ['SL', 'Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml'];
+  if (hasAnyOffer) HEADERS.push('Offer');
+  const colWidths = [slW, nameW, priceW, priceW, priceW, priceW, priceW];
+  if (hasAnyOffer) colWidths.push(offerW);
+
+  // Header row
+  const hY = TITLE_H;
+  ctx.fillStyle = '#2c2c2c';
+  ctx.fillRect(TABLE_X, hY, TABLE_W, HEADER_H);
   ctx.fillStyle = '#c8a96e';
-  ctx.font = 'bold 8px Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('2026', SIDEBAR_W/2, H - 16);
+  ctx.fillRect(TABLE_X, hY + HEADER_H - 2, TABLE_W, 2);
 
-  const TABLE_X = SIDEBAR_W + 6;
-  const TABLE_W = W - TABLE_X - 8;
-  const TABLE_Y = 8;
-
-  // Columns — offer column only if any perfume has an offer
-  const COLS = hasAnyOffer
-    ? ['Perfume Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml', 'Offer']
-    : ['Perfume Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml'];
-  const COL_W_BASE = hasAnyOffer
-    ? [220, 78, 78, 78, 78, 78, 90]
-    : [260, 88, 88, 88, 88, 88];
-
-  const totalCols = COL_W_BASE.reduce((a,b)=>a+b,0);
-  const scaleX = TABLE_W / totalCols;
-  const scaledW = COL_W_BASE.map(w => Math.round(w * scaleX));
-  scaledW[0] += TABLE_W - scaledW.reduce((a,b)=>a+b,0);
-
-  // Header bar
-  ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(TABLE_X, TABLE_Y, TABLE_W, 46);
-
-  let hx = TABLE_X;
-  COLS.forEach((h, i) => {
-    ctx.fillStyle = (hasAnyOffer && i === 6) ? '#c8a96e' : '#f0ede8';
-    ctx.font = 'bold 17px Arial, sans-serif';
-    ctx.textAlign = i === 0 ? 'left' : 'center';
-    ctx.fillText(h, i === 0 ? hx + 10 : hx + scaledW[i]/2, TABLE_Y + 30);
-    hx += scaledW[i];
+  HEADERS.forEach((h, i) => {
+    ctx.fillStyle = i === 0 ? '#777777' : '#ffffff';
+    ctx.font = 'bold 14px Arial, sans-serif';
+    ctx.textAlign = i === 1 ? 'left' : 'center';
+    const tx = i === 1 ? colX[i] + 12 : colX[i] + colWidths[i]/2;
+    ctx.fillText(h, tx, hY + HEADER_H/2 + 5);
   });
 
-  const availH = H - TABLE_Y - 46 - 30;
-  const ROW_H = Math.min(Math.floor(availH / sorted.length), 44);
-  const startY = TABLE_Y + 46;
-
-  sorted.forEach((p, rowIdx) => {
-    const ry = startY + rowIdx * ROW_H;
-    ctx.fillStyle = rowIdx % 2 === 0 ? '#f9f8f5' : '#ffffff';
+  // Data rows
+  sorted.forEach((p, idx) => {
+    const ry = TITLE_H + HEADER_H + idx * ROW_H;
+    ctx.fillStyle = idx % 2 === 0 ? '#f8f7f4' : '#ffffff';
     ctx.fillRect(TABLE_X, ry, TABLE_W, ROW_H);
 
-    const badgeTxt = hasAnyOffer ? offerBadgeText(p) : '';
-    if (hasAnyOffer && badgeTxt) {
-      const offerX = TABLE_X + scaledW.slice(0,-1).reduce((a,b)=>a+b,0);
-      ctx.fillStyle = '#fff0f0';
-      ctx.fillRect(offerX, ry, scaledW[scaledW.length-1], ROW_H);
+    if (hasAnyOffer && offerBadgeText(p)) {
+      ctx.fillStyle = '#fff3f3';
+      ctx.fillRect(colX[colX.length-1], ry, offerW, ROW_H);
     }
 
-    let cx = TABLE_X;
+    // SL
+    ctx.fillStyle = '#aaaaaa';
+    ctx.font = '12px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(idx+1), colX[0] + slW/2, ry + ROW_H/2 + 4);
 
     // Name
-    ctx.fillStyle = p.out ? '#ee6b6e' : '#1a1a1a';
+    ctx.fillStyle = p.out ? '#e05555' : '#1a1a1a';
+    ctx.font = p.out ? 'italic 13px Arial, sans-serif' : '13px Arial, sans-serif';
     ctx.textAlign = 'left';
-    const nameStr = p.name + (p.out ? ' (Out)' : '');
-    const maxNameW = scaledW[0] - 20;
+    let displayName = p.name + (p.out ? ' (Out)' : '');
     ctx.font = '13px Arial, sans-serif';
-    if (ctx.measureText(nameStr).width > maxNameW) {
-      const words = nameStr.split(' ');
-      let l1 = '', l2 = '', done = false;
-      words.forEach(w => { if (!done && ctx.measureText(l1+w+' ').width < maxNameW) l1+=w+' '; else { done=true; l2+=w+' '; } });
-      ctx.font = '14px Arial, sans-serif';
-      ctx.fillText(l1.trim(), cx+10, ry + ROW_H/2 - 5);
-      ctx.fillText(l2.trim(), cx+10, ry + ROW_H/2 + 11);
-    } else {
-      ctx.font = '16px Arial, sans-serif';
-      ctx.fillText(nameStr, cx+10, ry + ROW_H/2 + 4);
+    while (ctx.measureText(displayName).width > nameW - 20 && displayName.length > 8) {
+      displayName = displayName.slice(0, -4) + '...';
     }
-    cx += scaledW[0];
+    ctx.fillText(displayName, colX[1] + 12, ry + ROW_H/2 + 4);
 
     // Prices
     [2,5,10,15,30].forEach((s, si) => {
       const pr = p.prices[s];
       const ep = effectivePrice(p, s);
+      const cx = colX[si+2] + colWidths[si+2]/2;
       ctx.textAlign = 'center';
       if (ep !== pr) {
-        ctx.fillStyle = '#aaaaaa';
+        ctx.fillStyle = '#bbbbbb';
         ctx.font = '10px Arial, sans-serif';
-        ctx.fillText('৳' + pr.toLocaleString(), cx + scaledW[si+1]/2, ry + ROW_H/2 - 2);
-        ctx.fillStyle = '#2a7a3a';
-        ctx.font = 'bold 13px Arial, sans-serif';
-        ctx.fillText('৳' + ep.toLocaleString(), cx + scaledW[si+1]/2, ry + ROW_H/2 + 10);
+        const origTxt = pr.toLocaleString();
+        const tw = ctx.measureText(origTxt).width;
+        ctx.fillText(origTxt, cx, ry + ROW_H/2 - 3);
+        ctx.strokeStyle = '#bbbbbb';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(cx - tw/2, ry + ROW_H/2 - 6);
+        ctx.lineTo(cx + tw/2, ry + ROW_H/2 - 6);
+        ctx.stroke();
+        ctx.fillStyle = '#1a7a3a';
+        ctx.font = 'bold 12px Arial, sans-serif';
+        ctx.fillText(ep.toLocaleString(), cx, ry + ROW_H/2 + 10);
       } else {
         ctx.fillStyle = pr ? '#333333' : '#cccccc';
-        ctx.font = '16px Arial, sans-serif';
-        ctx.fillText(pr ? pr.toLocaleString() : '-', cx + scaledW[si+1]/2, ry + ROW_H/2 + 4);
+        ctx.font = '14px Arial, sans-serif';
+        ctx.fillText(pr ? pr.toLocaleString() : '—', cx, ry + ROW_H/2 + 4);
       }
-      cx += scaledW[si+1];
     });
 
-    // Offer badge column
-    if (hasAnyOffer && badgeTxt) {
-      ctx.fillStyle = '#cc3333';
-      ctx.font = 'bold 15px Arial, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(badgeTxt, cx + scaledW[scaledW.length-1]/2, ry + ROW_H/2 + 4);
+    // Offer
+    if (hasAnyOffer) {
+      const badge = offerBadgeText(p);
+      if (badge) {
+        ctx.fillStyle = '#cc3333';
+        ctx.font = 'bold 12px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(badge, colX[colX.length-1] + offerW/2, ry + ROW_H/2 + 4);
+      }
     }
 
     // Row divider
-    ctx.strokeStyle = '#e4e0d8';
+    ctx.strokeStyle = '#eae6de';
     ctx.lineWidth = 0.5;
     ctx.beginPath();
     ctx.moveTo(TABLE_X, ry + ROW_H);
@@ -1464,30 +1478,30 @@ function generateCard() {
   // Column dividers
   ctx.strokeStyle = '#dedad2';
   ctx.lineWidth = 0.5;
-  let dvx = TABLE_X + scaledW[0];
-  for (let i = 1; i < scaledW.length; i++) {
-    ctx.beginPath(); ctx.moveTo(dvx, TABLE_Y+46); ctx.lineTo(dvx, startY+sorted.length*ROW_H); ctx.stroke();
-    dvx += scaledW[i];
-  }
+  colX.slice(1).forEach(x => {
+    ctx.beginPath();
+    ctx.moveTo(x, TITLE_H + HEADER_H);
+    ctx.lineTo(x, TITLE_H + HEADER_H + sorted.length * ROW_H);
+    ctx.stroke();
+  });
 
-  // Table border
+  // Outer border
   ctx.strokeStyle = '#c8a96e';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(TABLE_X, TABLE_Y, TABLE_W, sorted.length * ROW_H + 46);
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(TABLE_X, TITLE_H, TABLE_W, HEADER_H + sorted.length * ROW_H);
 
   // Footer
-  ctx.fillStyle = '#999999';
-  ctx.font = '10px Arial, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('Prices in BDT — Subject to change without prior notice', TABLE_X, H - 10);
-  ctx.textAlign = 'right';
-  ctx.fillText('Last Updated: ' + dateStr, W - 14, H - 10);
+  const footY = TITLE_H + HEADER_H + sorted.length * ROW_H + 10;
+  ctx.fillStyle = '#aaaaaa';
+  ctx.font = '11px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Prices in BDT — Subject to change without prior notice — Fragranza Decant', W/2, footY + 12);
 
   const img = document.getElementById('card-img');
   img.src = canvas.toDataURL('image/png');
   document.getElementById('card-preview').style.display = 'block';
   document.getElementById('download-btn').disabled = false;
-  showToast('Image generated!');
+  showToast('Price card ready!');
 }
 function downloadCard() {
   generateCard();
