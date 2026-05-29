@@ -612,6 +612,11 @@ body {
 .osr-final { font-size: 12px; font-weight: 500; color: var(--muted); text-align: right; }
 .osr-final-active { color: #7ec98e; }
 
+
+/* Paste order */
+#paste-input::placeholder { color: var(--muted); }
+#paste-input:focus { border-color: var(--border2) !important; }
+
 .no-results { text-align: center; padding: 40px 0; color: var(--muted); font-size: 14px; }
 </style>
 </head>
@@ -651,8 +656,45 @@ body {
 
   <!-- ORDER -->
   <div class="page" id="page-order">
+    <div id="paste-order-section" style="margin-bottom:12px;">
+      <button onclick="togglePasteBox()" id="paste-toggle-btn" style="width:100%;background:rgba(200,169,110,0.08);border:0.5px solid rgba(200,169,110,0.3);border-radius:var(--radius-sm);padding:11px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        Paste Customer Order
+      </button>
+      <div id="paste-box" style="display:none;margin-top:8px;">
+        <textarea id="paste-input" placeholder="Paste customer's copied order here..." style="width:100%;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;min-height:120px;outline:none;line-height:1.6;" oninput="this.style.borderColor='var(--border2)'"></textarea>
+        <button onclick="importPastedOrder()" style="width:100%;background:var(--accent);border:none;border-radius:var(--radius-sm);padding:11px;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-top:6px;">Import Order</button>
+      </div>
+    </div>
     <div id="order-list"></div>
     <div id="order-summary"></div>
+    <!-- Custom item -->
+    <div id="custom-item-section" style="margin-top:10px;">
+      <button onclick="toggleCustomBox()" id="custom-toggle-btn" style="width:100%;background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        Add Custom Item
+      </button>
+      <div id="custom-box" style="display:none;margin-top:8px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:0.05em;text-transform:uppercase;">Item name</label>
+          <input id="custom-name" type="text" placeholder="e.g. Aether Extrait 6ml sprayer" autocomplete="off"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;" />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:0.05em;text-transform:uppercase;">Price (৳)</label>
+            <input id="custom-price" type="number" min="0" placeholder="0" inputmode="numeric"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;outline:none;text-align:center;" />
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:0.05em;text-transform:uppercase;">Qty</label>
+            <input id="custom-qty" type="number" min="1" value="1" placeholder="1" inputmode="numeric"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;text-align:center;" />
+          </div>
+        </div>
+        <button onclick="addCustomItem()" style="width:100%;background:var(--accent);border:none;border-radius:var(--radius-sm);padding:11px;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;">Add to Order</button>
+      </div>
+    </div>
   </div>
 
   <!-- MANAGE -->
@@ -924,8 +966,8 @@ function renderOrder() {
   listEl.innerHTML = order.map((o, i) => `
     <div class="order-item">
       <div class="oi-info">
-        <div class="oi-name">${esc(o.name)}</div>
-        <div class="oi-size">${o.size} ml</div>
+        <div class="oi-name" style="${o.custom ? 'color:var(--accent2);' : ''}">${esc(o.name)}</div>
+        <div class="oi-size">${o.custom ? 'Custom item' : o.size + ' ml'}</div>
       </div>
       <div class="oi-price">৳${o.price.toLocaleString()}</div>
       <button class="oi-remove" onclick="removeFromOrder(${i})" aria-label="Remove">
@@ -939,10 +981,11 @@ function renderOrder() {
 
   // group for item list
   const map = {};
-  order.forEach(o => {
-    const k = o.pid + '-' + o.size;
-    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
-    map[k].qty++;
+  order.forEach((o, i) => {
+    const k = o.custom ? 'custom-' + i + '-' + o.price : o.pid + '-' + o.size;
+    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0, custom: o.custom };
+    if (!o.custom) map[k].qty++;
+    else map[k].qty = (map[k].qty || 0) + 1;
   });
   const itemRows = Object.values(map).map(g =>
     `<div class="sum-row"><span>${esc(g.name)} ${g.size}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
@@ -1109,7 +1152,9 @@ function getOrderLines() {
     map[k].qty++;
   });
   return Object.values(map).map(g =>
-    `• ${g.name} ${g.size}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
+    g.custom
+      ? `• ${g.name}${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
+      : `• ${g.name} ${g.size}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
   );
 }
 
@@ -1552,6 +1597,150 @@ function fallbackCopy(text) {
   try { document.execCommand('copy'); showToast('Price list copied!'); }
   catch(e) { showToast('Could not copy'); }
   document.body.removeChild(ta);
+}
+
+
+/* ---- PASTE ORDER ---- */
+function togglePasteBox() {
+  const box = document.getElementById('paste-box');
+  const btn = document.getElementById('paste-toggle-btn');
+  const open = box.style.display === 'none';
+  box.style.display = open ? 'block' : 'none';
+  btn.style.background = open ? 'rgba(200,169,110,0.15)' : 'rgba(200,169,110,0.08)';
+  if (open) document.getElementById('paste-input').focus();
+}
+
+function importPastedOrder() {
+  const text = document.getElementById('paste-input').value.trim();
+  if (!text) { showToast('Paste an order first'); return; }
+
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const imported = [];
+  const notFound = [];
+  const mismatches = [];
+
+  lines.forEach(line => {
+    // Match: - Hawas Ice 5ml — ৳260  or  • Hawas Ice 5ml x2 — ৳520
+    const match = line.match(/[-•]?\s*(.+?)\s+(\d+)ml(?:\s*[x×](\d+))?(?:\s*[—-]+\s*৳([\d,]+))?/i);
+    if (!match) return;
+
+    const rawName = match[1].trim();
+    const size = parseInt(match[2]);
+    const qty = parseInt(match[3] || '1');
+    const claimedPrice = match[4] ? parseInt(match[4].replace(/,/g, '')) : null;
+
+    const perfume = perfumes.find(p =>
+      p.name.toLowerCase() === rawName.toLowerCase() ||
+      p.name.toLowerCase().includes(rawName.toLowerCase()) ||
+      rawName.toLowerCase().includes(p.name.toLowerCase().split(' ')[0].toLowerCase())
+    );
+
+    if (perfume && SIZES.includes(size)) {
+      const correctPrice = effectivePrice(perfume, size);
+      const unitPrice = claimedPrice && qty > 1 ? Math.round(claimedPrice / qty) : claimedPrice;
+
+      // Check mismatch
+      if (unitPrice && unitPrice !== correctPrice) {
+        mismatches.push({
+          name: perfume.name,
+          size,
+          claimed: unitPrice,
+          correct: correctPrice
+        });
+      }
+
+      for (let i = 0; i < qty; i++) {
+        imported.push({ pid: perfume.id, size, price: correctPrice, name: perfume.name });
+      }
+    } else if (line.startsWith('-') || line.startsWith('•')) {
+      notFound.push(rawName + ' ' + size + 'ml');
+    }
+  });
+
+  if (!imported.length) {
+    showToast('Could not read order — check format');
+    return;
+  }
+
+  order = imported;
+  updateBadge();
+
+  document.getElementById('paste-input').value = '';
+  document.getElementById('paste-box').style.display = 'none';
+  document.getElementById('paste-toggle-btn').style.background = 'rgba(200,169,110,0.08)';
+
+  renderOrder();
+
+  // Show mismatch warning
+  if (mismatches.length > 0) {
+    const mismatchHtml = mismatches.map(m =>
+      `<div style="padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px;">
+        <span style="color:var(--text);">${esc(m.name)} ${m.size}ml</span><br>
+        <span style="color:var(--danger);">Customer said ৳${m.claimed.toLocaleString()}</span>
+        <span style="color:var(--muted);"> → </span>
+        <span style="color:#7ec98e;">Correct price ৳${m.correct.toLocaleString()}</span>
+      </div>`
+    ).join('');
+
+    // Insert warning above order list
+    const warning = document.createElement('div');
+    warning.id = 'mismatch-warning';
+    warning.style.cssText = 'background:rgba(224,85,85,0.08);border:0.5px solid rgba(224,85,85,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;';
+    warning.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:12px;font-weight:500;color:var(--danger);">⚠ Price mismatch detected (${mismatches.length})</span>
+        <button onclick="document.getElementById('mismatch-warning').remove()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">✕</button>
+      </div>
+      <div style="border-top:0.5px solid var(--border);padding-top:6px;">${mismatchHtml}</div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px;">Order has been filled with your correct prices.</p>
+    `;
+    const existingWarning = document.getElementById('mismatch-warning');
+    if (existingWarning) existingWarning.remove();
+    const orderList = document.getElementById('order-list');
+    orderList.parentNode.insertBefore(warning, orderList);
+    showToast('⚠ ' + mismatches.length + ' price mismatch' + (mismatches.length > 1 ? 'es' : '') + ' found!');
+  } else {
+    showToast('Imported ' + imported.length + ' item' + (imported.length !== 1 ? 's' : '') + '!');
+  }
+}
+
+
+/* ---- CUSTOM ITEM ---- */
+function toggleCustomBox() {
+  const box = document.getElementById('custom-box');
+  const btn = document.getElementById('custom-toggle-btn');
+  const open = box.style.display === 'none';
+  box.style.display = open ? 'block' : 'none';
+  btn.style.background = open ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)';
+  btn.style.color = open ? 'var(--text)' : 'var(--muted)';
+  if (open) document.getElementById('custom-name').focus();
+}
+
+function addCustomItem() {
+  const name = document.getElementById('custom-name').value.trim();
+  const price = parseInt(document.getElementById('custom-price').value) || 0;
+  const qty = parseInt(document.getElementById('custom-qty').value) || 1;
+
+  if (!name) { showToast('Enter item name'); return; }
+  if (!price) { showToast('Enter a price'); return; }
+
+  for (let i = 0; i < qty; i++) {
+    order.push({ pid: 'custom', size: null, price, name, custom: true });
+  }
+  updateBadge();
+
+  // Clear inputs
+  document.getElementById('custom-name').value = '';
+  document.getElementById('custom-price').value = '';
+  document.getElementById('custom-qty').value = '1';
+
+  // Close box
+  document.getElementById('custom-box').style.display = 'none';
+  document.getElementById('custom-toggle-btn').style.background = 'rgba(255,255,255,0.03)';
+  document.getElementById('custom-toggle-btn').style.color = 'var(--muted)';
+
+  renderOrder();
+  showToast(name + ' added!');
 }
 
 /* ---- UTILS ---- */
