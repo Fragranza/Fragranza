@@ -1616,49 +1616,75 @@ function importPastedOrder() {
 
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const imported = [];
-  const notFound = [];
   const mismatches = [];
 
   lines.forEach(line => {
-    // Match: - Hawas Ice 5ml — ৳260  or  • Hawas Ice 5ml x2 — ৳520
-    const match = line.match(/[-•]?\s*(.+?)\s+(\d+)ml(?:\s*[x×](\d+))?(?:\s*[—-]+\s*৳([\d,]+))?/i);
-    if (!match) return;
+    // Skip summary/total lines
+    if (/total|subtotal|delivery|advance|due|perfume total/i.test(line)) return;
 
-    const rawName = match[1].trim();
-    const size = parseInt(match[2]);
-    const qty = parseInt(match[3] || '1');
-    const claimedPrice = match[4] ? parseInt(match[4].replace(/,/g, '')) : null;
+    // Extract size: any number followed by ml
+    const sizeMatch = line.match(/(\d+)\s*ml/i);
+    if (!sizeMatch) return;
+    const size = parseInt(sizeMatch[1]);
+    if (!SIZES.includes(size)) return;
 
-    const perfume = perfumes.find(p =>
-      p.name.toLowerCase() === rawName.toLowerCase() ||
-      p.name.toLowerCase().includes(rawName.toLowerCase()) ||
-      rawName.toLowerCase().includes(p.name.toLowerCase().split(' ')[0].toLowerCase())
-    );
+    // Extract price: any ৳ followed by digits (with optional commas)
+    const priceMatch = line.match(/৳([\d,]+)/);
+    const claimedPrice = priceMatch ? parseInt(priceMatch[1].replace(/,/g, '')) : null;
 
-    if (perfume && SIZES.includes(size)) {
+    // Extract qty: x2 or ×2 anywhere in line
+    const qtyMatch = line.match(/[x×]\s*(\d+)/i);
+    const qty = qtyMatch ? parseInt(qtyMatch[1]) : 1;
+
+    // Extract name: everything before the size mention, strip leading -•* chars
+    let rawName = line.split(/\d+\s*ml/i)[0]
+      .replace(/^[-•*\s]+/, '')
+      .replace(/[—–-]+.*$/, '')
+      .trim();
+
+    // Remove trailing x2 or ×2 from name
+    rawName = rawName.replace(/[x×]\s*\d+\s*$/i, '').trim();
+
+    if (!rawName) return;
+
+    // Fuzzy match against perfume list
+    const perfume = perfumes.find(p => {
+      const pn = p.name.toLowerCase();
+      const rn = rawName.toLowerCase();
+      return pn === rn ||
+        pn.includes(rn) ||
+        rn.includes(pn) ||
+        // word overlap: if 2+ words match
+        pn.split(' ').filter(w => w.length > 2 && rn.includes(w)).length >= 2 ||
+        rn.split(' ').filter(w => w.length > 2 && pn.includes(w)).length >= 2;
+    });
+
+    if (perfume) {
       const correctPrice = effectivePrice(perfume, size);
-      const unitPrice = claimedPrice && qty > 1 ? Math.round(claimedPrice / qty) : claimedPrice;
-
-      // Check mismatch
-      if (unitPrice && unitPrice !== correctPrice) {
-        mismatches.push({
+      // Check mismatch — for qty orders divide total price
+      const unitClaimed = claimedPrice && qty > 1 ? Math.round(claimedPrice / qty) : claimedPrice;
+      if (unitClaimed && unitClaimed !== correctPrice) {
+        mismatches.push({ name: perfume.name, size, claimed: unitClaimed, correct: correctPrice });
+      }
+      for (let i = 0; i < qty; i++) {
+        imported.push({
+          pid: perfume.id, size,
+          price: correctPrice,
           name: perfume.name,
-          size,
-          claimed: unitPrice,
-          correct: correctPrice
+          custom: false
         });
       }
-
+    } else {
+      // Unknown perfume — add as custom item with claimed price
+      const price = claimedPrice && qty > 1 ? Math.round(claimedPrice / qty) : (claimedPrice || 0);
       for (let i = 0; i < qty; i++) {
-        imported.push({ pid: perfume.id, size, price: correctPrice, name: perfume.name });
+        imported.push({ pid: 'custom', size, price, name: rawName + ' ' + size + 'ml', custom: true });
       }
-    } else if (line.startsWith('-') || line.startsWith('•')) {
-      notFound.push(rawName + ' ' + size + 'ml');
     }
   });
 
   if (!imported.length) {
-    showToast('Could not read order — check format');
+    showToast('Could not read order — try again');
     return;
   }
 
@@ -1671,40 +1697,34 @@ function importPastedOrder() {
 
   renderOrder();
 
-  // Show mismatch warning
   if (mismatches.length > 0) {
     const mismatchHtml = mismatches.map(m =>
       `<div style="padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px;">
         <span style="color:var(--text);">${esc(m.name)} ${m.size}ml</span><br>
         <span style="color:var(--danger);">Customer said ৳${m.claimed.toLocaleString()}</span>
         <span style="color:var(--muted);"> → </span>
-        <span style="color:#7ec98e;">Correct price ৳${m.correct.toLocaleString()}</span>
+        <span style="color:#7ec98e;">Your price ৳${m.correct.toLocaleString()}</span>
       </div>`
     ).join('');
-
-    // Insert warning above order list
     const warning = document.createElement('div');
     warning.id = 'mismatch-warning';
     warning.style.cssText = 'background:rgba(224,85,85,0.08);border:0.5px solid rgba(224,85,85,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;';
     warning.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:12px;font-weight:500;color:var(--danger);">⚠ Price mismatch detected (${mismatches.length})</span>
+        <span style="font-size:12px;font-weight:500;color:var(--danger);">⚠ Price mismatch (${mismatches.length})</span>
         <button onclick="document.getElementById('mismatch-warning').remove()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">✕</button>
       </div>
       <div style="border-top:0.5px solid var(--border);padding-top:6px;">${mismatchHtml}</div>
-      <p style="font-size:11px;color:var(--muted);margin-top:8px;">Order has been filled with your correct prices.</p>
-    `;
-    const existingWarning = document.getElementById('mismatch-warning');
-    if (existingWarning) existingWarning.remove();
+      <p style="font-size:11px;color:var(--muted);margin-top:8px;">Order filled with your correct prices.</p>`;
+    const existing = document.getElementById('mismatch-warning');
+    if (existing) existing.remove();
     const orderList = document.getElementById('order-list');
     orderList.parentNode.insertBefore(warning, orderList);
-    showToast('⚠ ' + mismatches.length + ' price mismatch' + (mismatches.length > 1 ? 'es' : '') + ' found!');
+    showToast('⚠ ' + mismatches.length + ' price mismatch' + (mismatches.length > 1 ? 'es' : '') + '!');
   } else {
     showToast('Imported ' + imported.length + ' item' + (imported.length !== 1 ? 's' : '') + '!');
   }
 }
-
-
 /* ---- CUSTOM ITEM ---- */
 function toggleCustomBox() {
   const box = document.getElementById('custom-box');
