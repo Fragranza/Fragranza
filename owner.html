@@ -675,24 +675,62 @@ body {
         Add Custom Item
       </button>
       <div id="custom-box" style="display:none;margin-top:8px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+
+        <!-- Section A: From perfume list -->
+        <div style="font-size:11px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">From Price List</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Perfume</label>
+            <select id="custom-perfume" onchange="onCustomPerfumeChange()"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+              <option value="">— Select —</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Size</label>
+            <select id="custom-ml" onchange="onCustomMlChange()"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+              <option value="">— ml —</option>
+              <option value="2">2 ml</option>
+              <option value="5">5 ml</option>
+              <option value="10">10 ml</option>
+              <option value="15">15 ml</option>
+              <option value="30">30 ml</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Price (৳) <span id="custom-auto-price" style="color:var(--accent);font-size:10px;"></span></label>
+            <input id="custom-price" type="number" min="0" placeholder="Auto / override" inputmode="numeric"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;outline:none;text-align:center;" />
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Qty</label>
+            <input id="custom-qty" type="number" min="1" value="1" inputmode="numeric"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;text-align:center;" />
+          </div>
+        </div>
         <div style="margin-bottom:10px;">
-          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:0.05em;text-transform:uppercase;">Item name</label>
-          <input id="custom-name" type="text" placeholder="e.g. Aether Extrait 6ml sprayer" autocomplete="off"
-            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;" />
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Note (optional)</label>
+          <input id="custom-note" type="text" placeholder="e.g. 6ml sprayer bottle, special packaging..."
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;" />
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-          <div>
-            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:0.05em;text-transform:uppercase;">Price (৳)</label>
-            <input id="custom-price" type="number" min="0" placeholder="0" inputmode="numeric"
-              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;outline:none;text-align:center;" />
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:0.05em;text-transform:uppercase;">Qty</label>
-            <input id="custom-qty" type="number" min="1" value="1" placeholder="1" inputmode="numeric"
-              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;text-align:center;" />
-          </div>
+        <button onclick="addCustomItem()" style="width:100%;background:var(--accent);border:none;border-radius:var(--radius-sm);padding:11px;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:12px;">Add to Order</button>
+
+        <!-- Section B: Freeform note/charge -->
+        <div style="font-size:11px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-top:0.5px solid var(--border);padding-top:12px;">Additional Note / Charge</div>
+        <div style="margin-bottom:8px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Note / Item name</label>
+          <input id="extra-note-name" type="text" placeholder="e.g. Gift wrapping, Express delivery..."
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;" />
         </div>
-        <button onclick="addCustomItem()" style="width:100%;background:var(--accent);border:none;border-radius:var(--radius-sm);padding:11px;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;">Add to Order</button>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Price (৳) — leave 0 for note only</label>
+          <input id="extra-note-price" type="number" min="0" value="0" inputmode="numeric"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;outline:none;text-align:center;" />
+        </div>
+        <button onclick="addExtraNote()" style="width:100%;background:none;border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Add Note / Charge</button>
       </div>
     </div>
   </div>
@@ -767,8 +805,10 @@ let perfumes = [
   { id:31, name:'Club de Nuit EDT', prices:{2:120,5:280,10:480,15:700,30:1460}, out:false, sale:false, offer:null, gender:'male' },
   { id:32, name:'JPG Le Beau EDT', prices:{2:200,5:480,10:860,15:1220,30:2580}, out:false, sale:false, offer:null, gender:'male' },
   { id:33, name:'Lattafa Opulent Dubai', prices:{2:80,5:160,10:280,15:400,30:0}, out:false, sale:false, offer:null, gender:'unisex' },
+  { id:34, name:'CK One EDT', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'unisex' },
+  { id:35, name:'Rayhaan Tiger', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
 ];
-let nextId = 34;
+let nextId = 36;
 
 // ── GitHub Sync Config ──────────────────────────────────────────────────────
 const GH_TOKEN  = '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';
@@ -1733,34 +1773,75 @@ function toggleCustomBox() {
   box.style.display = open ? 'block' : 'none';
   btn.style.background = open ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)';
   btn.style.color = open ? 'var(--text)' : 'var(--muted)';
-  if (open) document.getElementById('custom-name').focus();
+  if (open) {
+    // Populate perfume dropdown
+    const sel = document.getElementById('custom-perfume');
+    const sorted = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
+    sel.innerHTML = '<option value="">— Select perfume —</option>' +
+      sorted.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  }
+}
+
+function onCustomPerfumeChange() {
+  const pid = parseInt(document.getElementById('custom-perfume').value);
+  const ml = parseInt(document.getElementById('custom-ml').value);
+  if (pid && ml) {
+    const p = perfumes.find(x => x.id === pid);
+    if (p) {
+      const ep = effectivePrice(p, ml);
+      document.getElementById('custom-price').value = ep;
+      document.getElementById('custom-auto-price').textContent = '(auto)';
+    }
+  }
+}
+
+function onCustomMlChange() {
+  onCustomPerfumeChange();
 }
 
 function addCustomItem() {
-  const name = document.getElementById('custom-name').value.trim();
+  const pid = parseInt(document.getElementById('custom-perfume').value) || null;
+  const ml = parseInt(document.getElementById('custom-ml').value) || null;
   const price = parseInt(document.getElementById('custom-price').value) || 0;
   const qty = parseInt(document.getElementById('custom-qty').value) || 1;
+  const note = document.getElementById('custom-note').value.trim();
 
-  if (!name) { showToast('Enter item name'); return; }
+  if (!pid && !ml) { showToast('Select a perfume and size'); return; }
   if (!price) { showToast('Enter a price'); return; }
 
+  const perfume = pid ? perfumes.find(x => x.id === pid) : null;
+  const baseName = perfume ? perfume.name : 'Custom';
+  const sizePart = ml ? ' ' + ml + 'ml' : '';
+  const notePart = note ? ' (' + note + ')' : '';
+  const itemName = baseName + sizePart + notePart;
+
   for (let i = 0; i < qty; i++) {
-    order.push({ pid: 'custom', size: null, price, name, custom: true });
+    order.push({ pid: pid || 'custom', size: ml, price, name: itemName, custom: true });
   }
   updateBadge();
 
-  // Clear inputs
-  document.getElementById('custom-name').value = '';
+  // Clear
+  document.getElementById('custom-perfume').value = '';
+  document.getElementById('custom-ml').value = '';
   document.getElementById('custom-price').value = '';
   document.getElementById('custom-qty').value = '1';
-
-  // Close box
-  document.getElementById('custom-box').style.display = 'none';
-  document.getElementById('custom-toggle-btn').style.background = 'rgba(255,255,255,0.03)';
-  document.getElementById('custom-toggle-btn').style.color = 'var(--muted)';
+  document.getElementById('custom-note').value = '';
+  document.getElementById('custom-auto-price').textContent = '';
 
   renderOrder();
-  showToast(name + ' added!');
+  showToast(itemName + ' added!');
+}
+
+function addExtraNote() {
+  const name = document.getElementById('extra-note-name').value.trim();
+  const price = parseInt(document.getElementById('extra-note-price').value) || 0;
+  if (!name) { showToast('Enter a note or item name'); return; }
+  order.push({ pid: 'note', size: null, price, name, custom: true, isNote: true });
+  updateBadge();
+  document.getElementById('extra-note-name').value = '';
+  document.getElementById('extra-note-price').value = '0';
+  renderOrder();
+  showToast('Added: ' + name);
 }
 
 /* ---- UTILS ---- */
