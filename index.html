@@ -45,8 +45,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 /* Perfume cards */
 
 .p-display-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; color: var(--text); letter-spacing: 0.01em; line-height: 1.3; }
-.fragrantica-link { font-size: 11px; color: var(--muted); margin-top: 4px; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; opacity: 0.7; transition: opacity 0.15s; }
-.fragrantica-link:active { opacity: 1; color: var(--accent); }
+
 
 .p-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
 .p-card.out-of-stock{opacity:0.45;}
@@ -222,7 +221,6 @@ async function loadPerfumes() {
       offer: p.offer ? { pct: p.offer.pct || {}, manual: p.offer.manual || {} } : null,
       gender: p.gender || 'male',
       displayName: p.displayName || p.name,
-      fragrantica: p.fragrantica || ''
     }));
     renderCatalog();
   } catch(e) {
@@ -277,16 +275,10 @@ function renderCatalog() {
           '<span class="size-price">' + (pr > 0 ? '৳' + pr.toLocaleString() : '—') + '</span>' +
           '</button>';
       }).join('');
-      const fragLink = p.fragrantica
-        ? '<a href="' + p.fragrantica + '" target="_blank" rel="noopener" class="fragrantica-link">' +
-            '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
-            'View on Fragrantica</a>'
-        : '';
       return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + '">' +
         '<div class="p-header">' +
           '<div style="flex:1;min-width:0;">' +
             '<div class="p-display-name">' + esc(p.displayName || p.name) + '</div>' +
-            fragLink +
           '</div>' +
           (badges ? '<div class="badges" style="flex-shrink:0;">' + badges + '</div>' : '') +
         '</div>' +
