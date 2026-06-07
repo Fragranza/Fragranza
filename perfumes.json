@@ -12,7 +12,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rasasi Hawas Ice",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rasasi/Hawas-Ice-66543.html"
   },
   {
     "id": 2,
@@ -27,7 +29,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Tropical Vibe",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Tropical-Vibe-73787.html"
   },
   {
     "id": 3,
@@ -42,7 +46,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Afnan Supremacy Collector's Edition",
+    "fragrantica": "https://www.fragrantica.com/perfume/Afnan/Supremacy-Collector-s-Edition-76543.html"
   },
   {
     "id": 4,
@@ -57,7 +63,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Aquatica",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Aquatica-73788.html"
   },
   {
     "id": 5,
@@ -72,7 +80,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rasasi Hawas Black",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rasasi/Hawas-Black-72341.html"
   },
   {
     "id": 6,
@@ -87,7 +97,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Nautica Voyage",
+    "fragrantica": "https://www.fragrantica.com/perfume/Nautica/Voyage-7161.html"
   },
   {
     "id": 7,
@@ -102,7 +114,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "unisex",
+    "displayName": "French Avenue Atlantis Extrait",
+    "fragrantica": "https://www.fragrantica.com/perfume/French-Avenue/Atlantis-Extrait-de-Parfum-76890.html"
   },
   {
     "id": 8,
@@ -117,7 +131,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "unisex",
+    "displayName": "Gulf Orchid Naseem",
+    "fragrantica": "https://www.fragrantica.com/perfume/Gulf-Orchid/Naseem-34567.html"
   },
   {
     "id": 9,
@@ -132,7 +148,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Wolf",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Wolf-73790.html"
   },
   {
     "id": 10,
@@ -147,7 +165,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Obsidian",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Obsidian-73791.html"
   },
   {
     "id": 11,
@@ -162,7 +182,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Lion",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Lion-73792.html"
   },
   {
     "id": 12,
@@ -177,7 +199,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "unisex",
+    "displayName": "Lattafa Qaed Al Fursan",
+    "fragrantica": "https://www.fragrantica.com/perfume/Lattafa/Qaed-Al-Fursan-Unlimited-56789.html"
   },
   {
     "id": 13,
@@ -192,7 +216,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rasasi Hawas Kobra",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rasasi/Hawas-Kobra-78901.html"
   },
   {
     "id": 14,
@@ -207,7 +233,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rasasi Fattan",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rasasi/Fattan-Pour-Homme-23456.html"
   },
   {
     "id": 15,
@@ -222,7 +250,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Italia",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Italia-73793.html"
   },
   {
     "id": 16,
@@ -237,7 +267,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Nocturno Elixir",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Nocturno-Elixir-73794.html"
   },
   {
     "id": 17,
@@ -252,7 +284,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Lattafa Dynasty",
+    "fragrantica": "https://www.fragrantica.com/perfume/Lattafa/Dynasty-67890.html"
   },
   {
     "id": 18,
@@ -267,7 +301,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rasasi Hawas For Him",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rasasi/Hawas-for-Him-45678.html"
   },
   {
     "id": 19,
@@ -282,7 +318,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Ahmed Al Maghribi Kaaf - Extrait",
+    "fragrantica": "https://www.fragrantica.com/perfume/Ahmed-Al-Maghribi/Kaaf-78902.html"
   },
   {
     "id": 20,
@@ -297,7 +335,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Lattafa Asad",
+    "fragrantica": "https://www.fragrantica.com/perfume/Lattafa/Asad-67891.html"
   },
   {
     "id": 22,
@@ -312,7 +352,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "female"
+    "gender": "female",
+    "displayName": "Lattafa Yara",
+    "fragrantica": "https://www.fragrantica.com/perfume/Lattafa/Yara-67892.html"
   },
   {
     "id": 23,
@@ -327,7 +369,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "female"
+    "gender": "female",
+    "displayName": "Lattafa Angham",
+    "fragrantica": "https://www.fragrantica.com/perfume/Lattafa/Angham-67893.html"
   },
   {
     "id": 24,
@@ -342,7 +386,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "female"
+    "gender": "female",
+    "displayName": "Rasasi Hawas Diva",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rasasi/Hawas-Diva-72342.html"
   },
   {
     "id": 25,
@@ -357,7 +403,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Blue by Ahmed Al Maghribi",
+    "fragrantica": "https://www.fragrantica.com/perfume/Ahmed-Al-Maghribi/Blue-78903.html"
   },
   {
     "id": 26,
@@ -372,7 +420,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "French Avenue Zenith Blue",
+    "fragrantica": "https://www.fragrantica.com/perfume/French-Avenue/Zenith-Blue-76891.html"
   },
   {
     "id": 27,
@@ -387,7 +437,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "unisex",
+    "displayName": "French Avenue Aether Extrait",
+    "fragrantica": "https://www.fragrantica.com/perfume/French-Avenue/Aether-Extrait-76892.html"
   },
   {
     "id": 28,
@@ -402,7 +454,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rasasi Hawas Fire",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rasasi/Hawas-Fire-78904.html"
   },
   {
     "id": 29,
@@ -417,7 +471,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Khadlaj Island",
+    "fragrantica": "https://www.fragrantica.com/perfume/Khadlaj/Island-67894.html"
   },
   {
     "id": 30,
@@ -432,7 +488,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "unisex",
+    "displayName": "Khadlaj Island Dreams",
+    "fragrantica": "https://www.fragrantica.com/perfume/Khadlaj/Island-Dreams-67895.html"
   },
   {
     "id": 31,
@@ -447,7 +505,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Armaf Club de Nuit EDT",
+    "fragrantica": "https://www.fragrantica.com/perfume/Armaf/Club-de-Nuit-Intense-Man-EDT-23457.html"
   },
   {
     "id": 32,
@@ -462,7 +522,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Jean Paul Gaultier Le Beau EDT",
+    "fragrantica": "https://www.fragrantica.com/perfume/Jean-Paul-Gaultier/Le-Beau-EDT-67896.html"
   },
   {
     "id": 33,
@@ -477,7 +539,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "unisex",
+    "displayName": "Lattafa Opulent Dubai",
+    "fragrantica": "https://www.fragrantica.com/perfume/Lattafa/Opulent-Shaik-Classic-No-77-67897.html"
   },
   {
     "id": 34,
@@ -492,7 +556,9 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex"
+    "gender": "unisex",
+    "displayName": "Calvin Klein CK One EDT",
+    "fragrantica": "https://www.fragrantica.com/perfume/Calvin-Klein/CK-One-395.html"
   },
   {
     "id": 35,
@@ -507,6 +573,8 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "male"
+    "gender": "male",
+    "displayName": "Rayhaan Tiger",
+    "fragrantica": "https://www.fragrantica.com/perfume/Rayhaan-by-Rasasi/Tiger-73795.html"
   }
 ]
