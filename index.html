@@ -44,6 +44,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 /* Perfume cards */
 
+
+.badge-featured { background: rgba(200,169,110,0.2); color: var(--accent); border: 0.5px solid rgba(200,169,110,0.5); }
+.featured-card { border-color: rgba(200,169,110,0.3) !important; }
+
 .p-display-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; color: var(--text); letter-spacing: 0.01em; line-height: 1.3; }
 
 
@@ -221,6 +225,7 @@ async function loadPerfumes() {
       offer: p.offer ? { pct: p.offer.pct || {}, manual: p.offer.manual || {} } : null,
       gender: p.gender || 'male',
       displayName: p.displayName || p.name,
+      featured: p.featured || false,
     }));
     renderCatalog();
   } catch(e) {
@@ -256,17 +261,19 @@ function setFilter(f) {
 
 function renderCatalog() {
   const q = (document.getElementById('search').value || '').toLowerCase();
-  let list = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
+  const featured = perfumes.filter(p => p.featured);
+  const regular = [...perfumes].filter(p => !p.featured).sort((a,b) => a.name.localeCompare(b.name));
+  let list = [...featured, ...regular];
   if (q) list = list.filter(p => p.name.toLowerCase().includes(q));
   if (activeFilter === 'available') list = list.filter(p => !p.out);
   if (activeFilter === 'sale') list = list.filter(p => p.sale);
   if (activeFilter === 'out') list = list.filter(p => p.out);
-  if (genderFilter !== 'all') list = list.filter(p => (p.gender || 'male') === genderFilter);
+  if (genderFilter !== 'all') list = list.filter(p => p.featured || (p.gender || 'male') === genderFilter);
   const el = document.getElementById('catalog');
   if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
   el.innerHTML = '<div class="count-label">' + list.length + ' perfume' + (list.length !== 1 ? 's' : '') + '</div>' +
     list.map(p => {
-      const badges = (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
+      const badges = (p.featured ? '<span class="badge badge-featured">Featured</span>' : '') + (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
       const btns = SIZES.map(s => {
         const pr = p.prices[s];
         if (!pr || pr === 0) return '<div></div>';
@@ -275,7 +282,7 @@ function renderCatalog() {
           '<span class="size-price">' + (pr > 0 ? '৳' + pr.toLocaleString() : '—') + '</span>' +
           '</button>';
       }).join('');
-      return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + '">' +
+      return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + (p.featured ? ' featured-card' : '') + '">' +
         '<div class="p-header">' +
           '<div style="flex:1;min-width:0;">' +
             '<div class="p-display-name">' + esc(p.displayName || p.name) + '</div>' +
