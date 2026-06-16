@@ -559,5 +559,39 @@
     "offer": null,
     "gender": "male",
     "displayName": "Rayhaan Tiger"
+  },
+  {
+    "id": 37,
+    "name": "Lattafa Art of Universe",
+    "displayName": "Lattafa Art of Universe",
+    "prices": {
+      "2": 160,
+      "5": 400,
+      "10": 720,
+      "15": 1020,
+      "30": 2160
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false
+  },
+  {
+    "id": 38,
+    "name": "Rayhaan Azul",
+    "displayName": "Rayhaan Azul",
+    "prices": {
+      "2": 80,
+      "5": 180,
+      "10": 340,
+      "15": 480,
+      "30": 1000
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false
   }
 ]
