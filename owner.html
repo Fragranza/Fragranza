@@ -776,6 +776,8 @@ let perfumes = [
   { id:36, name:'JPG Le Male Le Parfum', prices:{2:0,5:490,10:950,15:1399,30:0}, out:false, sale:false, offer:null, gender:'male' },
   { id:37, name:'Lattafa Art of Universe', prices:{2:160,5:400,10:720,15:1020,30:2160}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:38, name:'Rayhaan Azul', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
+  { id:39, name:'Armaf Dunescape', prices:{2:120,5:300,10:520,15:760,30:1580}, out:false, sale:false, offer:null, gender:'unisex' },
+  { id:40, name:'Bois Blanc', prices:{2:120,5:280,10:500,15:720,30:1500}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:1, name:'Hawas Ice', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'male' },
   { id:2, name:'Rayhaan Tropical Vibe', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
   { id:4, name:'Rayhaan Aquatica', prices:{2:100,5:220,10:380,15:540,30:1120}, out:false, sale:false, offer:null, gender:'male' },
@@ -810,7 +812,7 @@ let perfumes = [
   { id:34, name:'CK One EDT', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:35, name:'Rayhaan Tiger', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
 ];
-let nextId = 39;
+let nextId = 41;
 
 // ── GitHub Sync Config ──────────────────────────────────────────────────────
 const GH_TOKEN  = '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';
@@ -1656,77 +1658,123 @@ function importPastedOrder() {
   const text = document.getElementById('paste-input').value.trim();
   if (!text) { showToast('Paste an order first'); return; }
 
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const rawLines = text.split('\n').map(l => l.trim());
   const imported = [];
   const mismatches = [];
+  const unresolved = [];
 
-  lines.forEach(line => {
-    // Skip summary/total lines
-    if (/total|subtotal|delivery|advance|due|perfume total/i.test(line)) return;
-
-    // Extract size: any number followed by ml
-    const sizeMatch = line.match(/(\d+)\s*ml/i);
-    if (!sizeMatch) return;
-    const size = parseInt(sizeMatch[1]);
-    if (!SIZES.includes(size)) return;
-
-    // Extract price: any ৳ followed by digits (with optional commas)
-    const priceMatch = line.match(/৳([\d,]+)/);
-    const claimedPrice = priceMatch ? parseInt(priceMatch[1].replace(/,/g, '')) : null;
-
-    // Extract qty: x2 or ×2 anywhere in line
-    const qtyMatch = line.match(/[x×]\s*(\d+)/i);
-    const qty = qtyMatch ? parseInt(qtyMatch[1]) : 1;
-
-    // Extract name: everything before the size mention, strip leading -•* chars
-    let rawName = line.split(/\d+\s*ml/i)[0]
-      .replace(/^[-•*\s]+/, '')
-      .replace(/[—–-]+.*$/, '')
-      .trim();
-
-    // Remove trailing x2 or ×2 from name
-    rawName = rawName.replace(/[x×]\s*\d+\s*$/i, '').trim();
-
-    if (!rawName) return;
-
-    // Fuzzy match against perfume list
-    const perfume = perfumes.find(p => {
+  // Helper: try to match a name string against the perfume list
+  function matchPerfume(rawName) {
+    const rn = rawName.toLowerCase().trim();
+    if (!rn) return null;
+    return perfumes.find(p => {
       const pn = p.name.toLowerCase();
-      const rn = rawName.toLowerCase();
       return pn === rn ||
         pn.includes(rn) ||
         rn.includes(pn) ||
-        // word overlap: if 2+ words match
         pn.split(' ').filter(w => w.length > 2 && rn.includes(w)).length >= 2 ||
         rn.split(' ').filter(w => w.length > 2 && pn.includes(w)).length >= 2;
     });
+  }
 
-    if (perfume) {
-      const correctPrice = effectivePrice(perfume, size);
-      // Check mismatch — for qty orders divide total price
-      const unitClaimed = claimedPrice && qty > 1 ? Math.round(claimedPrice / qty) : claimedPrice;
-      if (unitClaimed && unitClaimed !== correctPrice) {
-        mismatches.push({ name: perfume.name, size, claimed: unitClaimed, correct: correctPrice });
+  // Helper: extract a size token (e.g. "2ml", "2 ml", "2ml each") from a line
+  function extractSize(line) {
+    const m = line.match(/(\d+)\s*ml/i);
+    return m ? parseInt(m[1]) : null;
+  }
+
+  function extractPrice(line) {
+    const m = line.match(/৳([\d,]+)/);
+    return m ? parseInt(m[1].replace(/,/g, '')) : null;
+  }
+
+  function extractQty(line) {
+    const m = line.match(/[x×]\s*(\d+)/i);
+    return m ? parseInt(m[1]) : 1;
+  }
+
+  function cleanName(line) {
+    return line
+      .replace(/[-•*]+/g, '')
+      .replace(/\d+\s*ml/gi, '')
+      .replace(/[x×]\s*\d+/gi, '')
+      .replace(/৳[\d,]+/g, '')
+      .replace(/[—–-]+$/, '')
+      .trim();
+  }
+
+  // Strip out summary/total lines first, keep track of blank lines for grouping
+  const lines = [];
+  rawLines.forEach(l => {
+    if (/^\s*$/.test(l)) { lines.push(''); return; }
+    if (/^(total|subtotal|delivery|advance|due|perfume total|grand total)/i.test(l)) return;
+    lines.push(l);
+  });
+
+  // Pending name-only lines waiting for a shared size (e.g. a block of names followed by "2ml each")
+  let pendingNames = [];
+
+  function flushPending(size, qty) {
+    pendingNames.forEach(rawName => {
+      const perfume = matchPerfume(rawName);
+      if (perfume && size && SIZES.includes(size)) {
+        const correctPrice = effectivePrice(perfume, size);
+        for (let i = 0; i < qty; i++) {
+          imported.push({ pid: perfume.id, size, price: correctPrice, name: perfume.name, custom: false });
+        }
+      } else if (rawName) {
+        unresolved.push(rawName + (size ? ' ' + size + 'ml' : ''));
       }
-      for (let i = 0; i < qty; i++) {
-        imported.push({
-          pid: perfume.id, size,
-          price: correctPrice,
-          name: perfume.name,
-          custom: false
-        });
+    });
+    pendingNames = [];
+  }
+
+  lines.forEach((line, idx) => {
+    if (!line) return; // blank lines just separate blocks, ignore
+
+    const size = extractSize(line);
+    const price = extractPrice(line);
+    const qty = extractQty(line);
+    const name = cleanName(line);
+
+    if (size) {
+      // This line has a size mentioned
+      if (name) {
+        // "Hawas Ice 2ml" — direct line with both name and size
+        const perfume = matchPerfume(name);
+        if (perfume) {
+          const correctPrice = effectivePrice(perfume, size);
+          const unitClaimed = price && qty > 1 ? Math.round(price / qty) : price;
+          if (unitClaimed && unitClaimed !== correctPrice) {
+            mismatches.push({ name: perfume.name, size, claimed: unitClaimed, correct: correctPrice });
+          }
+          for (let i = 0; i < qty; i++) {
+            imported.push({ pid: perfume.id, size, price: correctPrice, name: perfume.name, custom: false });
+          }
+        } else {
+          // Unknown perfume with explicit price — add as custom
+          const p = price && qty > 1 ? Math.round(price / qty) : (price || 0);
+          for (let i = 0; i < qty; i++) {
+            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + size + 'ml', custom: true });
+          }
+        }
+      } else {
+        // Line is JUST a size (e.g. "2ml each" or "2ml") — applies to pending names above
+        flushPending(size, qty);
       }
     } else {
-      // Unknown perfume — add as custom item with claimed price
-      const price = claimedPrice && qty > 1 ? Math.round(claimedPrice / qty) : (claimedPrice || 0);
-      for (let i = 0; i < qty; i++) {
-        imported.push({ pid: 'custom', size, price, name: rawName + ' ' + size + 'ml', custom: true });
-      }
+      // No size mentioned on this line — could be a perfume name waiting for a size below
+      if (name) pendingNames.push(name);
     }
   });
 
+  // Any names left with no size found — report as unresolved
+  if (pendingNames.length) {
+    pendingNames.forEach(n => unresolved.push(n + ' (no size found)'));
+  }
+
   if (!imported.length) {
-    showToast('Could not read order — try again');
+    showToast(unresolved.length ? 'Could not match: ' + unresolved.join(', ') : 'Could not read order — try again');
     return;
   }
 
@@ -1763,6 +1811,8 @@ function importPastedOrder() {
     const orderList = document.getElementById('order-list');
     orderList.parentNode.insertBefore(warning, orderList);
     showToast('⚠ ' + mismatches.length + ' price mismatch' + (mismatches.length > 1 ? 'es' : '') + '!');
+  } else if (unresolved.length) {
+    showToast('Imported ' + imported.length + ', but missed: ' + unresolved.slice(0,3).join(', '));
   } else {
     showToast('Imported ' + imported.length + ' item' + (imported.length !== 1 ? 's' : '') + '!');
   }
