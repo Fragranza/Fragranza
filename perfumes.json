@@ -627,5 +627,22 @@
     "offer": null,
     "gender": "unisex",
     "featured": false
+  },
+  {
+    "id": 41,
+    "name": "CH 212 Men NYC",
+    "displayName": "Carolina Herrera 212 Men NYC",
+    "prices": {
+      "2": 180,
+      "5": 420,
+      "10": 740,
+      "15": 1060,
+      "30": 2240
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false
   }
 ]
