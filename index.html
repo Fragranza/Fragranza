@@ -264,7 +264,11 @@ function renderCatalog() {
   const featured = perfumes.filter(p => p.featured);
   const regular = [...perfumes].filter(p => !p.featured).sort((a,b) => a.name.localeCompare(b.name));
   let list = [...featured, ...regular];
-  if (q) list = list.filter(p => p.name.toLowerCase().includes(q));
+  if (q) list = list.filter(p => {
+    const nameMatch = p.name.toLowerCase().includes(q) || (p.displayName || '').toLowerCase().includes(q);
+    const aliasMatch = (p.aliases || []).some(a => a.toLowerCase().includes(q));
+    return nameMatch || aliasMatch;
+  });
   if (activeFilter === 'available') list = list.filter(p => !p.out);
   if (activeFilter === 'sale') list = list.filter(p => p.sale);
   if (activeFilter === 'out') list = list.filter(p => p.out);
