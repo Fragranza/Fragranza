@@ -14,7 +14,12 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "featured": true
+    "featured": true,
+    "aliases": [
+      "le male le parfum",
+      "jpg le male",
+      "le male jpg"
+    ]
   },
   {
     "id": 1,
@@ -30,7 +35,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rasasi Hawas Ice"
+    "displayName": "Rasasi Hawas Ice",
+    "aliases": [
+      "hawas ice",
+      "rasasi hawas ice"
+    ]
   },
   {
     "id": 2,
@@ -46,7 +55,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Tropical Vibe"
+    "displayName": "Rayhaan Tropical Vibe",
+    "aliases": []
   },
   {
     "id": 3,
@@ -62,7 +72,12 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Afnan Supremacy Collector's Edition"
+    "displayName": "Afnan Supremacy Collector's Edition",
+    "aliases": [
+      "supremacy",
+      "afnan supremacy",
+      "collectors edition"
+    ]
   },
   {
     "id": 4,
@@ -78,7 +93,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Aquatica"
+    "displayName": "Rayhaan Aquatica",
+    "aliases": []
   },
   {
     "id": 5,
@@ -94,7 +110,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rasasi Hawas Black"
+    "displayName": "Rasasi Hawas Black",
+    "aliases": []
   },
   {
     "id": 6,
@@ -110,7 +127,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Nautica Voyage"
+    "displayName": "Nautica Voyage",
+    "aliases": []
   },
   {
     "id": 7,
@@ -126,7 +144,11 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "displayName": "French Avenue Atlantis Extrait"
+    "displayName": "French Avenue Atlantis Extrait",
+    "aliases": [
+      "atlantis",
+      "french avenue atlantis"
+    ]
   },
   {
     "id": 8,
@@ -142,7 +164,10 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "displayName": "Gulf Orchid Naseem"
+    "displayName": "Gulf Orchid Naseem",
+    "aliases": [
+      "gulf orchid naseem"
+    ]
   },
   {
     "id": 9,
@@ -158,7 +183,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Wolf"
+    "displayName": "Rayhaan Wolf",
+    "aliases": []
   },
   {
     "id": 10,
@@ -174,7 +200,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Obsidian"
+    "displayName": "Rayhaan Obsidian",
+    "aliases": []
   },
   {
     "id": 11,
@@ -190,7 +217,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Lion"
+    "displayName": "Rayhaan Lion",
+    "aliases": []
   },
   {
     "id": 12,
@@ -206,7 +234,12 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "displayName": "Lattafa Qaed Al Fursan"
+    "displayName": "Lattafa Qaed Al Fursan",
+    "aliases": [
+      "qaed al fursan",
+      "qaed",
+      "al fursan"
+    ]
   },
   {
     "id": 13,
@@ -222,7 +255,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rasasi Hawas Kobra"
+    "displayName": "Rasasi Hawas Kobra",
+    "aliases": []
   },
   {
     "id": 14,
@@ -238,7 +272,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rasasi Fattan"
+    "displayName": "Rasasi Fattan",
+    "aliases": [
+      "fattan",
+      "rasasi fattan"
+    ]
   },
   {
     "id": 15,
@@ -254,7 +292,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Italia"
+    "displayName": "Rayhaan Italia",
+    "aliases": []
   },
   {
     "id": 16,
@@ -270,7 +309,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Nocturno Elixir"
+    "displayName": "Rayhaan Nocturno Elixir",
+    "aliases": []
   },
   {
     "id": 17,
@@ -286,7 +326,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Lattafa Dynasty"
+    "displayName": "Lattafa Dynasty",
+    "aliases": [
+      "dynasty",
+      "lattafa dynasty"
+    ]
   },
   {
     "id": 18,
@@ -302,7 +346,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rasasi Hawas For Him"
+    "displayName": "Rasasi Hawas For Him",
+    "aliases": []
   },
   {
     "id": 19,
@@ -318,7 +363,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Ahmed Al Maghribi Kaaf - Extrait"
+    "displayName": "Ahmed Al Maghribi Kaaf - Extrait",
+    "aliases": [
+      "kaaf extrait",
+      "ahmed al maghribi kaaf"
+    ]
   },
   {
     "id": 20,
@@ -334,7 +383,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Lattafa Asad"
+    "displayName": "Lattafa Asad",
+    "aliases": [
+      "asad",
+      "lattafa asad"
+    ]
   },
   {
     "id": 22,
@@ -350,7 +403,11 @@
     "sale": false,
     "offer": null,
     "gender": "female",
-    "displayName": "Lattafa Yara"
+    "displayName": "Lattafa Yara",
+    "aliases": [
+      "yara",
+      "lattafa yara"
+    ]
   },
   {
     "id": 23,
@@ -366,7 +423,11 @@
     "sale": false,
     "offer": null,
     "gender": "female",
-    "displayName": "Lattafa Angham"
+    "displayName": "Lattafa Angham",
+    "aliases": [
+      "angham",
+      "lattafa angham"
+    ]
   },
   {
     "id": 24,
@@ -382,7 +443,8 @@
     "sale": false,
     "offer": null,
     "gender": "female",
-    "displayName": "Rasasi Hawas Diva"
+    "displayName": "Rasasi Hawas Diva",
+    "aliases": []
   },
   {
     "id": 25,
@@ -398,7 +460,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Blue by Ahmed Al Maghribi"
+    "displayName": "Blue by Ahmed Al Maghribi",
+    "aliases": [
+      "blue ahmed al maghribi",
+      "ahmed al maghribi blue"
+    ]
   },
   {
     "id": 26,
@@ -414,7 +480,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "French Avenue Zenith Blue"
+    "displayName": "French Avenue Zenith Blue",
+    "aliases": [
+      "zenith",
+      "french avenue zenith"
+    ]
   },
   {
     "id": 27,
@@ -430,7 +500,11 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "displayName": "French Avenue Aether Extrait"
+    "displayName": "French Avenue Aether Extrait",
+    "aliases": [
+      "aether",
+      "french avenue aether"
+    ]
   },
   {
     "id": 28,
@@ -446,7 +520,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rasasi Hawas Fire"
+    "displayName": "Rasasi Hawas Fire",
+    "aliases": []
   },
   {
     "id": 29,
@@ -462,7 +537,11 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Khadlaj Island"
+    "displayName": "Khadlaj Island",
+    "aliases": [
+      "island",
+      "khadlaj"
+    ]
   },
   {
     "id": 30,
@@ -478,7 +557,12 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "displayName": "Khadlaj Island Dreams"
+    "displayName": "Khadlaj Island Dreams",
+    "aliases": [
+      "island dreams",
+      "dreams",
+      "khadlaj dreams"
+    ]
   },
   {
     "id": 31,
@@ -494,7 +578,12 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Armaf Club de Nuit EDT"
+    "displayName": "Armaf Club de Nuit EDT",
+    "aliases": [
+      "club de nuit",
+      "armaf club de nuit",
+      "cdn"
+    ]
   },
   {
     "id": 32,
@@ -510,7 +599,12 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Jean Paul Gaultier Le Beau EDT"
+    "displayName": "Jean Paul Gaultier Le Beau EDT",
+    "aliases": [
+      "le beau",
+      "jpg le beau",
+      "jean paul gaultier le beau"
+    ]
   },
   {
     "id": 33,
@@ -526,7 +620,12 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "displayName": "Lattafa Opulent Dubai"
+    "displayName": "Lattafa Opulent Dubai",
+    "aliases": [
+      "opulent dubai",
+      "opulent",
+      "shaik opulent"
+    ]
   },
   {
     "id": 34,
@@ -542,7 +641,11 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "displayName": "Calvin Klein CK One EDT"
+    "displayName": "Calvin Klein CK One EDT",
+    "aliases": [
+      "ck one",
+      "calvin klein ck one"
+    ]
   },
   {
     "id": 35,
@@ -558,7 +661,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "displayName": "Rayhaan Tiger"
+    "displayName": "Rayhaan Tiger",
+    "aliases": []
   },
   {
     "id": 37,
@@ -575,7 +679,11 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "featured": false
+    "featured": false,
+    "aliases": [
+      "art of universe",
+      "universe"
+    ]
   },
   {
     "id": 38,
@@ -592,7 +700,8 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "featured": false
+    "featured": false,
+    "aliases": []
   },
   {
     "id": 39,
@@ -609,7 +718,11 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "featured": false
+    "featured": false,
+    "aliases": [
+      "dunescape",
+      "armaf dunescape"
+    ]
   },
   {
     "id": 40,
@@ -626,7 +739,10 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "featured": false
+    "featured": false,
+    "aliases": [
+      "bois blanc"
+    ]
   },
   {
     "id": 41,
@@ -643,6 +759,56 @@
     "sale": false,
     "offer": null,
     "gender": "male",
-    "featured": false
+    "featured": false,
+    "aliases": [
+      "212 men",
+      "carolina herrera 212",
+      "212 nyc",
+      "ch 212"
+    ]
+  },
+  {
+    "id": 42,
+    "name": "Lattafa Atheeri",
+    "displayName": "Lattafa Atheeri",
+    "prices": {
+      "2": 140,
+      "5": 320,
+      "10": 560,
+      "15": 820,
+      "30": 1700
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "female",
+    "featured": false,
+    "aliases": [
+      "atheeri",
+      "lattafa atheeri"
+    ]
+  },
+  {
+    "id": 43,
+    "name": "Maison Milan Mystique",
+    "displayName": "Maison Milan Mystique",
+    "prices": {
+      "2": 140,
+      "5": 320,
+      "10": 580,
+      "15": 820,
+      "30": 1740
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "mystique milan",
+      "milan mystique",
+      "mystique",
+      "maison milan"
+    ]
   }
 ]
