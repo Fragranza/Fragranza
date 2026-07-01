@@ -1934,7 +1934,7 @@ function copyBatchCodes() {
     if (o.custom) return;
     const p = perfumes.find(x => x.id === o.pid);
     if (p && p.batch) {
-      lines.push(p.batch + ' ' + o.size + 'ml');
+      lines.push(p.batch + '\t' + o.size);
     } else if (p) {
       missing.push(displayNameOf(p));
     }
