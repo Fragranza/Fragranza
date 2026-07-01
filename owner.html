@@ -169,6 +169,8 @@ body {
   flex: 1;
   line-height: 1.3;
 }
+.p-sl { color: var(--muted); font-size: 13px; font-weight: 400; margin-right: 6px; }
+.m-sl { color: var(--muted); font-size: 12px; font-weight: 400; margin-right: 6px; flex-shrink: 0; }
 .badge {
   font-size: 10px;
   font-weight: 500;
@@ -932,6 +934,11 @@ function goTab(name) {
   if (name === 'catalog') renderCatalog();
 }
 
+/* ---- Name helper ---- */
+function displayNameOf(p) {
+  return (p && (p.displayName || p.name)) || '';
+}
+
 /* ---- CATALOG ---- */
 function setGenderFilter(g) {
   genderFilter = g;
@@ -945,11 +952,11 @@ function setGenderFilter(g) {
 function renderCatalog() {
   const q = (document.getElementById('search').value || '').toLowerCase();
   const el = document.getElementById('catalog');
-  let list = perfumes.filter(p => p.name.toLowerCase().includes(q));
+  let list = perfumes.filter(p => displayNameOf(p).toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
   if (genderFilter !== 'all') list = list.filter(p => (p.gender || 'male') === genderFilter);
-  list = list.sort((a,b) => a.name.localeCompare(b.name));
+  list = list.sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b)));
   if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
-  el.innerHTML = list.map(p => {
+  el.innerHTML = list.map((p, idx) => {
     const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
     const btns = SIZES.map(s => {
       const pr = p.prices[s];
@@ -965,7 +972,7 @@ function renderCatalog() {
     }).join('');
     return `<div class="p-card ${p.out ? 'out-of-stock' : ''}">
       <div class="p-header">
-        <div class="p-name">${esc(p.name)}</div>
+        <div class="p-name"><span class="p-sl">${idx + 1}.</span>${esc(displayNameOf(p))}</div>
         <div style="display:flex;align-items:center;gap:6px;">
           ${badges}
           <button class="copy-price-btn" onclick="copyPriceList(${p.id})">
@@ -983,9 +990,9 @@ function renderCatalog() {
 function addToOrder(pid, size) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, price: effectivePrice(p, size), origPrice: p.prices[size], name: p.name });
+  order.push({ pid, size, price: effectivePrice(p, size), origPrice: p.prices[size], name: displayNameOf(p) });
   updateBadge();
-  showToast(p.name.split(' ')[0] + ' ' + size + 'ml added');
+  showToast(displayNameOf(p).split(' ')[0] + ' ' + size + 'ml added');
 }
 
 function removeFromOrder(idx) {
@@ -1243,7 +1250,7 @@ function copyWithTransaction() {
 /* ---- MANAGE ---- */
 function renderManage() {
   const el = document.getElementById('manage-list');
-  el.innerHTML = [...perfumes].sort((a,b) => a.name.localeCompare(b.name)).map(p => {
+  el.innerHTML = [...perfumes].sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b))).map((p, idx) => {
     const editing = editingId === p.id;
     const offerOpen = offerPanelId === p.id;
     const offerPct = (p.offer && p.offer.pct) ? p.offer.pct : {};
@@ -1288,7 +1295,8 @@ function renderManage() {
 
     return `<div class="manage-item">
       <div class="manage-row">
-        <span class="manage-name">${esc(p.name)}</span>
+        <span class="m-sl">${idx + 1}.</span>
+        <span class="manage-name">${esc(displayNameOf(p))}</span>
         <select class="gender-select" onchange="setGender(${p.id},this.value)">
           <option value="male" ${(p.gender||'male')==='male'?'selected':''}>Male</option>
           <option value="female" ${(p.gender||'male')==='female'?'selected':''}>Female</option>
@@ -1344,7 +1352,7 @@ function addPerfume() {
   if (!name) { showToast('Enter a perfume name'); return; }
   const prices = {};
   SIZES.forEach(s => { prices[s] = parseInt(document.getElementById('new-' + s).value) || 0; });
-  perfumes.push({ id: nextId++, name, prices, out: false, sale: false, offer: null, gender: 'male' });
+  perfumes.push({ id: nextId++, name, displayName: name, prices, out: false, sale: false, offer: null, gender: 'male' });
   document.getElementById('new-name').value = '';
   SIZES.forEach(s => { document.getElementById('new-' + s).value = ''; });
   showToast(name + ' added!');
@@ -1421,7 +1429,7 @@ function clearOffer(id) {
 
 /* ---- PRICE CARD ---- */
 function generateCard() {
-  const sorted = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
+  const sorted = [...perfumes].sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b)));
   const today = new Date();
   const dateStr = today.getDate() + '-' + today.toLocaleString('en',{month:'short'}) + '-' + String(today.getFullYear()).slice(2);
 
@@ -1521,7 +1529,7 @@ function generateCard() {
     ctx.fillStyle = p.out ? '#e05555' : '#1a1a1a';
     ctx.font = p.out ? 'italic 13px Arial, sans-serif' : '13px Arial, sans-serif';
     ctx.textAlign = 'left';
-    let displayName = p.name + (p.out ? ' (Out)' : '');
+    let displayName = displayNameOf(p) + (p.out ? ' (Out)' : '');
     ctx.font = '13px Arial, sans-serif';
     while (ctx.measureText(displayName).width > nameW - 20 && displayName.length > 8) {
       displayName = displayName.slice(0, -4) + '...';
@@ -1618,7 +1626,7 @@ function downloadCard() {
 function copyPriceList(pid) {
   const p = perfumes.find(x => x.id === pid);
   if (!p) return;
-  const lines = [p.name, ''];
+  const lines = [displayNameOf(p), ''];
   [2, 5, 10, 15, 30].forEach(s => {
     if (p.prices[s]) {
       const ep = effectivePrice(p, s);
@@ -1681,10 +1689,14 @@ function importPastedOrder() {
     if (!rn) return null;
     return perfumes.find(p => {
       const pn = p.name.toLowerCase();
+      const dn = displayNameOf(p).toLowerCase();
       const aliasMatch = (p.aliases || []).some(a => a.toLowerCase() === rn || a.toLowerCase().includes(rn) || rn.includes(a.toLowerCase()));
       return pn === rn ||
+        dn === rn ||
         pn.includes(rn) ||
+        dn.includes(rn) ||
         rn.includes(pn) ||
+        rn.includes(dn) ||
         aliasMatch ||
         pn.split(' ').filter(w => w.length > 2 && rn.includes(w)).length >= 2 ||
         rn.split(' ').filter(w => w.length > 2 && pn.includes(w)).length >= 2;
@@ -1734,7 +1746,7 @@ function importPastedOrder() {
       if (perfume && size && SIZES.includes(size)) {
         const correctPrice = effectivePrice(perfume, size);
         for (let i = 0; i < qty; i++) {
-          imported.push({ pid: perfume.id, size, price: correctPrice, name: perfume.name, custom: false });
+          imported.push({ pid: perfume.id, size, price: correctPrice, name: displayNameOf(perfume), custom: false });
         }
       } else if (rawName) {
         unresolved.push(rawName + (size ? ' ' + size + 'ml' : ''));
@@ -1760,10 +1772,10 @@ function importPastedOrder() {
           const correctPrice = effectivePrice(perfume, size);
           const unitClaimed = price && qty > 1 ? Math.round(price / qty) : price;
           if (unitClaimed && unitClaimed !== correctPrice) {
-            mismatches.push({ name: perfume.name, size, claimed: unitClaimed, correct: correctPrice });
+            mismatches.push({ name: displayNameOf(perfume), size, claimed: unitClaimed, correct: correctPrice });
           }
           for (let i = 0; i < qty; i++) {
-            imported.push({ pid: perfume.id, size, price: correctPrice, name: perfume.name, custom: false });
+            imported.push({ pid: perfume.id, size, price: correctPrice, name: displayNameOf(perfume), custom: false });
           }
         } else {
           // Unknown perfume with explicit price — add as custom
@@ -1842,9 +1854,9 @@ function toggleCustomBox() {
   if (open) {
     // Populate perfume dropdown
     const sel = document.getElementById('custom-perfume');
-    const sorted = [...perfumes].sort((a,b) => a.name.localeCompare(b.name));
+    const sorted = [...perfumes].sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b)));
     sel.innerHTML = '<option value="">— Select perfume —</option>' +
-      sorted.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
+      sorted.map(p => `<option value="${p.id}">${esc(displayNameOf(p))}</option>`).join('');
   }
 }
 
@@ -1876,7 +1888,7 @@ function addCustomItem() {
   if (!price) { showToast('Enter a price'); return; }
 
   const perfume = pid ? perfumes.find(x => x.id === pid) : null;
-  const baseName = perfume ? perfume.name : 'Custom';
+  const baseName = perfume ? displayNameOf(perfume) : 'Custom';
   const sizePart = ml ? ' ' + ml + 'ml' : '';
   const notePart = note ? ' (' + note + ')' : '';
   const itemName = baseName + sizePart + notePart;
@@ -1924,7 +1936,7 @@ function copyBatchCodes() {
     if (p && p.batch) {
       lines.push(p.batch + ' ' + o.size + 'ml');
     } else if (p) {
-      missing.push(p.name);
+      missing.push(displayNameOf(p));
     }
   });
 
