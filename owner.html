@@ -777,10 +777,11 @@ let perfumes = [
   { id:37, name:'Lattafa Art of Universe', prices:{2:160,5:400,10:720,15:1020,30:2160}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:38, name:'Rayhaan Azul', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
   { id:39, name:'Armaf Dunescape', prices:{2:120,5:300,10:520,15:760,30:1580}, out:false, sale:false, offer:null, gender:'unisex' },
-  { id:40, name:'Bois Blanc', prices:{2:120,5:280,10:500,15:720,30:1500}, out:false, sale:false, offer:null, gender:'unisex' },
+  { id:40, name:'Arabiyat Bois Blanc', prices:{2:120,5:280,10:500,15:720,30:1500}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:41, name:'CH 212 Men NYC', prices:{2:180,5:420,10:740,15:1060,30:2240}, out:false, sale:false, offer:null, gender:'male' },
   { id:42, name:'Lattafa Atheeri', prices:{2:140,5:320,10:560,15:820,30:1700}, out:false, sale:false, offer:null, gender:'female' },
   { id:43, name:'Maison Milan Mystique', prices:{2:140,5:320,10:580,15:820,30:1740}, out:false, sale:false, offer:null, gender:'unisex' },
+  { id:44, name:'Afnan SNOI', prices:{2:180,5:420,10:760,15:1080,30:2280}, out:false, sale:false, offer:null, gender:'male' },
   { id:1, name:'Hawas Ice', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'male' },
   { id:2, name:'Rayhaan Tropical Vibe', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
   { id:4, name:'Rayhaan Aquatica', prices:{2:100,5:220,10:380,15:540,30:1120}, out:false, sale:false, offer:null, gender:'male' },
@@ -809,13 +810,13 @@ let perfumes = [
   { id:28, name:'Hawas Fire', prices:{2:120,5:280,10:500,15:740,30:1540}, out:false, sale:false, offer:null, gender:'male' },
   { id:29, name:'Khadlaj Island', prices:{2:100,5:220,10:400,15:580,30:1200}, out:false, sale:false, offer:null, gender:'male' },
   { id:30, name:'Khadlaj Dreams', prices:{2:100,5:220,10:400,15:580,30:1200}, out:false, sale:false, offer:null, gender:'unisex' },
-  { id:31, name:'Club de Nuit EDT', prices:{2:120,5:260,10:460,15:660,30:1380}, out:false, sale:false, offer:null, gender:'male' },
+  { id:31, name:'Armaf Club de Nuit EDT', prices:{2:120,5:260,10:460,15:660,30:1380}, out:false, sale:false, offer:null, gender:'male' },
   { id:32, name:'JPG Le Beau EDT', prices:{2:200,5:480,10:860,15:1220,30:2580}, out:false, sale:false, offer:null, gender:'male' },
   { id:33, name:'Lattafa Opulent Dubai', prices:{2:80,5:180,10:280,15:400,30:0}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:34, name:'CK One EDT', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'unisex' },
   { id:35, name:'Rayhaan Tiger', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male' },
 ];
-let nextId = 44;
+let nextId = 45;
 
 // ── GitHub Sync Config ──────────────────────────────────────────────────────
 const GH_TOKEN  = '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';
@@ -842,7 +843,8 @@ async function loadFromGitHub() {
       gender: p.gender || 'male',
       aliases: p.aliases || [],
       displayName: p.displayName || p.name,
-      featured: p.featured || false
+      featured: p.featured || false,
+      batch: p.batch || ''
     }));
     nextId = Math.max(...perfumes.map(p => p.id)) + 1;
     // Also fetch SHA separately for saving (needs token)
@@ -1017,7 +1019,7 @@ function renderOrder() {
     <div class="order-item">
       <div class="oi-info">
         <div class="oi-name" style="${o.custom ? 'color:var(--accent2);' : ''}">${esc(o.name)}</div>
-        <div class="oi-size">${o.custom ? 'Custom item' : o.size + ' ml'}</div>
+        <div class="oi-size">${o.custom ? 'Custom item' : o.size + ' ml'}${!o.custom && (() => { const pf = perfumes.find(x => x.id === o.pid); return pf && pf.batch ? ' · <span style=\'font-size:10px;color:#8ab0e8;\'>'+pf.batch+'</span>' : ''; })()}</div>
       </div>
       <div class="oi-price">৳${o.price.toLocaleString()}</div>
       <button class="oi-remove" onclick="removeFromOrder(${i})" aria-label="Remove">
@@ -1122,6 +1124,10 @@ function renderOrder() {
     <button class="btn-copy" onclick="copyFull()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       Copy Full Order Summary
+    </button>
+    <button class="btn-copy" onclick="copyBatchCodes()" id="copy-batch-btn" style="background:rgba(100,140,200,0.1);border-color:rgba(100,140,200,0.3);color:#8ab0e8;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Copy Batch Codes
     </button>
     <button class="btn-copy btn-copy-inside" onclick="copyWithTransaction()" id="copy-transaction-btn" style="display:none;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -1902,6 +1908,55 @@ function addExtraNote() {
   document.getElementById('extra-note-price').value = '0';
   renderOrder();
   showToast('Added: ' + name);
+}
+
+
+/* ---- BATCH CODES ---- */
+function copyBatchCodes() {
+  if (!order.length) { showToast('No items in order'); return; }
+
+  // Get unique perfume ids in order (excluding custom)
+  const seen = new Set();
+  const codes = [];
+  const missing = [];
+
+  order.forEach(o => {
+    if (o.custom || seen.has(o.pid)) return;
+    seen.add(o.pid);
+    const p = perfumes.find(x => x.id === o.pid);
+    if (p && p.batch) {
+      codes.push(p.batch);
+    } else if (p) {
+      missing.push(p.name);
+    }
+  });
+
+  if (!codes.length) {
+    showToast('No batch codes found for this order');
+    return;
+  }
+
+  const text = codes.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Batch codes copied!' + (missing.length ? ' (' + missing.length + ' missing)' : '')))
+      .catch(() => fallbackCopyText(text));
+  } else {
+    fallbackCopyText(text);
+  }
+}
+
+function fallbackCopyText(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); showToast('Batch codes copied!'); }
+  catch(e) { showToast('Could not copy'); }
+  document.body.removeChild(ta);
 }
 
 /* ---- UTILS ---- */
