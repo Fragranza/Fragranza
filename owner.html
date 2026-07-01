@@ -1925,16 +1925,21 @@ function addExtraNote() {
 
 /* ---- BATCH CODES ---- */
 function copyBatchCodes() {
-  if (!order.length) { showToast('No items in order'); return; }
+  if (!order.length) { 
+    showToast('No items in order'); 
+    return; 
+  }
 
   const lines = [];
   const missing = [];
 
   order.forEach(o => {
     if (o.custom) return;
+
     const p = perfumes.find(x => x.id === o.pid);
+
     if (p && p.batch) {
-      lines.push(p.batch + ' ' + o.size + 'ml');
+      lines.push(p.batch + '\t' + o.qty);
     } else if (p) {
       missing.push(displayNameOf(p));
     }
@@ -1946,9 +1951,13 @@ function copyBatchCodes() {
   }
 
   const text = lines.join('\n');
+
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text)
-      .then(() => showToast('Batch codes copied!' + (missing.length ? ' (' + missing.length + ' missing)' : '')))
+      .then(() => showToast(
+        'Batch codes copied!' +
+        (missing.length ? ' (' + missing.length + ' missing)' : '')
+      ))
       .catch(() => fallbackCopyText(text));
   } else {
     fallbackCopyText(text);
