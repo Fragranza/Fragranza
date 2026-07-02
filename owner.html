@@ -1950,7 +1950,13 @@ function copyBatchCodes() {
   const grandTotal = perfumeTotal + delAmt;
   const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
 
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}`;
+  const advEl = document.getElementById('advance-input');
+  const advance = advEl ? (parseFloat(advEl.value) || 0) : 0;
+  const advLine = advance > 0
+    ? `\n\nAdvance Paid: ৳${advance.toLocaleString()}\nDue Bill: ৳${Math.abs(grandTotal - advance).toLocaleString()}${(grandTotal - advance) < 0 ? ' (Overpaid)' : (grandTotal - advance) === 0 ? ' (Settled)' : ''}`
+    : '';
+
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}${advLine}`;
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text)
