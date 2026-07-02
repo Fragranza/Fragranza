@@ -1945,7 +1945,13 @@ function copyBatchCodes() {
     return;
   }
 
-  const text = lines.join('\n');
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
+
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}`;
+
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text)
       .then(() => showToast('Batch codes copied!' + (missing.length ? ' (' + missing.length + ' missing)' : '')))
