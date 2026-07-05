@@ -10,140 +10,620 @@
 <title>Fragranza — Owner Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
-:root{--bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);--text:#f0ede8;--muted:#888;--accent:#c8a96e;--accent2:#e8c98e;--danger:#e05555;--success:#5c9e6a;--radius:14px;--radius-sm:8px;--tab-h:64px;--header-h:70px;}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
-.header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border);height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 20px;backdrop-filter:blur(20px);}
-.logo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;letter-spacing:0.04em;color:var(--text);}
-.logo span{color:var(--accent);}
-.cart-pill{background:var(--accent);color:#0a0a0a;border-radius:99px;padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;border:none;transition:background 0.2s;}
-.cart-pill:hover{background:var(--accent2);}
-.cart-pill svg{width:14px;height:14px;}
-.tabs{display:flex;background:var(--bg);border-bottom:0.5px solid var(--border);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:sticky;top:var(--header-h);z-index:99;}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{flex:1;min-width:80px;padding:14px 8px;text-align:center;font-size:12px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:1.5px solid transparent;transition:all 0.2s;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;border:none;background:none;}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.content{padding:20px 16px;padding-bottom:calc(var(--tab-h) + 20px);max-width:480px;margin:0 auto;}
-.search-wrap{position:relative;margin-bottom:16px;}
-.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);width:16px;height:16px;}
-.search-input{width:100%;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px 12px 40px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;font-weight:300;outline:none;}
-.search-input::placeholder{color:var(--muted);}
-.search-input:focus{border-color:var(--border2);}
-.p-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;transition:border-color 0.2s;}
-.p-card:active{border-color:var(--border2);}
-.p-card.out-of-stock{opacity:0.45;}
-.p-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
-.p-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--text);letter-spacing:0.01em;flex:1;line-height:1.3;}
-.p-sl{color:var(--muted);font-size:13px;font-weight:400;margin-right:6px;}
-.m-sl{color:var(--muted);font-size:12px;font-weight:400;margin-right:6px;flex-shrink:0;}
-.badge{font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;margin-left:8px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
-.badge-sale{background:rgba(200,169,110,0.15);color:var(--accent);border:0.5px solid rgba(200,169,110,0.3);}
-.badge-out{background:rgba(224,85,85,0.1);color:var(--danger);border:0.5px solid rgba(224,85,85,0.3);}
-.size-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
-.size-btn{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 4px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text);font-family:'DM Sans',sans-serif;}
-.size-btn:active{transform:scale(0.95);background:rgba(200,169,110,0.15);border-color:var(--accent);}
-.size-btn:disabled{opacity:0.3;cursor:not-allowed;}
-.size-ml{font-size:13px;font-weight:500;display:block;}
-.size-price{font-size:10px;color:var(--accent);display:block;margin-top:2px;}
-.order-empty{text-align:center;padding:60px 20px;color:var(--muted);}
-.order-empty svg{width:48px;height:48px;opacity:0.3;margin-bottom:16px;display:block;margin-left:auto;margin-right:auto;}
-.order-empty p{font-size:14px;}
-.order-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
-.oi-info{flex:1;min-width:0;}
-.oi-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.oi-size{font-size:12px;color:var(--muted);margin-top:2px;}
-.oi-price{font-size:16px;font-weight:500;color:var(--accent);white-space:nowrap;}
-.oi-remove{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center;transition:color 0.15s;flex-shrink:0;}
-.oi-remove:active{color:var(--danger);}
-.oi-remove svg{width:16px;height:16px;}
-.summary-box{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:12px;}
-.sum-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
-.sum-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;color:var(--muted);}
-.sum-row:last-of-type{border-bottom:none;}
-.sum-row span:last-child{color:var(--text);}
-.sum-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:14px;margin-top:8px;border-top:0.5px solid var(--border2);}
-.sum-total-label{font-size:14px;color:var(--muted);}
-.sum-total-amt{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--accent);}
-.btn-clear{width:100%;background:none;border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:10px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.btn-clear:active{border-color:var(--danger);color:var(--danger);}
-.btn-copy{width:100%;background:rgba(200,169,110,0.1);border:0.5px solid rgba(200,169,110,0.3);border-radius:var(--radius-sm);padding:12px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.btn-copy:active{background:rgba(200,169,110,0.2);}
-.section-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;margin-top:20px;}
-.section-label:first-child{margin-top:0;}
-.manage-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;overflow:hidden;}
-.manage-row{display:flex;align-items:center;gap:8px;padding:12px 14px;}
-.manage-name{flex:1;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.m-btn{background:none;border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
-.m-btn:active{border-color:var(--border2);color:var(--text);}
-.m-btn.danger:active{border-color:var(--danger);color:var(--danger);}
-.m-btn.out-active{border-color:rgba(224,85,85,0.4);color:var(--danger);}
-.edit-prices{padding:10px 14px 14px;border-top:0.5px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
-.edit-field label{font-size:10px;color:var(--muted);display:block;margin-bottom:4px;}
-.edit-field input{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:6px;padding:6px 6px;color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;text-align:center;outline:none;}
-.edit-field input:focus{border-color:var(--accent);}
-.add-form{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:4px;}
-.add-form-name{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;font-weight:300;outline:none;margin-bottom:10px;}
-.add-form-name::placeholder{color:var(--muted);}
-.add-form-name:focus{border-color:var(--border2);}
-.add-form-prices{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px;}
-.add-form-prices .edit-field input{padding:8px 4px;}
-.btn-add{width:100%;background:var(--accent);border:none;border-radius:var(--radius-sm);padding:13px;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.2s;}
-.btn-add:active{background:var(--accent2);}
-.step-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;}
-.delivery-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.delivery-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 6px;text-align:center;cursor:pointer;transition:border-color 0.15s;}
-.del-icon{font-size:13px;letter-spacing:0.05em;color:var(--muted);margin-bottom:6px;}
-.del-price{font-size:16px;font-weight:500;color:var(--accent);font-family:'Cormorant Garamond',serif;}
-.bill-breakdown,.due-breakdown{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;}
-.bb-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
-.bb-row:last-child{border-bottom:none;}
-.bb-lbl{color:var(--muted);}
-.bb-val{color:var(--text);font-weight:500;}
-.adv-color{color:#7ec98e!important;}
-.bb-total-row{padding-top:10px;}
-.bb-total-lbl{font-size:14px;font-weight:500;color:var(--text);}
-.bb-total-val{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--accent);}
-.due-color{color:#e05555;}
-.advance-section{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;}
-.advance-input-row{display:flex;align-items:center;gap:10px;}
-.adv-currency{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--accent);}
-.adv-input{flex:1;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:18px;font-family:'DM Sans',sans-serif;outline:none;}
-.adv-input:focus{border-color:var(--accent);}
-.due-section{margin-top:0;}
-.toast{position:fixed;bottom:calc(var(--tab-h) + 16px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:0.5px solid var(--border2);border-radius:99px;padding:10px 20px;font-size:13px;color:var(--text);opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;z-index:999;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.page{display:none;}
-.page.active{display:block;}
-.filter-row{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;}
-.filter-row::-webkit-scrollbar{display:none;}
-.filter-btn{background:var(--bg2);border:0.5px solid var(--border);border-radius:99px;padding:6px 14px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
-.filter-btn.active{background:rgba(200,169,110,0.12);border-color:rgba(200,169,110,0.4);color:var(--accent);}
-.gender-select{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:4px 6px;font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;cursor:pointer;flex-shrink:0;}
-.copy-price-btn{background:none;border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:4px 9px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
-.copy-price-btn:active{border-color:var(--accent);color:var(--accent);}
-.price-original{text-decoration:line-through;color:var(--muted);font-size:9px;display:block;margin-bottom:1px;}
-.offer-badge{font-size:9px;color:#7ec98e;display:block;margin-top:1px;}
-.offer-clear-btn{background:none;border:0.5px solid rgba(224,85,85,0.3);border-radius:var(--radius-sm);padding:4px 10px;font-size:11px;color:var(--danger);cursor:pointer;font-family:'DM Sans',sans-serif;}
-.badge-offer{background:rgba(92,158,106,0.15);color:#7ec98e;border:0.5px solid rgba(92,158,106,0.3);}
-.offer-panel{background:var(--bg3);border-top:0.5px solid var(--border);padding:12px 14px;}
-.offer-size-table{display:flex;flex-direction:column;gap:6px;}
-.offer-size-header{display:grid;grid-template-columns:36px 60px 80px 1fr 60px;gap:6px;font-size:10px;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;padding:0 4px;}
-.offer-size-row{display:grid;grid-template-columns:36px 60px 80px 1fr 60px;gap:6px;align-items:center;background:var(--bg2);border-radius:var(--radius-sm);padding:8px 6px;}
-.osr-size{font-size:12px;font-weight:500;color:var(--text);}
-.osr-orig{font-size:11px;color:var(--muted);}
-.osr-pct-wrap{display:flex;align-items:center;gap:3px;}
-.osr-pct-sym{font-size:11px;color:var(--muted);}
-.osr-input{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:6px;padding:5px 4px;color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;text-align:center;outline:none;}
-.osr-input:focus{border-color:var(--accent);}
-.osr-final{font-size:12px;font-weight:500;color:var(--muted);text-align:right;}
-.osr-final-active{color:#7ec98e;}
-.btn-copy-inside{background:rgba(92,158,106,0.1);border-color:rgba(92,158,106,0.3);color:#7ec98e;}
-.btn-copy-inside:active{background:rgba(92,158,106,0.2);}
-#paste-input::placeholder{color:var(--muted);}
-.no-results{text-align:center;padding:40px 0;color:var(--muted);font-size:14px;}
+:root {
+  --bg: #0a0a0a;
+  --bg2: #141414;
+  --bg3: #1e1e1e;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f0ede8;
+  --muted: #888;
+  --accent: #c8a96e;
+  --accent2: #e8c98e;
+  --danger: #e05555;
+  --success: #5c9e6a;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --tab-h: 64px;
+  --header-h: 70px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Header */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  height: var(--header-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.logo span { color: var(--accent); }
+
+.cart-pill {
+  background: var(--accent);
+  color: #0a0a0a;
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  border: none;
+  transition: background 0.2s;
+}
+.cart-pill:hover { background: var(--accent2); }
+.cart-pill svg { width: 14px; height: 14px; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  position: sticky;
+  top: var(--header-h);
+  z-index: 99;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 1;
+  min-width: 80px;
+  padding: 14px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 1.5px solid transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: none;
+  background: none;
+}
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Content */
+.content {
+  padding: 20px 16px;
+  padding-bottom: calc(var(--tab-h) + 20px);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Search */
+.search-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  width: 16px; height: 16px;
+}
+.search-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px 12px 40px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  outline: none;
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { border-color: var(--border2); }
+
+/* Perfume cards in catalog */
+.p-card {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+.p-card:active { border-color: var(--border2); }
+.p-card.out-of-stock { opacity: 0.45; }
+
+.p-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.p-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  flex: 1;
+  line-height: 1.3;
+}
+.p-sl { color: var(--muted); font-size: 13px; font-weight: 400; margin-right: 6px; }
+.m-sl { color: var(--muted); font-size: 12px; font-weight: 400; margin-right: 6px; flex-shrink: 0; }
+.badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 99px;
+  margin-left: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.badge-sale { background: rgba(200,169,110,0.15); color: var(--accent); border: 0.5px solid rgba(200,169,110,0.3); }
+.badge-out { background: rgba(224,85,85,0.1); color: var(--danger); border: 0.5px solid rgba(224,85,85,0.3); }
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.size-btn {
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+.size-btn:active { transform: scale(0.95); background: rgba(200,169,110,0.15); border-color: var(--accent); }
+.size-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.size-ml { font-size: 13px; font-weight: 500; display: block; }
+.size-price { font-size: 10px; color: var(--accent); display: block; margin-top: 2px; }
+
+/* Order items */
+.order-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.order-empty svg { width: 48px; height: 48px; opacity: 0.3; margin-bottom: 16px; display: block; margin-left: auto; margin-right: auto; }
+.order-empty p { font-size: 14px; }
+
+.order-item {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 12px;
+}
+.oi-info { flex: 1; min-width: 0; }
+.oi-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oi-size { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.oi-price { font-size: 16px; font-weight: 500; color: var(--accent); white-space: nowrap; }
+.oi-remove {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex; align-items: center;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.oi-remove:active { color: var(--danger); }
+.oi-remove svg { width: 16px; height: 16px; }
+
+/* Summary */
+.summary-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 12px;
+}
+.sum-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.sum-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+  font-size: 13px;
+  color: var(--muted);
+}
+.sum-row:last-of-type { border-bottom: none; }
+.sum-row span:last-child { color: var(--text); }
+.sum-total {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 14px;
+  margin-top: 8px;
+  border-top: 0.5px solid var(--border2);
+}
+.sum-total-label { font-size: 14px; color: var(--muted); }
+.sum-total-amt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--accent);
+}
+.btn-clear {
+  width: 100%;
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-clear:active { border-color: var(--danger); color: var(--danger); }
+
+.btn-copy {
+  width: 100%;
+  background: rgba(200,169,110,0.1);
+  border: 0.5px solid rgba(200,169,110,0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--accent);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-copy:active { background: rgba(200,169,110,0.2); }
+
+/* Manage tab */
+.section-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+.section-label:first-child { margin-top: 0; }
+
+.manage-item {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+.manage-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px;
+}
+.manage-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.m-btn {
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.m-btn:active { border-color: var(--border2); color: var(--text); }
+.m-btn.danger:active { border-color: var(--danger); color: var(--danger); }
+.m-btn.out-active { border-color: rgba(224,85,85,0.4); color: var(--danger); }
+
+.edit-prices {
+  padding: 10px 14px 14px;
+  border-top: 0.5px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.edit-field label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 4px; }
+.edit-field input {
+  width: 100%;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 6px;
+  color: var(--text);
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+  outline: none;
+}
+.edit-field input:focus { border-color: var(--accent); }
+
+/* Add form */
+.add-form {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 4px;
+}
+.add-form-name {
+  width: 100%;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  outline: none;
+  margin-bottom: 10px;
+}
+.add-form-name::placeholder { color: var(--muted); }
+.add-form-name:focus { border-color: var(--border2); }
+.add-form-prices {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.add-form-prices .edit-field input { padding: 8px 4px; }
+.btn-add {
+  width: 100%;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 13px;
+  color: #0a0a0a;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-add:active { background: var(--accent2); }
+
+
+/* Delivery */
+.delivery-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 10px;
+}
+.delivery-opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.delivery-card {
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  text-align: center;
+}
+.del-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.del-price { font-size: 18px; font-weight: 500; color: var(--accent); font-family: 'Cormorant Garamond', serif; }
+.del-total { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.btn-copy-inside { background: rgba(92,158,106,0.1); border-color: rgba(92,158,106,0.3); color: #7ec98e; }
+.btn-copy-inside:active { background: rgba(92,158,106,0.2); }
+.btn-copy-outside { background: rgba(100,140,200,0.1); border-color: rgba(100,140,200,0.3); color: #8ab0e8; }
+.btn-copy-outside:active { background: rgba(100,140,200,0.2); }
+
+
+
+/* Bill summary lines */
+.bill-line {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.bill-line:last-of-type { border-bottom: none; }
+.bill-line-total {
+  padding-top: 10px;
+  margin-top: 2px;
+  border-bottom: none !important;
+}
+.bill-lbl { font-size: 13px; color: var(--muted); }
+.bill-val { font-size: 14px; color: var(--text); font-weight: 500; }
+.bill-total-amt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--accent);
+}
+.bill-divider {
+  border-top: 0.5px solid var(--border2);
+  margin: 12px 0;
+}
+
+/* Advance & Due */
+.advance-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 10px;
+}
+.advance-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.advance-label { font-size: 13px; color: var(--muted); flex: 1; }
+.advance-input {
+  width: 130px;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--accent);
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  text-align: right;
+  outline: none;
+  flex-shrink: 0;
+}
+.advance-input:focus { border-color: var(--accent); }
+.due-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-top: 4px;
+}
+.due-label { font-size: 13px; color: var(--muted); }
+.due-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+}
+.due-amount.positive { color: #e05555; }
+.due-amount.zero { color: var(--success); }
+.due-amount.overpaid { color: #8ab0e8; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: calc(var(--tab-h) + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg3);
+  border: 0.5px solid var(--border2);
+  border-radius: 99px;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: var(--text);
+  opacity: 0;
+  transition: all 0.25s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Quantity control in order */
+.qty-ctrl { display: flex; align-items: center; gap: 8px; }
+.qty-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  color: var(--text);
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; line-height: 1;
+}
+.qty-num { font-size: 14px; min-width: 16px; text-align: center; }
+
+/* Page hidden class */
+.page { display: none; }
+.page.active { display: block; }
+
+/* No results */
+
+
+.filter-row { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-btn { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 99px; padding: 6px 14px; font-size: 12px; color: var(--muted); cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+.filter-btn.active { background: rgba(200,169,110,0.12); border-color: rgba(200,169,110,0.4); color: var(--accent); }
+.gender-select { background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 4px 6px; font-size: 11px; color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer; flex-shrink: 0; }
+
+.copy-price-btn {
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 9px;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.copy-price-btn:active { border-color: var(--accent); color: var(--accent); }
+
+
+/* Offer pricing */
+.price-original { text-decoration: line-through; color: var(--muted); font-size: 9px; display: block; margin-bottom: 1px; }
+.offer-badge { font-size: 9px; color: #7ec98e; display: block; margin-top: 1px; }
+.offer-clear-btn { background: none; border: 0.5px solid rgba(224,85,85,0.3); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 11px; color: var(--danger); cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.badge-offer { background: rgba(92,158,106,0.15); color: #7ec98e; border: 0.5px solid rgba(92,158,106,0.3); }
+.offer-panel { background: var(--bg3); border-top: 0.5px solid var(--border); padding: 12px 14px; }
+.offer-size-table { display: flex; flex-direction: column; gap: 6px; }
+.offer-size-header { display: grid; grid-template-columns: 36px 60px 80px 1fr 60px; gap: 6px; font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; padding: 0 4px; }
+.offer-size-row { display: grid; grid-template-columns: 36px 60px 80px 1fr 60px; gap: 6px; align-items: center; background: var(--bg2); border-radius: var(--radius-sm); padding: 8px 6px; }
+.osr-size { font-size: 12px; font-weight: 500; color: var(--text); }
+.osr-orig { font-size: 11px; color: var(--muted); }
+.osr-pct-wrap { display: flex; align-items: center; gap: 3px; }
+.osr-pct-sym { font-size: 11px; color: var(--muted); }
+.osr-input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 6px; padding: 5px 4px; color: var(--text); font-size: 12px; font-family: 'DM Sans', sans-serif; text-align: center; outline: none; }
+.osr-input:focus { border-color: var(--accent); }
+.osr-final { font-size: 12px; font-weight: 500; color: var(--muted); text-align: right; }
+.osr-final-active { color: #7ec98e; }
+
+
+/* Paste order */
+#paste-input::placeholder { color: var(--muted); }
+#paste-input:focus { border-color: var(--border2) !important; }
+
+.no-results { text-align: center; padding: 40px 0; color: var(--muted); font-size: 14px; }
 </style>
 </head>
 <body>
+
 <header class="header">
   <div class="logo">Frag<span>ranza</span> <span style="font-size:11px;font-family:'DM Sans',sans-serif;background:rgba(200,169,110,0.15);color:var(--accent);border:0.5px solid rgba(200,169,110,0.3);border-radius:99px;padding:2px 8px;vertical-align:middle;letter-spacing:0.06em;">OWNER</span></div>
   <button class="cart-pill" onclick="goTab('order')">
@@ -151,20 +631,23 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     <span id="cart-count">0</span> items
   </button>
 </header>
+
 <nav class="tabs">
   <button class="tab active" onclick="goTab('catalog')" id="tab-catalog">Catalog</button>
   <button class="tab" onclick="goTab('order')" id="tab-order">Order</button>
   <button class="tab" onclick="goTab('manage')" id="tab-manage">Manage</button>
   <button class="tab" onclick="goTab('pricecard')" id="tab-pricecard">Price Card</button>
 </nav>
+
 <main class="content">
+
   <!-- CATALOG -->
   <div class="page active" id="page-catalog">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input class="search-input" type="text" id="search" placeholder="Search perfumes…" oninput="renderCatalog()" autocomplete="off" />
     </div>
-    <div class="filter-row">
+    <div class="filter-row" id="gender-filter-row">
       <button class="filter-btn active" id="gf-all" onclick="setGenderFilter('all')">All</button>
       <button class="filter-btn" id="gf-male" onclick="setGenderFilter('male')">Male</button>
       <button class="filter-btn" id="gf-female" onclick="setGenderFilter('female')">Female</button>
@@ -172,6 +655,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div id="catalog"></div>
   </div>
+
   <!-- ORDER -->
   <div class="page" id="page-order">
     <div id="paste-order-section" style="margin-bottom:12px;">
@@ -186,39 +670,73 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div id="order-list"></div>
     <div id="order-summary"></div>
+    <!-- Custom item -->
     <div id="custom-item-section" style="margin-top:10px;">
       <button onclick="toggleCustomBox()" id="custom-toggle-btn" style="width:100%;background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
         Add Custom Item
       </button>
       <div id="custom-box" style="display:none;margin-top:8px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+
+        <!-- Section A: From perfume list -->
         <div style="font-size:11px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">From Price List</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Perfume</label>
-          <select id="custom-perfume" onchange="onCustomPerfumeChange()" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;"><option value="">— Select —</option></select></div>
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Size</label>
-          <select id="custom-ml" onchange="onCustomMlChange()" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
-            <option value="">— ml —</option><option value="2">2 ml</option><option value="5">5 ml</option><option value="10">10 ml</option><option value="15">15 ml</option><option value="30">30 ml</option>
-          </select></div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Perfume</label>
+            <select id="custom-perfume" onchange="onCustomPerfumeChange()"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+              <option value="">— Select —</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Size</label>
+            <select id="custom-ml" onchange="onCustomMlChange()"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+              <option value="">— ml —</option>
+              <option value="2">2 ml</option>
+              <option value="5">5 ml</option>
+              <option value="10">10 ml</option>
+              <option value="15">15 ml</option>
+              <option value="30">30 ml</option>
+            </select>
+          </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Price (৳) <span id="custom-auto-price" style="color:var(--accent);font-size:10px;"></span></label>
-          <input id="custom-price" type="number" min="0" placeholder="Auto / override" inputmode="numeric" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;outline:none;text-align:center;" /></div>
-          <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Qty</label>
-          <input id="custom-qty" type="number" min="1" value="1" inputmode="numeric" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;text-align:center;" /></div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Price (৳) <span id="custom-auto-price" style="color:var(--accent);font-size:10px;"></span></label>
+            <input id="custom-price" type="number" min="0" placeholder="Auto / override" inputmode="numeric"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;outline:none;text-align:center;" />
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Qty</label>
+            <input id="custom-qty" type="number" min="1" value="1" inputmode="numeric"
+              style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;text-align:center;" />
+          </div>
         </div>
-        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Note (optional)</label>
-        <input id="custom-note" type="text" placeholder="e.g. 6ml sprayer bottle..." style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;" /></div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Note (optional)</label>
+          <input id="custom-note" type="text" placeholder="e.g. 6ml sprayer bottle, special packaging..."
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;" />
+        </div>
         <button onclick="addCustomItem()" style="width:100%;background:var(--accent);border:none;border-radius:var(--radius-sm);padding:11px;color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:12px;">Add to Order</button>
+
+        <!-- Section B: Freeform note/charge -->
         <div style="font-size:11px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-top:0.5px solid var(--border);padding-top:12px;">Additional Note / Charge</div>
-        <div style="margin-bottom:8px;"><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Note / Item name</label>
-        <input id="extra-note-name" type="text" placeholder="e.g. Gift wrapping..." style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;" /></div>
-        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Price (৳) — 0 for note only</label>
-        <input id="extra-note-price" type="number" min="0" value="0" inputmode="numeric" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;outline:none;text-align:center;" /></div>
+        <div style="margin-bottom:8px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Note / Item name</label>
+          <input id="extra-note-name" type="text" placeholder="e.g. Gift wrapping, Express delivery..."
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;" />
+        </div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">Price (৳) — leave 0 for note only</label>
+          <input id="extra-note-price" type="number" min="0" value="0" inputmode="numeric"
+            style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;outline:none;text-align:center;" />
+        </div>
         <button onclick="addExtraNote()" style="width:100%;background:none;border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Add Note / Charge</button>
       </div>
     </div>
   </div>
+
   <!-- MANAGE -->
   <div class="page" id="page-manage">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -234,9 +752,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
       <button class="btn-add" onclick="addPerfume()">Add Perfume</button>
     </div>
   </div>
+
   <!-- PRICE CARD -->
   <div class="page" id="page-pricecard">
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Generate a price list image you can download and post to social media.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Generate a price list image you can download and post to social media. Automatically includes all your current perfumes.</p>
     <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
       <button class="btn-add" id="generate-btn" onclick="generateCard()" style="flex:1;padding:13px;min-width:140px;">Generate Image</button>
       <button class="btn-add" id="download-btn" onclick="downloadCard()" style="flex:1;padding:13px;min-width:140px;background:rgba(200,169,110,0.15);color:var(--accent);border:0.5px solid rgba(200,169,110,0.3);" disabled>Download</button>
@@ -247,10 +766,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <canvas id="price-canvas" style="display:none;"></canvas>
   </div>
+
 </main>
+
 <div class="toast" id="toast"></div>
+
 <script>
-const SIZES = [2,5,10,15,30];
+const SIZES = [2, 5, 10, 15, 30];
+
 let perfumes = [
   { id:36, name:'Jean Paul Gaultier Le Male Le Parfum', displayName:'Jean Paul Gaultier Le Male Le Parfum', prices:{2:0,5:490,10:950,15:1399,30:2499}, out:false, sale:false, offer:null, gender:'male', featured:true, batch:'SNOI0726', aliases:["le male le parfum", "jpg le male", "le male jpg"] },
   { id:1, name:'Rasasi Hawas Ice', displayName:'Rasasi Hawas Ice', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Ice0626', aliases:["hawas ice", "rasasi hawas ice"] },
@@ -298,456 +821,1181 @@ let perfumes = [
 ];
 let nextId = 45;
 
+// ── GitHub Sync Config ──────────────────────────────────────────────────────
 const GH_TOKEN  = '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';
 const GH_REPO   = 'Fragranza/Fragranza';
 const GH_FILE   = 'perfumes.json';
 const GH_API    = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE;
-let ghFileSha   = null;
+let   ghFileSha = null; // will be fetched on load
 
 async function loadFromGitHub() {
   try {
     showToast('Loading...');
-    const r = await fetch('https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json?t=' + Date.now() + '&r=' + Math.random(), { cache: 'no-store', headers: { 'Cache-Control': 'no-cache, no-store' } });
+    // Use public raw URL — no token needed for reading
+    const rawUrl = 'https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json?t=' + Date.now();
+    const r = await fetch(rawUrl);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const decoded = await r.json();
     perfumes = decoded.map(p => ({
       ...p,
-      prices: {2:p.prices['2']||0,5:p.prices['5']||0,10:p.prices['10']||0,15:p.prices['15']||0,30:p.prices['30']||0},
-      offer: p.offer ? {pct:p.offer.pct||{},manual:p.offer.manual||{}} : null,
-      gender: p.gender||'male', aliases: p.aliases||[],
-      displayName: p.displayName||p.name, featured: p.featured||false, batch: p.batch||''
+      prices: { 2: p.prices['2']||0, 5: p.prices['5']||0, 10: p.prices['10']||0, 15: p.prices['15']||0, 30: p.prices['30']||0 },
+      offer: p.offer ? {
+        pct: p.offer.pct || {},
+        manual: p.offer.manual || {}
+      } : null,
+      gender: p.gender || 'male',
+      aliases: p.aliases || [],
+      displayName: p.displayName || p.name,
+      featured: p.featured || false,
+      batch: p.batch || ''
     }));
-    nextId = Math.max(...perfumes.map(p=>p.id))+1;
+    nextId = Math.max(...perfumes.map(p => p.id)) + 1;
+    // Also fetch SHA separately for saving (needs token)
     fetchSha();
-    showToast('Loaded '+perfumes.length+' perfumes!');
-    renderCatalog(); renderManage();
+    showToast('Loaded ' + perfumes.length + ' perfumes!');
+    renderCatalog();
+    renderManage();
   } catch(e) {
-    showToast('Load failed: '+e.message);
-    renderCatalog(); renderManage();
+    showToast('Load failed: ' + e.message);
+    // Fall back to built-in data silently
+    renderCatalog();
+    renderManage();
+    console.error(e);
   }
 }
 
 async function fetchSha() {
   try {
-    const r = await fetch(GH_API,{headers:{'Authorization':'token '+GH_TOKEN,'User-Agent':'Fragranza-App'}});
-    if(!r.ok) return;
+    const r = await fetch(GH_API, {
+      headers: { 'Authorization': 'token ' + GH_TOKEN, 'User-Agent': 'Fragranza-App' }
+    });
+    if (!r.ok) return;
     const data = await r.json();
     ghFileSha = data.sha;
-  } catch(e){}
+  } catch(e) { console.error('SHA fetch failed', e); }
 }
 
 async function saveToGitHub() {
   try {
     showSaveState('saving');
+    // Normalize prices to string keys for JSON
     const data = perfumes.map(p => ({
-      id:p.id, name:p.name, displayName:p.displayName||p.name,
-      prices:{'2':p.prices[2]||0,'5':p.prices[5]||0,'10':p.prices[10]||0,'15':p.prices[15]||0,'30':p.prices[30]||0},
-      out:p.out, sale:p.sale, gender:p.gender||'male', featured:p.featured||false,
-      aliases:p.aliases||[], batch:p.batch||'',
-      offer:p.offer?{pct:p.offer.pct||{},manual:p.offer.manual?Object.fromEntries(Object.entries(p.offer.manual).map(([k,v])=>[k,v])):{}}:null
+      id: p.id, name: p.name,
+      prices: { '2': p.prices[2]||0, '5': p.prices[5]||0, '10': p.prices[10]||0, '15': p.prices[15]||0, '30': p.prices[30]||0 },
+      out: p.out, sale: p.sale, gender: p.gender || 'male',
+      offer: p.offer ? {
+        pct: p.offer.pct || {},
+        manual: p.offer.manual ? Object.fromEntries(Object.entries(p.offer.manual).map(([k,v])=>[k,v])) : {}
+      } : null
     }));
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
-    const body = {message:'Update perfumes via owner panel',content};
-    if(ghFileSha) body.sha = ghFileSha;
-    const r = await fetch(GH_API,{method:'PUT',headers:{'Authorization':'token '+GH_TOKEN,'Content-Type':'application/json','User-Agent':'Fragranza-App'},body:JSON.stringify(body)});
-    if(!r.ok){const e=await r.json();throw new Error(e.message);}
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    const body = { message: 'Update perfumes via owner panel', content };
+    if (ghFileSha) body.sha = ghFileSha;
+    const r = await fetch(GH_API, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + GH_TOKEN,
+        'Content-Type': 'application/json',
+        'User-Agent': 'Fragranza-App'
+      },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
     const resp = await r.json();
     ghFileSha = resp.content.sha;
     showSaveState('saved');
-  } catch(e) { showSaveState('error'); showToast('Save failed: '+e.message); }
+  } catch(e) {
+    showSaveState('error');
+    showToast('Save failed: ' + e.message);
+    console.error(e);
+  }
 }
 
 function showSaveState(state) {
   const btn = document.getElementById('gh-save-btn');
-  if(!btn) return;
-  if(state==='saving'){btn.textContent='Saving...';btn.disabled=true;btn.style.opacity='0.6';}
-  else if(state==='saved'){btn.textContent='✓ Saved to GitHub';btn.disabled=false;btn.style.opacity='1';btn.style.borderColor='rgba(92,158,106,0.5)';btn.style.color='#7ec98e';setTimeout(()=>{btn.textContent='Save to GitHub';btn.style.borderColor='';btn.style.color='';},3000);}
-  else{btn.textContent='Save failed — retry';btn.disabled=false;btn.style.opacity='1';btn.style.borderColor='rgba(224,85,85,0.5)';btn.style.color='#e05555';}
+  if (!btn) return;
+  if (state === 'saving') { btn.textContent = 'Saving...'; btn.disabled = true; btn.style.opacity = '0.6'; }
+  else if (state === 'saved') { btn.textContent = '✓ Saved to GitHub'; btn.disabled = false; btn.style.opacity = '1'; btn.style.borderColor = 'rgba(92,158,106,0.5)'; btn.style.color = '#7ec98e'; setTimeout(() => { btn.textContent = 'Save to GitHub'; btn.style.borderColor = ''; btn.style.color = ''; }, 3000); }
+  else { btn.textContent = 'Save failed — retry'; btn.disabled = false; btn.style.opacity = '1'; btn.style.borderColor = 'rgba(224,85,85,0.5)'; btn.style.color = '#e05555'; }
 }
 
-let order=[], currentGrandTotal=0, editingId=null, selectedDelivery='none', genderFilter='all', offerPanelId=null;
+let order = []; // [{pid, size, price, name}]
+let currentGrandTotal = 0;
+let editingId = null;
 
-function displayNameOf(p){ return(p&&(p.displayName||p.name))||''; }
-
-function goTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+/* ---- NAV ---- */
+function goTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.getElementById('page-'+name).classList.add('active');
-  if(name==='order') renderOrder();
-  if(name==='manage') renderManage();
-  if(name==='catalog') renderCatalog();
+  if (name === 'order') renderOrder();
+  if (name === 'manage') renderManage();
+  if (name === 'pricecard') { /* ready on demand */ }
+  if (name === 'catalog') renderCatalog();
 }
 
-function setGenderFilter(g){
-  genderFilter=g;
-  ['all','male','female','unisex'].forEach(f=>{const b=document.getElementById('gf-'+f);if(b)b.classList.toggle('active',f===g);});
+/* ---- Name helper ---- */
+function displayNameOf(p) {
+  return (p && (p.displayName || p.name)) || '';
+}
+
+/* ---- CATALOG ---- */
+function setGenderFilter(g) {
+  genderFilter = g;
+  ['all','male','female','unisex'].forEach(f => {
+    const b = document.getElementById('gf-' + f);
+    if (b) b.classList.toggle('active', f === g);
+  });
   renderCatalog();
 }
 
-function renderCatalog(){
-  const q=(document.getElementById('search').value||'').toLowerCase();
-  const el=document.getElementById('catalog');
-  let list=perfumes.filter(p=>displayNameOf(p).toLowerCase().includes(q)||p.name.toLowerCase().includes(q)||(p.aliases||[]).some(a=>a.toLowerCase().includes(q)));
-  if(genderFilter!=='all') list=list.filter(p=>(p.gender||'male')===genderFilter);
-  list=list.sort((a,b)=>displayNameOf(a).localeCompare(displayNameOf(b)));
-  if(!list.length){el.innerHTML='<div class="no-results">No perfumes found</div>';return;}
-  el.innerHTML=list.map((p,idx)=>{
-    const badges=(p.sale?'<span class="badge badge-sale">SALE</span>':'')+(p.out?'<span class="badge badge-out">OUT</span>':'');
-    const btns=SIZES.map(s=>{
-      const pr=p.prices[s];
-      if(!pr) return '<div></div>';
-      const ep=effectivePrice(p,s);
-      const isOffer=ep!==pr;
-      return '<button class="size-btn" onclick="addToOrder('+p.id+','+s+')" '+(p.out?'disabled':'')+'>'+
-        '<span class="size-ml">'+s+'ml</span>'+
-        (isOffer?'<span class="price-original">৳'+pr.toLocaleString()+'</span>':'')+
-        '<span class="size-price">৳'+ep.toLocaleString()+'</span>'+
-        (isOffer?'<span class="offer-badge">'+offerBadgeText(p)+'</span>':'')+
-        '</button>';
+function renderCatalog() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const el = document.getElementById('catalog');
+  let list = perfumes.filter(p => displayNameOf(p).toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
+  if (genderFilter !== 'all') list = list.filter(p => (p.gender || 'male') === genderFilter);
+  list = list.sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b)));
+  if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
+  el.innerHTML = list.map((p, idx) => {
+    const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
+    const btns = SIZES.map(s => {
+      const pr = p.prices[s];
+      if (!pr) return `<div></div>`;
+      const ep = effectivePrice(p, s);
+      const isOffer = ep !== pr;
+      return `<button class="size-btn" onclick="addToOrder(${p.id},${s})" ${p.out ? 'disabled' : ''}>
+        <span class="size-ml">${s}ml</span>
+        ${isOffer ? `<span class="price-original">৳${pr.toLocaleString()}</span>` : ''}
+        <span class="size-price">৳${ep.toLocaleString()}</span>
+        ${isOffer ? `<span class="offer-badge">${offerBadgeText(p)}</span>` : ''}
+      </button>`;
     }).join('');
-    return '<div class="p-card '+(p.out?'out-of-stock':'')+'">'+
-      '<div class="p-header">'+
-        '<div class="p-name"><span class="p-sl">'+(idx+1)+'.</span>'+esc(displayNameOf(p))+'</div>'+
-        '<div style="display:flex;align-items:center;gap:6px;">'+badges+
-          '<button class="copy-price-btn" onclick="copyPriceList('+p.id+')">'+
-            '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Price</button>'+
-        '</div>'+
-      '</div>'+
-      '<div class="size-grid">'+btns+'</div></div>';
+    return `<div class="p-card ${p.out ? 'out-of-stock' : ''}">
+      <div class="p-header">
+        <div class="p-name"><span class="p-sl">${idx + 1}.</span>${esc(displayNameOf(p))}</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          ${badges}
+          <button class="copy-price-btn" onclick="copyPriceList(${p.id})">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Price
+          </button>
+        </div>
+      </div>
+      <div class="size-grid">${btns}</div>
+    </div>`;
   }).join('');
 }
 
-function effectivePrice(p,size){
-  if(!p.offer) return p.prices[size];
-  const s=String(size);
-  if(p.offer.pct&&p.offer.pct[s]) return Math.round(p.prices[size]*(1-p.offer.pct[s]/100));
-  if(p.offer.manual&&p.offer.manual[s]) return p.offer.manual[s];
-  return p.prices[size];
-}
-
-function offerBadgeText(p){
-  if(!p.offer) return '';
-  const pcts=p.offer.pct?Object.values(p.offer.pct).filter(v=>v>0):[];
-  const mans=p.offer.manual?Object.values(p.offer.manual).filter(v=>v>0):[];
-  if(pcts.length&&mans.length) return 'OFFER';
-  if(pcts.length){const u=[...new Set(pcts)];return u.length===1?u[0]+'% OFF':'OFFER';}
-  if(mans.length) return 'SPECIAL';
-  return '';
-}
-
-function addToOrder(pid,size){
-  const p=perfumes.find(x=>x.id===pid);
-  if(!p||p.out) return;
-  order.push({pid,size,price:effectivePrice(p,size),origPrice:p.prices[size],name:displayNameOf(p)});
+/* ---- ORDER ---- */
+function addToOrder(pid, size) {
+  const p = perfumes.find(x => x.id === pid);
+  if (!p || p.out) return;
+  order.push({ pid, size, price: effectivePrice(p, size), origPrice: p.prices[size], name: displayNameOf(p) });
   updateBadge();
-  showToast(displayNameOf(p).split(' ')[0]+' '+size+'ml added');
+  showToast(displayNameOf(p).split(' ')[0] + ' ' + size + 'ml added');
 }
 
-function removeFromOrder(idx){order.splice(idx,1);updateBadge();renderOrder();}
-function clearOrder(){order=[];updateBadge();renderOrder();}
-function updateBadge(){document.getElementById('cart-count').textContent=order.length;}
+function removeFromOrder(idx) {
+  order.splice(idx, 1);
+  updateBadge();
+  renderOrder();
+}
 
-function selectDelivery(type){
-  selectedDelivery=type;
-  ['none','inside','outside'].forEach(t=>{const c=document.getElementById('del-card-'+t);if(c)c.style.borderColor=t===type?'var(--accent)':'var(--border)';});
+function clearOrder() {
+  order = [];
+  updateBadge();
+  renderOrder();
+}
+
+function updateBadge() {
+  document.getElementById('cart-count').textContent = order.length;
+}
+
+function renderOrder() {
+  const listEl = document.getElementById('order-list');
+  const sumEl = document.getElementById('order-summary');
+  if (!order.length) {
+    listEl.innerHTML = `<div class="order-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <p>No items yet.<br>Go to Catalog to add.</p>
+    </div>`;
+    sumEl.innerHTML = '';
+    return;
+  }
+  listEl.innerHTML = order.map((o, i) => `
+    <div class="order-item">
+      <div class="oi-info">
+        <div class="oi-name" style="${o.custom ? 'color:var(--accent2);' : ''}">${esc(o.name)}</div>
+        <div class="oi-size">${o.custom ? 'Custom item' : o.size + ' ml'}</div>
+      </div>
+      <div class="oi-price">৳${o.price.toLocaleString()}</div>
+      <button class="oi-remove" onclick="removeFromOrder(${i})" aria-label="Remove">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>`).join('');
+
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const totalMl = order.reduce((s, o) => s + o.size, 0);
+  currentGrandTotal = perfumeTotal;
+
+  // group for item list
+  const map = {};
+  order.forEach((o, i) => {
+    const k = o.custom ? 'custom-' + i + '-' + o.price : o.pid + '-' + o.size;
+    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0, custom: o.custom };
+    if (!o.custom) map[k].qty++;
+    else map[k].qty = (map[k].qty || 0) + 1;
+  });
+  const itemRows = Object.values(map).map(g =>
+    `<div class="sum-row"><span>${esc(g.name)} ${g.size}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
+  ).join('');
+
+  sumEl.innerHTML = `
+
+    <!-- STEP 1: Items -->
+    <div class="summary-box">
+      <div class="sum-title">Items</div>
+      ${itemRows}
+      <div class="sum-total">
+        <span class="sum-total-label">${order.length} item${order.length !== 1 ? 's' : ''} · ${totalMl}ml</span>
+        <span class="sum-total-amt">৳${perfumeTotal.toLocaleString()}</span>
+      </div>
+    </div>
+
+    <!-- STEP 2: Delivery -->
+    <div class="step-label">Select Delivery</div>
+    <div class="delivery-opts">
+      <div class="delivery-card" id="del-card-none" onclick="selectDelivery('none')" style="border-color:var(--accent);">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">PICKUP</div>
+        
+        <div class="del-price">৳0</div>
+      </div>
+      <div class="delivery-card" id="del-card-inside" onclick="selectDelivery('inside')">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">INSIDE</div>
+        
+        <div class="del-price">৳85</div>
+      </div>
+      <div class="delivery-card" id="del-card-outside" onclick="selectDelivery('outside')">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">OUTSIDE</div>
+        
+        <div class="del-price">৳125</div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Bill breakdown -->
+    <div class="step-label">Bill</div>
+    <div class="bill-breakdown">
+      <div class="bb-row">
+        <span class="bb-lbl">Perfume total</span>
+        <span class="bb-val">৳${perfumeTotal.toLocaleString()}</span>
+      </div>
+      <div class="bb-row" id="bb-del-row" style="display:none;">
+        <span class="bb-lbl" id="bb-del-lbl">Delivery</span>
+        <span class="bb-val" id="bb-del-val">—</span>
+      </div>
+      <div class="bb-row bb-total-row">
+        <span class="bb-total-lbl">Total bill</span>
+        <span class="bb-total-val" id="bb-total">৳${perfumeTotal.toLocaleString()}</span>
+      </div>
+    </div>
+
+    <!-- STEP 4: Advance -->
+    <div class="step-label">Advance Paid</div>
+    <div class="advance-section">
+      <div class="advance-input-row">
+        <span class="adv-currency">৳</span>
+        <input class="adv-input" type="number" min="0" id="advance-input" placeholder="0" inputmode="numeric" oninput="recalc()" />
+      </div>
+    </div>
+
+    <!-- STEP 5: Deducted & Due -->
+    <div class="due-section" id="due-section" style="display:none;">
+      <div class="due-breakdown">
+        <div class="bb-row">
+          <span class="bb-lbl">Total bill</span>
+          <span class="bb-val" id="due-bill-total">—</span>
+        </div>
+        <div class="bb-row">
+          <span class="bb-lbl">Advance paid</span>
+          <span class="bb-val adv-color" id="due-adv">—</span>
+        </div>
+        <div class="bb-row bb-total-row">
+          <span class="bb-total-lbl">Due bill</span>
+          <span class="bb-total-val due-color" id="due-final">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: Copy buttons -->
+    <div class="step-label">Send to Customer</div>
+    <button class="btn-copy" onclick="copyFull()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Full Order Summary
+    </button>
+    <button class="btn-copy" onclick="copyBatchCodes()" id="copy-batch-btn" style="background:rgba(100,140,200,0.1);border-color:rgba(100,140,200,0.3);color:#8ab0e8;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Copy Batch Codes
+    </button>
+    <button class="btn-copy btn-copy-inside" onclick="copyWithTransaction()" id="copy-transaction-btn" style="display:none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy with Advance & Due
+    </button>
+    <button class="btn-clear" onclick="clearOrder()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      Clear order
+    </button>
+  `;
+
+  selectedDelivery = 'none';
+  setTimeout(recalc, 0);
+}
+let selectedDelivery = 'none';
+let genderFilter = 'all';
+
+function selectDelivery(type) {
+  selectedDelivery = type;
+  ['none','inside','outside'].forEach(t => {
+    const c = document.getElementById('del-card-' + t);
+    if (c) c.style.borderColor = t === type ? 'var(--accent)' : 'var(--border)';
+  });
   recalc();
 }
 
-function recalc(){
-  const perfumeTotal=order.reduce((s,o)=>s+o.price,0);
-  const delAmt=selectedDelivery==='inside'?85:selectedDelivery==='outside'?125:0;
-  const grandTotal=perfumeTotal+delAmt;
-  currentGrandTotal=grandTotal;
-  const delRow=document.getElementById('bb-del-row');
-  const delLbl=document.getElementById('bb-del-lbl');
-  const delVal=document.getElementById('bb-del-val');
-  if(delRow){
-    if(delAmt>0){delRow.style.display='flex';delLbl.textContent=selectedDelivery==='inside'?'Inside Dhaka':'Outside Dhaka';delVal.textContent='৳'+delAmt.toLocaleString();}
-    else delRow.style.display='none';
+function recalc() {
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  currentGrandTotal = grandTotal;
+
+  // delivery row
+  const delRow = document.getElementById('bb-del-row');
+  const delLbl = document.getElementById('bb-del-lbl');
+  const delVal = document.getElementById('bb-del-val');
+  if (delRow) {
+    if (delAmt > 0) {
+      delRow.style.display = 'flex';
+      delLbl.textContent = selectedDelivery === 'inside' ? '🛵 Inside Dhaka' : '🚚 Outside Dhaka';
+      delVal.textContent = '৳' + delAmt.toLocaleString();
+    } else {
+      delRow.style.display = 'none';
+    }
   }
-  const bbTotal=document.getElementById('bb-total');
-  if(bbTotal) bbTotal.textContent='৳'+grandTotal.toLocaleString();
-  const advEl=document.getElementById('advance-input');
-  const advance=advEl?(parseFloat(advEl.value)||0):0;
-  const dueSection=document.getElementById('due-section');
-  const copyTxBtn=document.getElementById('copy-transaction-btn');
-  if(advance>0){
-    const due=grandTotal-advance;
-    if(dueSection) dueSection.style.display='block';
-    if(copyTxBtn) copyTxBtn.style.display='flex';
-    const dbt=document.getElementById('due-bill-total');
-    const da=document.getElementById('due-adv');
-    const df=document.getElementById('due-final');
-    if(dbt) dbt.textContent='৳'+grandTotal.toLocaleString();
-    if(da) da.textContent='- ৳'+advance.toLocaleString();
-    if(df){df.textContent='৳'+Math.abs(due).toLocaleString()+(due<0?' (Overpaid)':due===0?' (Settled)':'');df.style.color=due<0?'#8ab0e8':due===0?'var(--success)':'#e05555';}
+  const bbTotal = document.getElementById('bb-total');
+  if (bbTotal) bbTotal.textContent = '৳' + grandTotal.toLocaleString();
+
+  // advance & due
+  const advEl = document.getElementById('advance-input');
+  const advance = advEl ? (parseFloat(advEl.value) || 0) : 0;
+  const dueSection = document.getElementById('due-section');
+  const copyTxBtn = document.getElementById('copy-transaction-btn');
+  if (advance > 0) {
+    const due = grandTotal - advance;
+    if (dueSection) dueSection.style.display = 'block';
+    if (copyTxBtn) copyTxBtn.style.display = 'flex';
+    const dueBillTotal = document.getElementById('due-bill-total');
+    const dueAdv = document.getElementById('due-adv');
+    const dueFinal = document.getElementById('due-final');
+    if (dueBillTotal) dueBillTotal.textContent = '৳' + grandTotal.toLocaleString();
+    if (dueAdv) dueAdv.textContent = '- ৳' + advance.toLocaleString();
+    if (dueFinal) {
+      dueFinal.textContent = '৳' + Math.abs(due).toLocaleString() + (due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : '');
+      dueFinal.style.color = due < 0 ? '#8ab0e8' : due === 0 ? 'var(--success)' : '#e05555';
+    }
   } else {
-    if(dueSection) dueSection.style.display='none';
-    if(copyTxBtn) copyTxBtn.style.display='none';
+    if (dueSection) dueSection.style.display = 'none';
+    if (copyTxBtn) copyTxBtn.style.display = 'none';
   }
 }
 
-function getOrderLines(){
-  const map={};
-  order.forEach((o,i)=>{
-    const k=o.custom?'c-'+o.name+'-'+o.price:o.pid+'-'+o.size;
-    if(!map[k]) map[k]={name:o.name,size:o.size,price:o.price,qty:0,custom:o.custom};
+function getOrderLines() {
+  const map = {};
+  order.forEach(o => {
+    const k = o.pid + '-' + o.size;
+    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
     map[k].qty++;
   });
-  return Object.values(map).map(g=>{
-    const label=g.custom?g.name:g.name+' '+g.size+'ml';
-    const total=g.price*g.qty;
-    const qtyStr=g.qty>1?' x'+g.qty:'';
-    return '- '+label+qtyStr+' — ৳'+total.toLocaleString();
-  });
+  return Object.values(map).map(g =>
+    g.custom
+      ? `• ${g.name}${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
+      : `• ${g.name} ${g.size}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
+  );
 }
 
-function renderOrder(){
-  const listEl=document.getElementById('order-list');
-  const sumEl=document.getElementById('order-summary');
-  if(!order.length){
-    listEl.innerHTML='<div class="order-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>No items yet.<br>Go to Catalog to add.</p></div>';
-    sumEl.innerHTML=''; return;
-  }
-  listEl.innerHTML=order.map((o,i)=>'<div class="order-item"><div class="oi-info"><div class="oi-name" style="'+(o.custom?'color:var(--accent2);':'')+'">'+esc(o.name)+'</div><div class="oi-size">'+(o.custom?'Custom item':o.size+' ml')+'</div></div><div class="oi-price">৳'+o.price.toLocaleString()+'</div><button class="oi-remove" onclick="removeFromOrder('+i+')" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>').join('');
-  const perfumeTotal=order.reduce((s,o)=>s+o.price,0);
-  const totalMl=order.filter(o=>!o.custom&&o.size).reduce((s,o)=>s+o.size,0);
-  currentGrandTotal=perfumeTotal;
-  const map={};
-  order.forEach((o,i)=>{const k=o.custom?'c-'+i+'-'+o.price:o.pid+'-'+o.size;if(!map[k])map[k]={name:o.name,size:o.size,price:o.price,qty:0,custom:o.custom};map[k].qty++;});
-  const itemRows=Object.values(map).map(g=>'<div class="sum-row"><span>'+esc(g.name)+(g.custom?'':' '+g.size+'ml')+(g.qty>1?' ×'+g.qty:'')+'</span><span>৳'+(g.price*g.qty).toLocaleString()+'</span></div>').join('');
-  sumEl.innerHTML=
-    '<div class="summary-box"><div class="sum-title">Items</div>'+itemRows+
-    '<div class="sum-total"><span class="sum-total-label">'Quantity: '+order.length+'</span><span class="sum-total-amt">৳'+perfumeTotal.toLocaleString()+'</span></div></div>'+
-    '<div class="step-label">Select Delivery</div>'+
-    '<div class="delivery-opts">'+
-      '<div class="delivery-card" id="del-card-none" onclick="selectDelivery('none')" style="border-color:var(--accent);"><div class="del-icon">PICKUP</div><div class="del-price">৳0</div></div>'+
-      '<div class="delivery-card" id="del-card-inside" onclick="selectDelivery('inside')"><div class="del-icon">INSIDE</div><div class="del-price">৳85</div></div>'+
-      '<div class="delivery-card" id="del-card-outside" onclick="selectDelivery('outside')"><div class="del-icon">OUTSIDE</div><div class="del-price">৳125</div></div>'+
-    '</div>'+
-    '<div class="step-label">Bill</div>'+
-    '<div class="bill-breakdown">'+
-      '<div class="bb-row"><span class="bb-lbl">Perfume total</span><span class="bb-val">৳'+perfumeTotal.toLocaleString()+'</span></div>'+
-      '<div class="bb-row" id="bb-del-row" style="display:none;"><span class="bb-lbl" id="bb-del-lbl">Delivery</span><span class="bb-val" id="bb-del-val">—</span></div>'+
-      '<div class="bb-row bb-total-row"><span class="bb-total-lbl">Total bill</span><span class="bb-total-val" id="bb-total">৳'+perfumeTotal.toLocaleString()+'</span></div>'+
-    '</div>'+
-    '<div class="step-label">Advance Paid</div>'+
-    '<div class="advance-section"><div class="advance-input-row"><span class="adv-currency">৳</span><input class="adv-input" type="number" min="0" id="advance-input" placeholder="0" inputmode="numeric" oninput="recalc()" /></div></div>'+
-    '<div class="due-section" id="due-section" style="display:none;"><div class="due-breakdown">'+
-      '<div class="bb-row"><span class="bb-lbl">Total bill</span><span class="bb-val" id="due-bill-total">—</span></div>'+
-      '<div class="bb-row"><span class="bb-lbl">Advance paid</span><span class="bb-val adv-color" id="due-adv">—</span></div>'+
-      '<div class="bb-row bb-total-row"><span class="bb-total-lbl">Due bill</span><span class="bb-total-val due-color" id="due-final">—</span></div>'+
-    '</div></div>'+
-    '<div class="step-label">Send to Customer</div>'+
-    '<button class="btn-copy" onclick="copyFull()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Full Order Summary</button>'+
-    
-    '<button class="btn-copy btn-copy-inside" onclick="copyWithTransaction()" id="copy-transaction-btn" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy with Advance & Due</button>'+
-    '<button class="btn-clear" onclick="clearOrder()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>Clear order</button>';
-  selectedDelivery='none';
-  setTimeout(recalc,0);
+function copyFull() {
+  if (!order.length) return;
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const totalMl = order.reduce((s, o) => s + o.size, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
+  const lines = getOrderLines();
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
-function copyFull(){
-  if(!order.length) return;
-  const perfumeTotal=order.reduce((s,o)=>s+o.price,0);
-  const delAmt=selectedDelivery==='inside'?85:selectedDelivery==='outside'?125:0;
-  const grandTotal=perfumeTotal+delAmt;
-  const delLine=delAmt>0?'\nDelivery ('+(selectedDelivery==='inside'?'Inside Dhaka':'Outside Dhaka')+'):\u09f3'+delAmt:'';
-  const lines=getOrderLines();
-  const text='*Fragranza Order*\n\n'+lines.join('\n')+'\n\nPerfume Total: \u09f3'+perfumeTotal.toLocaleString()+delLine+'\n\nTotal Bill: \u09f3'+grandTotal.toLocaleString();
-  navigator.clipboard.writeText(text).then(()=>showToast('Copied!')).catch(()=>showToast('Could not copy'));
+function copyWithTransaction() {
+  if (!order.length) return;
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const totalMl = order.reduce((s, o) => s + o.size, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  const advance = parseFloat(document.getElementById('advance-input').value) || 0;
+  const due = grandTotal - advance;
+  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
+  const lines = getOrderLines();
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\nTotal Bill: ৳${grandTotal.toLocaleString()}\n\nAdvance Paid: ৳${advance.toLocaleString()}\nDue Bill: ৳${Math.abs(due).toLocaleString()}${due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : ''}`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
-function copyWithTransaction(){
-  if(!order.length) return;
-  const perfumeTotal=order.reduce((s,o)=>s+o.price,0);
-  const delAmt=selectedDelivery==='inside'?85:selectedDelivery==='outside'?125:0;
-  const grandTotal=perfumeTotal+delAmt;
-  const advance=parseFloat(document.getElementById('advance-input').value)||0;
-  const due=grandTotal-advance;
-  const delLine=delAmt>0?'\nDelivery ('+(selectedDelivery==='inside'?'Inside Dhaka':'Outside Dhaka')+'):\u09f3'+delAmt:'';
-  const lines=getOrderLines();
-  const text='*Fragranza Order*\n\n'+lines.join('\n')+'\n\nPerfume Total: \u09f3'+perfumeTotal.toLocaleString()+delLine+'\nTotal Bill: \u09f3'+grandTotal.toLocaleString()+'\n\nAdvance Paid: \u09f3'+advance.toLocaleString()+'\nDue Bill: \u09f3'+Math.abs(due).toLocaleString()+(due<0?' (Overpaid)':due===0?' (Settled)':'');
-  navigator.clipboard.writeText(text).then(()=>showToast('Copied!')).catch(()=>showToast('Could not copy'));
-}
+/* ---- MANAGE ---- */
+function renderManage() {
+  const el = document.getElementById('manage-list');
+  el.innerHTML = [...perfumes].sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b))).map((p, idx) => {
+    const editing = editingId === p.id;
+    const offerOpen = offerPanelId === p.id;
+    const offerPct = (p.offer && p.offer.pct) ? p.offer.pct : {};
+    const offerMan = (p.offer && p.offer.manual) ? p.offer.manual : {};
+    const hasAnyOffer = p.offer && (
+      Object.values(offerPct).some(v=>v>0) || Object.values(offerMan).some(v=>v>0)
+    );
 
+    const editBlock = editing ? `<div class="edit-prices">${SIZES.map(s=>
+      `<div class="edit-field"><label>${s}ml</label><input type="number" min="0" value="${p.prices[s]||''}" oninput="setPr(${p.id},${s},this.value)" inputmode="numeric" /></div>`
+    ).join('')}</div>` : '';
 
-function renderManage(){
-  const el=document.getElementById('manage-list');
-  el.innerHTML=[...perfumes].sort((a,b)=>displayNameOf(a).localeCompare(displayNameOf(b))).map((p,idx)=>{
-    const editing=editingId===p.id;
-    const offerOpen=offerPanelId===p.id;
-    const offerPct=(p.offer&&p.offer.pct)?p.offer.pct:{};
-    const offerMan=(p.offer&&p.offer.manual)?p.offer.manual:{};
-    const hasAnyOffer=p.offer&&(Object.values(offerPct).some(v=>v>0)||Object.values(offerMan).some(v=>v>0));
-    const editBlock=editing?'<div class="edit-prices">'+SIZES.map(s=>'<div class="edit-field"><label>'+s+'ml</label><input type="number" min="0" value="'+(p.prices[s]||'')+'" oninput="setPr('+p.id+','+s+',this.value)" inputmode="numeric" /></div>').join('')+'</div>':'';
-    const offerBlock=offerOpen?'<div class="offer-panel"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><span style="font-size:11px;font-weight:500;color:var(--text);">Set Offer Per Size</span><button class="offer-clear-btn" onclick="clearOffer('+p.id+')">Clear All</button></div><div class="offer-size-table"><div class="offer-size-header"><span>Size</span><span>Original</span><span>% Off</span><span>Manual ৳</span><span>Final</span></div>'+[2,5,10,15,30].map(s=>{const orig=p.prices[s];const pct=offerPct[String(s)]||'';const man=offerMan[String(s)]||'';const ep=effectivePrice(p,s);const changed=ep!==orig;return '<div class="offer-size-row"><span class="osr-size">'+s+'ml</span><span class="osr-orig">৳'+orig.toLocaleString()+'</span><div class="osr-pct-wrap"><input class="osr-input" type="number" min="0" max="99" placeholder="0" value="'+pct+'" oninput="setSizePct('+p.id+','+s+',this.value)" inputmode="numeric" /><span class="osr-pct-sym">%</span></div><input class="osr-input" type="number" min="0" placeholder="—" value="'+man+'" oninput="setSizeManual('+p.id+','+s+',this.value)" inputmode="numeric" /><span class="osr-final '+(changed?'osr-final-active':'')+'">৳'+ep.toLocaleString()+'</span></div>';}).join('')+'</div><p style="font-size:10px;color:var(--muted);margin-top:8px;">Manual price overrides % for that size.</p></div>':'';
-    return '<div class="manage-item"><div class="manage-row"><span class="m-sl">'+(idx+1)+'.</span><span class="manage-name">'+esc(displayNameOf(p))+'</span><select class="gender-select" onchange="setGender('+p.id+',this.value)"><option value="male" '+(( p.gender||'male')==='male'?'selected':'')+'>Male</option><option value="female" '+((p.gender||'male')==='female'?'selected':'')+'>Female</option><option value="unisex" '+((p.gender||'male')==='unisex'?'selected':'')+'>Unisex</option></select><button class="m-btn" onclick="toggleEdit('+p.id+')">'+(editing?'Done':'Prices')+'</button><button class="m-btn" style="'+(hasAnyOffer?'border-color:rgba(92,158,106,0.4);color:#7ec98e;':'')+'" onclick="toggleOfferPanel('+p.id+')">'+(hasAnyOffer?offerBadgeText(p):'Offer')+'</button><button class="m-btn '+(p.out?'out-active':'')+'" onclick="toggleOut('+p.id+')">'+(p.out?'Out':'In stock')+'</button><button class="m-btn danger" onclick="deletePerfume('+p.id+')">✕</button></div>'+editBlock+offerBlock+'</div>';
+    const offerBlock = offerOpen ? `<div class="offer-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:11px;font-weight:500;color:var(--text);">Set Offer Per Size</span>
+        <button class="offer-clear-btn" onclick="clearOffer(${p.id})">Clear All</button>
+      </div>
+      <div class="offer-size-table">
+        <div class="offer-size-header">
+          <span>Size</span><span>Original</span><span>% Off</span><span>Manual ৳</span><span>Final</span>
+        </div>
+        ${[2,5,10,15,30].map(s => {
+          const orig = p.prices[s];
+          const pct = offerPct[String(s)] || '';
+          const man = offerMan[String(s)] || '';
+          const ep = effectivePrice(p, s);
+          const changed = ep !== orig;
+          return `<div class="offer-size-row">
+            <span class="osr-size">${s}ml</span>
+            <span class="osr-orig">৳${orig.toLocaleString()}</span>
+            <div class="osr-pct-wrap">
+              <input class="osr-input" type="number" min="0" max="99" placeholder="0" value="${pct}" oninput="setSizePct(${p.id},${s},this.value)" inputmode="numeric" />
+              <span class="osr-pct-sym">%</span>
+            </div>
+            <input class="osr-input" type="number" min="0" placeholder="—" value="${man}" oninput="setSizeManual(${p.id},${s},this.value)" inputmode="numeric" />
+            <span class="osr-final ${changed ? 'osr-final-active' : ''}">৳${ep.toLocaleString()}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <p style="font-size:10px;color:var(--muted);margin-top:8px;">Manual price overrides % for that size.</p>
+    </div>` : '';
+
+    return `<div class="manage-item">
+      <div class="manage-row">
+        <span class="m-sl">${idx + 1}.</span>
+        <span class="manage-name">${esc(displayNameOf(p))}</span>
+        <select class="gender-select" onchange="setGender(${p.id},this.value)">
+          <option value="male" ${(p.gender||'male')==='male'?'selected':''}>Male</option>
+          <option value="female" ${(p.gender||'male')==='female'?'selected':''}>Female</option>
+          <option value="unisex" ${(p.gender||'male')==='unisex'?'selected':''}>Unisex</option>
+        </select>
+        <button class="m-btn" onclick="toggleEdit(${p.id})">${editing ? 'Done' : 'Prices'}</button>
+        <button class="m-btn" style="${hasAnyOffer ? 'border-color:rgba(92,158,106,0.4);color:#7ec98e;' : ''}" onclick="toggleOfferPanel(${p.id})">${hasAnyOffer ? offerBadgeText(p) : 'Offer'}</button>
+        <button class="m-btn ${p.out ? 'out-active' : ''}" onclick="toggleOut(${p.id})">${p.out ? 'Out' : 'In stock'}</button>
+        <button class="m-btn danger" onclick="deletePerfume(${p.id})">✕</button>
+      </div>
+      ${editBlock}
+      ${offerBlock}
+    </div>`;
   }).join('');
-  const pf=document.getElementById('add-price-fields');
-  if(pf) pf.innerHTML=SIZES.map(s=>'<div class="edit-field"><label>'+s+'ml ৳</label><input type="number" min="0" id="new-'+s+'" placeholder="0" inputmode="numeric" /></div>').join('');
+
+  // Build add price fields
+  const pf = document.getElementById('add-price-fields');
+  if (pf) pf.innerHTML = SIZES.map(s =>
+    `<div class="edit-field"><label>${s}ml ৳</label><input type="number" min="0" id="new-${s}" placeholder="0" inputmode="numeric" /></div>`
+  ).join('');
+}
+function setGender(id, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) p.gender = val;
 }
 
-function setGender(id,val){const p=perfumes.find(x=>x.id===id);if(p)p.gender=val;}
-function toggleEdit(id){editingId=editingId===id?null:id;renderManage();}
-function setPr(id,size,val){const p=perfumes.find(x=>x.id===id);if(p)p.prices[size]=parseInt(val)||0;}
-function toggleOut(id){const p=perfumes.find(x=>x.id===id);if(p){p.out=!p.out;renderManage();renderCatalog();}}
-function deletePerfume(id){if(!confirm('Delete?'))return;perfumes=perfumes.filter(x=>x.id!==id);order=order.filter(o=>o.pid!==id);updateBadge();renderManage();renderCatalog();}
-function addPerfume(){
-  const name=document.getElementById('new-name').value.trim();
-  if(!name){showToast('Enter a perfume name');return;}
-  const prices={};
-  SIZES.forEach(s=>{prices[s]=parseInt(document.getElementById('new-'+s).value)||0;});
-  perfumes.push({id:nextId++,name,displayName:name,prices,out:false,sale:false,offer:null,gender:'male',featured:false,aliases:[],batch:''});
-  document.getElementById('new-name').value='';
-  SIZES.forEach(s=>{document.getElementById('new-'+s).value='';});
-  showToast(name+' added!');
-  renderManage();renderCatalog();
+function toggleEdit(id) {
+  editingId = editingId === id ? null : id;
+  renderManage();
 }
 
-function toggleOfferPanel(id){offerPanelId=offerPanelId===id?null:id;const p=perfumes.find(x=>x.id===id);if(offerPanelId&&p&&!p.offer)p.offer={pct:{},manual:{}};renderManage();renderCatalog();}
-function setSizePct(id,size,val){const p=perfumes.find(x=>x.id===id);if(!p)return;if(!p.offer)p.offer={pct:{},manual:{}};if(!p.offer.pct)p.offer.pct={};const v=parseFloat(val)||0;if(v>0){p.offer.pct[String(size)]=v;if(p.offer.manual)delete p.offer.manual[String(size)];}else delete p.offer.pct[String(size)];cleanOffer(p);renderCatalog();}
-function setSizeManual(id,size,val){const p=perfumes.find(x=>x.id===id);if(!p)return;if(!p.offer)p.offer={pct:{},manual:{}};if(!p.offer.manual)p.offer.manual={};const v=parseInt(val)||0;if(v>0){p.offer.manual[String(size)]=v;if(p.offer.pct)delete p.offer.pct[String(size)];}else delete p.offer.manual[String(size)];cleanOffer(p);renderCatalog();}
-function cleanOffer(p){const hasPct=p.offer&&p.offer.pct&&Object.values(p.offer.pct).some(v=>v>0);const hasMan=p.offer&&p.offer.manual&&Object.values(p.offer.manual).some(v=>v>0);if(!hasPct&&!hasMan)p.offer=null;}
-function clearOffer(id){const p=perfumes.find(x=>x.id===id);if(p)p.offer=null;offerPanelId=null;renderManage();renderCatalog();}
-
-function copyPriceList(pid){
-  const p=perfumes.find(x=>x.id===pid);if(!p)return;
-  const lines=[displayNameOf(p),''];
-  [2,5,10,15,30].forEach(s=>{if(p.prices[s]){const ep=effectivePrice(p,s);const orig=p.prices[s];lines.push(s+' ml — ৳'+ep.toLocaleString()+(ep!==orig?' (was ৳'+orig.toLocaleString()+')':'')); }});
-  const badge=offerBadgeText(p);if(badge)lines.push('\n'+badge+' offer applied');
-  const text=lines.join('\n');
-  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(()=>showToast('Price list copied!')).catch(()=>fallbackCopy(text));
-  else fallbackCopy(text);
+function setPr(id, size, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) p.prices[size] = parseInt(val) || 0;
 }
 
-function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');showToast('Copied!');}catch(e){showToast('Could not copy');}document.body.removeChild(ta);}
-
-function togglePasteBox(){const box=document.getElementById('paste-box');const btn=document.getElementById('paste-toggle-btn');const open=box.style.display==='none';box.style.display=open?'block':'none';btn.style.background=open?'rgba(200,169,110,0.15)':'rgba(200,169,110,0.08)';if(open)document.getElementById('paste-input').focus();}
-
-function importPastedOrder(){
-  const text=document.getElementById('paste-input').value.trim();
-  if(!text){showToast('Paste an order first');return;}
-  const rawLines=text.split('\n').map(l=>l.trim());
-  const imported=[],mismatches=[],unresolved=[];
-  function matchPerfume(rawName){
-    const rn=rawName.toLowerCase().trim();if(!rn)return null;
-    return perfumes.find(p=>{
-      const pn=p.name.toLowerCase();const dn=displayNameOf(p).toLowerCase();
-      const aliasMatch=(p.aliases||[]).some(a=>a.toLowerCase()===rn||a.toLowerCase().includes(rn)||rn.includes(a.toLowerCase()));
-      return pn===rn||dn===rn||pn.includes(rn)||dn.includes(rn)||rn.includes(pn)||rn.includes(dn)||aliasMatch||pn.split(' ').filter(w=>w.length>2&&rn.includes(w)).length>=2||rn.split(' ').filter(w=>w.length>2&&pn.includes(w)).length>=2;
-    });
-  }
-  function extractSize(l){const m=l.match(/(\d+)\s*ml/i);return m?parseInt(m[1]):null;}
-  function extractPrice(l){const m=l.match(/\u09f3([\d,]+)/);return m?parseInt(m[1].replace(/,/g,'')):null;}
-  function extractQty(l){const m=l.match(/[x\xd7]\s*(\d+)/i);return m?parseInt(m[1]):1;}
-  function cleanName(l){return l.replace(/[-•*]+/g,'').replace(/\d+\s*ml/gi,'').replace(/[x\xd7]\s*\d+/gi,'').replace(/\u09f3[\d,]+/g,'').replace(/[\u2014\u2013-]+$/,'').trim();}
-  const lines=[];
-  rawLines.forEach(l=>{if(/^\s*$/.test(l)){lines.push('');return;}if(/^(total|subtotal|delivery|advance|due|perfume total|grand total)/i.test(l))return;lines.push(l);});
-  let pendingNames=[];
-  function flushPending(size,qty){
-    pendingNames.forEach(rawName=>{
-      const perfume=matchPerfume(rawName);
-      if(perfume&&size&&SIZES.includes(size)){const cp=effectivePrice(perfume,size);for(let i=0;i<qty;i++)imported.push({pid:perfume.id,size,price:cp,name:displayNameOf(perfume),custom:false});}
-      else if(rawName)unresolved.push(rawName+(size?' '+size+'ml':''));
-    });pendingNames=[];
-  }
-  lines.forEach(line=>{
-    if(!line)return;
-    const size=extractSize(line),price=extractPrice(line),qty=extractQty(line),name=cleanName(line);
-    if(size){
-      if(name){
-        const perfume=matchPerfume(name);
-        if(perfume){const cp=effectivePrice(perfume,size);const uc=price&&qty>1?Math.round(price/qty):price;if(uc&&uc!==cp)mismatches.push({name:displayNameOf(perfume),size,claimed:uc,correct:cp});for(let i=0;i<qty;i++)imported.push({pid:perfume.id,size,price:cp,name:displayNameOf(perfume),custom:false});}
-        else{const p=price&&qty>1?Math.round(price/qty):(price||0);for(let i=0;i<qty;i++)imported.push({pid:'custom',size,price:p,name:name+' '+size+'ml',custom:true});}
-      } else flushPending(size,qty);
-    } else {if(name)pendingNames.push(name);}
-  });
-  if(pendingNames.length)pendingNames.forEach(n=>unresolved.push(n+' (no size found)'));
-  if(!imported.length){showToast(unresolved.length?'Could not match: '+unresolved.join(', '):'Could not read order');return;}
-  order=[...order,...imported];updateBadge();
-  document.getElementById('paste-input').value='';document.getElementById('paste-box').style.display='none';document.getElementById('paste-toggle-btn').style.background='rgba(200,169,110,0.08)';
-  renderOrder();
-  if(mismatches.length>0){
-    const mh=mismatches.map(m=>'<div style="padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px;"><span style="color:var(--text);">'+esc(m.name)+' '+m.size+'ml</span><br><span style="color:var(--danger);">Customer said ৳'+m.claimed.toLocaleString()+'</span> → <span style="color:#7ec98e;">Your price ৳'+m.correct.toLocaleString()+'</span></div>').join('');
-    const w=document.createElement('div');w.id='mismatch-warning';w.style.cssText='background:rgba(224,85,85,0.08);border:0.5px solid rgba(224,85,85,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;';
-    w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:12px;font-weight:500;color:var(--danger);">⚠ Price mismatch ('+mismatches.length+')</span><button onclick="document.getElementById('mismatch-warning').remove()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">✕</button></div><div style="border-top:0.5px solid var(--border);padding-top:6px;">'+mh+'</div><p style="font-size:11px;color:var(--muted);margin-top:8px;">Order filled with your correct prices.</p>';
-    const ex=document.getElementById('mismatch-warning');if(ex)ex.remove();
-    document.getElementById('order-list').parentNode.insertBefore(w,document.getElementById('order-list'));
-    showToast('⚠ '+mismatches.length+' price mismatch'+(mismatches.length>1?'es':'')+'!');
-  } else if(unresolved.length) showToast('Imported '+imported.length+', missed: '+unresolved.slice(0,3).join(', '));
-  else showToast('Imported '+imported.length+' item'+(imported.length!==1?'s':'')+'!');
+function toggleOut(id) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) { p.out = !p.out; renderManage(); renderCatalog(); }
 }
 
-function toggleCustomBox(){
-  const box=document.getElementById('custom-box');const btn=document.getElementById('custom-toggle-btn');const open=box.style.display==='none';
-  box.style.display=open?'block':'none';btn.style.background=open?'rgba(255,255,255,0.06)':'rgba(255,255,255,0.03)';btn.style.color=open?'var(--text)':'var(--muted)';
-  if(open){const sel=document.getElementById('custom-perfume');const sorted=[...perfumes].sort((a,b)=>displayNameOf(a).localeCompare(displayNameOf(b)));sel.innerHTML='<option value="">— Select perfume —</option>'+sorted.map(p=>'<option value="'+p.id+'">'+esc(displayNameOf(p))+'</option>').join('');}
-}
-function onCustomPerfumeChange(){const pid=parseInt(document.getElementById('custom-perfume').value);const ml=parseInt(document.getElementById('custom-ml').value);if(pid&&ml){const p=perfumes.find(x=>x.id===pid);if(p){document.getElementById('custom-price').value=effectivePrice(p,ml);document.getElementById('custom-auto-price').textContent='(auto)';}}}
-function onCustomMlChange(){onCustomPerfumeChange();}
-function addCustomItem(){
-  const pid=parseInt(document.getElementById('custom-perfume').value)||null;const ml=parseInt(document.getElementById('custom-ml').value)||null;
-  const price=parseInt(document.getElementById('custom-price').value)||0;const qty=parseInt(document.getElementById('custom-qty').value)||1;const note=document.getElementById('custom-note').value.trim();
-  if(!pid&&!ml){showToast('Select a perfume and size');return;}if(!price){showToast('Enter a price');return;}
-  const perfume=pid?perfumes.find(x=>x.id===pid):null;const baseName=perfume?displayNameOf(perfume):'Custom';const sizePart=ml?' '+ml+'ml':'';const notePart=note?' ('+note+')':'';const itemName=baseName+sizePart+notePart;
-  for(let i=0;i<qty;i++)order.push({pid:pid||'custom',size:ml,price,name:itemName,custom:true});
+function deletePerfume(id) {
+  if (!confirm('Delete this perfume?')) return;
+  perfumes = perfumes.filter(x => x.id !== id);
+  order = order.filter(o => o.pid !== id);
   updateBadge();
-  document.getElementById('custom-perfume').value='';document.getElementById('custom-ml').value='';document.getElementById('custom-price').value='';document.getElementById('custom-qty').value='1';document.getElementById('custom-note').value='';document.getElementById('custom-auto-price').textContent='';
-  renderOrder();showToast(itemName+' added!');
+  renderManage();
+  renderCatalog();
 }
-function addExtraNote(){const name=document.getElementById('extra-note-name').value.trim();const price=parseInt(document.getElementById('extra-note-price').value)||0;if(!name){showToast('Enter a note');return;}order.push({pid:'note',size:null,price,name,custom:true,isNote:true});updateBadge();document.getElementById('extra-note-name').value='';document.getElementById('extra-note-price').value='0';renderOrder();showToast('Added: '+name);}
 
-function generateCard(){
-  const sorted=[...perfumes].sort((a,b)=>displayNameOf(a).localeCompare(displayNameOf(b)));
-  const today=new Date();const dateStr=today.getDate()+'-'+today.toLocaleString('en',{month:'short'})+'-'+String(today.getFullYear()).slice(2);
-  const hasAnyOffer=sorted.some(p=>p.offer&&((p.offer.pct&&Object.values(p.offer.pct).some(v=>v>0))||(p.offer.manual&&Object.values(p.offer.manual).some(v=>v>0))));
-  const ROW_H=30,HEADER_H=46,TITLE_H=56,W=1400,H=TITLE_H+HEADER_H+ROW_H*sorted.length+42;
-  const canvas=document.getElementById('price-canvas');canvas.width=W;canvas.height=H;const ctx=canvas.getContext('2d');
-  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,W,TITLE_H);
-  ctx.fillStyle='#c8a96e';ctx.font='bold 26px Georgia,serif';ctx.textAlign='left';ctx.fillText('FRAGRANZA',22,36);
-  ctx.fillStyle='#888888';ctx.font='12px Arial,sans-serif';ctx.textAlign='center';ctx.fillText('DECANT PRICE LIST — All prices in BDT',W/2,36);
-  ctx.fillStyle='#888888';ctx.textAlign='right';ctx.fillText('Last Updated: '+dateStr,W-18,36);
-  const PAD=14,TABLE_X=PAD,TABLE_W=W-PAD*2,slW=40,offerW=hasAnyOffer?90:0,priceW=Math.floor((TABLE_W-slW-offerW)/6),nameW=TABLE_W-slW-priceW*5-offerW;
-  const colX=[TABLE_X,TABLE_X+slW,TABLE_X+slW+nameW,TABLE_X+slW+nameW+priceW,TABLE_X+slW+nameW+priceW*2,TABLE_X+slW+nameW+priceW*3,TABLE_X+slW+nameW+priceW*4];
-  if(hasAnyOffer)colX.push(TABLE_X+slW+nameW+priceW*5);
-  const HEADERS=['SL','Name','2 ml','5 ml','10 ml','15 ml','30 ml'];if(hasAnyOffer)HEADERS.push('Offer');
-  const colWidths=[slW,nameW,priceW,priceW,priceW,priceW,priceW];if(hasAnyOffer)colWidths.push(offerW);
-  ctx.fillStyle='#2c2c2c';ctx.fillRect(TABLE_X,TITLE_H,TABLE_W,HEADER_H);
-  ctx.fillStyle='#c8a96e';ctx.fillRect(TABLE_X,TITLE_H+HEADER_H-2,TABLE_W,2);
-  HEADERS.forEach((h,i)=>{ctx.fillStyle=i===0?'#777':'#fff';ctx.font='bold 14px Arial,sans-serif';ctx.textAlign=i===1?'left':'center';ctx.fillText(h,i===1?colX[i]+12:colX[i]+colWidths[i]/2,TITLE_H+HEADER_H/2+5);});
-  sorted.forEach((p,idx)=>{
-    const ry=TITLE_H+HEADER_H+idx*ROW_H;
-    ctx.fillStyle=idx%2===0?'#f8f7f4':'#ffffff';ctx.fillRect(TABLE_X,ry,TABLE_W,ROW_H);
-    const badgeTxt=hasAnyOffer?offerBadgeText(p):'';
-    if(hasAnyOffer&&badgeTxt){ctx.fillStyle='#fff3f3';ctx.fillRect(colX[colX.length-1],ry,offerW,ROW_H);}
-    ctx.fillStyle='#aaaaaa';ctx.font='12px Arial,sans-serif';ctx.textAlign='center';ctx.fillText(String(idx+1),colX[0]+slW/2,ry+ROW_H/2+4);
-    ctx.fillStyle=p.out?'#e05555':'#1a1a1a';ctx.textAlign='left';
-    let dn=displayNameOf(p)+(p.out?' (Out)':'');ctx.font='13px Arial,sans-serif';
-    while(ctx.measureText(dn).width>nameW-20&&dn.length>8)dn=dn.slice(0,-4)+'...';
-    ctx.fillText(dn,colX[1]+12,ry+ROW_H/2+4);
-    [2,5,10,15,30].forEach((s,si)=>{
-      const pr=p.prices[s],ep=effectivePrice(p,s),cx=colX[si+2]+colWidths[si+2]/2;ctx.textAlign='center';
-      if(ep!==pr){ctx.fillStyle='#bbbbbb';ctx.font='10px Arial,sans-serif';const ot=pr.toLocaleString();const tw=ctx.measureText(ot).width;ctx.fillText(ot,cx,ry+ROW_H/2-3);ctx.strokeStyle='#bbbbbb';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(cx-tw/2,ry+ROW_H/2-6);ctx.lineTo(cx+tw/2,ry+ROW_H/2-6);ctx.stroke();ctx.fillStyle='#1a7a3a';ctx.font='bold 12px Arial,sans-serif';ctx.fillText(ep.toLocaleString(),cx,ry+ROW_H/2+10);}
-      else{ctx.fillStyle=pr?'#333':'#ccc';ctx.font='14px Arial,sans-serif';ctx.fillText(pr?pr.toLocaleString():'—',cx,ry+ROW_H/2+4);}
-    });
-    if(hasAnyOffer&&badgeTxt){ctx.fillStyle='#cc3333';ctx.font='bold 12px Arial,sans-serif';ctx.textAlign='center';ctx.fillText(badgeTxt,colX[colX.length-1]+offerW/2,ry+ROW_H/2+4);}
-    ctx.strokeStyle='#eae6de';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(TABLE_X,ry+ROW_H);ctx.lineTo(TABLE_X+TABLE_W,ry+ROW_H);ctx.stroke();
+function addPerfume() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) { showToast('Enter a perfume name'); return; }
+  const prices = {};
+  SIZES.forEach(s => { prices[s] = parseInt(document.getElementById('new-' + s).value) || 0; });
+  perfumes.push({ id: nextId++, name, displayName: name, prices, out: false, sale: false, offer: null, gender: 'male' });
+  document.getElementById('new-name').value = '';
+  SIZES.forEach(s => { document.getElementById('new-' + s).value = ''; });
+  showToast(name + ' added!');
+  renderManage();
+  renderCatalog();
+}
+
+/* ---- OFFER ---- */
+let offerPanelId = null;
+
+function effectivePrice(p, size) {
+  if (!p.offer) return p.prices[size];
+  const s = String(size);
+  if (p.offer.pct && p.offer.pct[s]) return Math.round(p.prices[size] * (1 - p.offer.pct[s] / 100));
+  if (p.offer.manual && p.offer.manual[s]) return p.offer.manual[s];
+  return p.prices[size];
+}
+
+function offerBadgeText(p) {
+  if (!p.offer) return '';
+  const pcts = p.offer.pct ? Object.values(p.offer.pct).filter(v => v > 0) : [];
+  const mans = p.offer.manual ? Object.values(p.offer.manual).filter(v => v > 0) : [];
+  if (pcts.length && mans.length) return 'OFFER';
+  if (pcts.length) { const u = [...new Set(pcts)]; return u.length === 1 ? u[0] + '% OFF' : 'OFFER'; }
+  if (mans.length) return 'SPECIAL';
+  return '';
+}
+
+function toggleOfferPanel(id) {
+  offerPanelId = offerPanelId === id ? null : id;
+  const p = perfumes.find(x => x.id === id);
+  if (offerPanelId && p && !p.offer) p.offer = { pct: {}, manual: {} };
+  renderManage();
+  renderCatalog();
+}
+
+function setSizePct(id, size, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (!p) return;
+  if (!p.offer) p.offer = { pct: {}, manual: {} };
+  if (!p.offer.pct) p.offer.pct = {};
+  const v = parseFloat(val) || 0;
+  if (v > 0) { p.offer.pct[String(size)] = v; if (p.offer.manual) delete p.offer.manual[String(size)]; }
+  else delete p.offer.pct[String(size)];
+  cleanOffer(p);
+  renderCatalog();
+}
+
+function setSizeManual(id, size, val) {
+  const p = perfumes.find(x => x.id === id);
+  if (!p) return;
+  if (!p.offer) p.offer = { pct: {}, manual: {} };
+  if (!p.offer.manual) p.offer.manual = {};
+  const v = parseInt(val) || 0;
+  if (v > 0) { p.offer.manual[String(size)] = v; if (p.offer.pct) delete p.offer.pct[String(size)]; }
+  else delete p.offer.manual[String(size)];
+  cleanOffer(p);
+  renderCatalog();
+}
+
+function cleanOffer(p) {
+  const hasPct = p.offer && p.offer.pct && Object.values(p.offer.pct).some(v => v > 0);
+  const hasMan = p.offer && p.offer.manual && Object.values(p.offer.manual).some(v => v > 0);
+  if (!hasPct && !hasMan) p.offer = null;
+}
+
+function clearOffer(id) {
+  const p = perfumes.find(x => x.id === id);
+  if (p) p.offer = null;
+  offerPanelId = null;
+  renderManage();
+  renderCatalog();
+}
+
+/* ---- PRICE CARD ---- */
+function generateCard() {
+  const sorted = [...perfumes].sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b)));
+  const today = new Date();
+  const dateStr = today.getDate() + '-' + today.toLocaleString('en',{month:'short'}) + '-' + String(today.getFullYear()).slice(2);
+
+  const hasAnyOffer = sorted.some(p => p.offer && (
+    (p.offer.pct && Object.values(p.offer.pct).some(v=>v>0)) ||
+    (p.offer.manual && Object.values(p.offer.manual).some(v=>v>0))
+  ));
+
+  const ROW_H = 30;
+  const HEADER_H = 46;
+  const TITLE_H = 56;
+  const FOOTER_H = 32;
+  const W = 1400;
+  const H = TITLE_H + HEADER_H + ROW_H * sorted.length + FOOTER_H + 10;
+
+  const canvas = document.getElementById('price-canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Title bar
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(0, 0, W, TITLE_H);
+  ctx.fillStyle = '#c8a96e';
+  ctx.font = 'bold 26px Georgia, serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('FRAGRANZA', 22, 36);
+  ctx.fillStyle = '#888888';
+  ctx.font = '12px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('DECANT PRICE LIST — All prices in BDT', W/2, 36);
+  ctx.fillStyle = '#888888';
+  ctx.textAlign = 'right';
+  ctx.fillText('Last Updated: ' + dateStr, W - 18, 36);
+
+  // Column layout
+  const PAD = 14;
+  const TABLE_X = PAD;
+  const TABLE_W = W - PAD * 2;
+  const slW = 40;
+  const offerW = hasAnyOffer ? 90 : 0;
+  const priceW = Math.floor((TABLE_W - slW - offerW) / 6);
+  const nameW = TABLE_W - slW - priceW * 5 - offerW;
+
+  const colX = [
+    TABLE_X,
+    TABLE_X + slW,
+    TABLE_X + slW + nameW,
+    TABLE_X + slW + nameW + priceW,
+    TABLE_X + slW + nameW + priceW*2,
+    TABLE_X + slW + nameW + priceW*3,
+    TABLE_X + slW + nameW + priceW*4,
+  ];
+  if (hasAnyOffer) colX.push(TABLE_X + slW + nameW + priceW*5);
+
+  const HEADERS = ['SL', 'Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml'];
+  if (hasAnyOffer) HEADERS.push('Offer');
+  const colWidths = [slW, nameW, priceW, priceW, priceW, priceW, priceW];
+  if (hasAnyOffer) colWidths.push(offerW);
+
+  // Header row
+  const hY = TITLE_H;
+  ctx.fillStyle = '#2c2c2c';
+  ctx.fillRect(TABLE_X, hY, TABLE_W, HEADER_H);
+  ctx.fillStyle = '#c8a96e';
+  ctx.fillRect(TABLE_X, hY + HEADER_H - 2, TABLE_W, 2);
+
+  HEADERS.forEach((h, i) => {
+    ctx.fillStyle = i === 0 ? '#777777' : '#ffffff';
+    ctx.font = 'bold 14px Arial, sans-serif';
+    ctx.textAlign = i === 1 ? 'left' : 'center';
+    const tx = i === 1 ? colX[i] + 12 : colX[i] + colWidths[i]/2;
+    ctx.fillText(h, tx, hY + HEADER_H/2 + 5);
   });
-  ctx.strokeStyle='#dedad2';ctx.lineWidth=0.5;colX.slice(1).forEach(x=>{ctx.beginPath();ctx.moveTo(x,TITLE_H+HEADER_H);ctx.lineTo(x,TITLE_H+HEADER_H+sorted.length*ROW_H);ctx.stroke();});
-  ctx.strokeStyle='#c8a96e';ctx.lineWidth=1.5;ctx.strokeRect(TABLE_X,TITLE_H,TABLE_W,HEADER_H+sorted.length*ROW_H);
-  ctx.fillStyle='#aaaaaa';ctx.font='11px Arial,sans-serif';ctx.textAlign='center';ctx.fillText('Prices in BDT — Subject to change without prior notice — Fragranza Decant',W/2,TITLE_H+HEADER_H+sorted.length*ROW_H+22);
-  const img=document.getElementById('card-img');img.src=canvas.toDataURL('image/png');
-  document.getElementById('card-preview').style.display='block';document.getElementById('download-btn').disabled=false;showToast('Price card ready!');
+
+  // Data rows
+  sorted.forEach((p, idx) => {
+    const ry = TITLE_H + HEADER_H + idx * ROW_H;
+    ctx.fillStyle = idx % 2 === 0 ? '#f8f7f4' : '#ffffff';
+    ctx.fillRect(TABLE_X, ry, TABLE_W, ROW_H);
+
+    if (hasAnyOffer && offerBadgeText(p)) {
+      ctx.fillStyle = '#fff3f3';
+      ctx.fillRect(colX[colX.length-1], ry, offerW, ROW_H);
+    }
+
+    // SL
+    ctx.fillStyle = '#aaaaaa';
+    ctx.font = '12px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(idx+1), colX[0] + slW/2, ry + ROW_H/2 + 4);
+
+    // Name
+    ctx.fillStyle = p.out ? '#e05555' : '#1a1a1a';
+    ctx.font = p.out ? 'italic 13px Arial, sans-serif' : '13px Arial, sans-serif';
+    ctx.textAlign = 'left';
+    let displayName = displayNameOf(p) + (p.out ? ' (Out)' : '');
+    ctx.font = '13px Arial, sans-serif';
+    while (ctx.measureText(displayName).width > nameW - 20 && displayName.length > 8) {
+      displayName = displayName.slice(0, -4) + '...';
+    }
+    ctx.fillText(displayName, colX[1] + 12, ry + ROW_H/2 + 4);
+
+    // Prices
+    [2,5,10,15,30].forEach((s, si) => {
+      const pr = p.prices[s];
+      const ep = effectivePrice(p, s);
+      const cx = colX[si+2] + colWidths[si+2]/2;
+      ctx.textAlign = 'center';
+      if (ep !== pr) {
+        ctx.fillStyle = '#bbbbbb';
+        ctx.font = '10px Arial, sans-serif';
+        const origTxt = pr.toLocaleString();
+        const tw = ctx.measureText(origTxt).width;
+        ctx.fillText(origTxt, cx, ry + ROW_H/2 - 3);
+        ctx.strokeStyle = '#bbbbbb';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(cx - tw/2, ry + ROW_H/2 - 6);
+        ctx.lineTo(cx + tw/2, ry + ROW_H/2 - 6);
+        ctx.stroke();
+        ctx.fillStyle = '#1a7a3a';
+        ctx.font = 'bold 12px Arial, sans-serif';
+        ctx.fillText(ep.toLocaleString(), cx, ry + ROW_H/2 + 10);
+      } else {
+        ctx.fillStyle = pr ? '#333333' : '#cccccc';
+        ctx.font = '14px Arial, sans-serif';
+        ctx.fillText(pr ? pr.toLocaleString() : '—', cx, ry + ROW_H/2 + 4);
+      }
+    });
+
+    // Offer
+    if (hasAnyOffer) {
+      const badge = offerBadgeText(p);
+      if (badge) {
+        ctx.fillStyle = '#cc3333';
+        ctx.font = 'bold 12px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(badge, colX[colX.length-1] + offerW/2, ry + ROW_H/2 + 4);
+      }
+    }
+
+    // Row divider
+    ctx.strokeStyle = '#eae6de';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(TABLE_X, ry + ROW_H);
+    ctx.lineTo(TABLE_X + TABLE_W, ry + ROW_H);
+    ctx.stroke();
+  });
+
+  // Column dividers
+  ctx.strokeStyle = '#dedad2';
+  ctx.lineWidth = 0.5;
+  colX.slice(1).forEach(x => {
+    ctx.beginPath();
+    ctx.moveTo(x, TITLE_H + HEADER_H);
+    ctx.lineTo(x, TITLE_H + HEADER_H + sorted.length * ROW_H);
+    ctx.stroke();
+  });
+
+  // Outer border
+  ctx.strokeStyle = '#c8a96e';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(TABLE_X, TITLE_H, TABLE_W, HEADER_H + sorted.length * ROW_H);
+
+  // Footer
+  const footY = TITLE_H + HEADER_H + sorted.length * ROW_H + 10;
+  ctx.fillStyle = '#aaaaaa';
+  ctx.font = '11px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Prices in BDT — Subject to change without prior notice — Fragranza Decant', W/2, footY + 12);
+
+  const img = document.getElementById('card-img');
+  img.src = canvas.toDataURL('image/png');
+  document.getElementById('card-preview').style.display = 'block';
+  document.getElementById('download-btn').disabled = false;
+  showToast('Price card ready!');
 }
-function downloadCard(){generateCard();const canvas=document.getElementById('price-canvas');const link=document.createElement('a');link.download='Fragranza-Price-List-'+new Date().toISOString().slice(0,10)+'.png';link.href=canvas.toDataURL('image/png');link.click();showToast('Downloading...');}
+function downloadCard() {
+  generateCard();
+  const canvas = document.getElementById('price-canvas');
+  const link = document.createElement('a');
+  link.download = 'Fragranza-Price-List-' + new Date().toISOString().slice(0,10) + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('Downloading...');
+}
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function copyPriceList(pid) {
+  const p = perfumes.find(x => x.id === pid);
+  if (!p) return;
+  const lines = [displayNameOf(p), ''];
+  [2, 5, 10, 15, 30].forEach(s => {
+    if (p.prices[s]) {
+      const ep = effectivePrice(p, s);
+      const orig = p.prices[s];
+      if (ep !== orig) {
+        lines.push(s + ' ml — ৳' + ep.toLocaleString() + ' (was ৳' + orig.toLocaleString() + ')');
+      } else {
+        lines.push(s + ' ml — ৳' + orig.toLocaleString());
+      }
+    }
+  });
+  const badge = offerBadgeText(p);
+  if (badge) lines.push('\n' + badge + ' offer applied');
+  const text = lines.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Price list copied!'))
+      .catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); showToast('Price list copied!'); }
+  catch(e) { showToast('Could not copy'); }
+  document.body.removeChild(ta);
+}
+
+
+/* ---- PASTE ORDER ---- */
+function togglePasteBox() {
+  const box = document.getElementById('paste-box');
+  const btn = document.getElementById('paste-toggle-btn');
+  const open = box.style.display === 'none';
+  box.style.display = open ? 'block' : 'none';
+  btn.style.background = open ? 'rgba(200,169,110,0.15)' : 'rgba(200,169,110,0.08)';
+  if (open) document.getElementById('paste-input').focus();
+}
+
+function importPastedOrder() {
+  const text = document.getElementById('paste-input').value.trim();
+  if (!text) { showToast('Paste an order first'); return; }
+
+  const rawLines = text.split('\n').map(l => l.trim());
+  const imported = [];
+  const mismatches = [];
+  const unresolved = [];
+
+  // Helper: try to match a name string against the perfume list
+  function matchPerfume(rawName) {
+    const rn = rawName.toLowerCase().trim();
+    if (!rn) return null;
+    return perfumes.find(p => {
+      const pn = p.name.toLowerCase();
+      const dn = displayNameOf(p).toLowerCase();
+      const aliasMatch = (p.aliases || []).some(a => a.toLowerCase() === rn || a.toLowerCase().includes(rn) || rn.includes(a.toLowerCase()));
+      return pn === rn ||
+        dn === rn ||
+        pn.includes(rn) ||
+        dn.includes(rn) ||
+        rn.includes(pn) ||
+        rn.includes(dn) ||
+        aliasMatch ||
+        pn.split(' ').filter(w => w.length > 2 && rn.includes(w)).length >= 2 ||
+        rn.split(' ').filter(w => w.length > 2 && pn.includes(w)).length >= 2;
+    });
+  }
+
+  // Helper: extract a size token (e.g. "2ml", "2 ml", "2ml each") from a line
+  function extractSize(line) {
+    const m = line.match(/(\d+)\s*ml/i);
+    return m ? parseInt(m[1]) : null;
+  }
+
+  function extractPrice(line) {
+    const m = line.match(/৳([\d,]+)/);
+    return m ? parseInt(m[1].replace(/,/g, '')) : null;
+  }
+
+  function extractQty(line) {
+    const m = line.match(/[x×]\s*(\d+)/i);
+    return m ? parseInt(m[1]) : 1;
+  }
+
+  function cleanName(line) {
+    return line
+      .replace(/[-•*]+/g, '')
+      .replace(/\d+\s*ml/gi, '')
+      .replace(/[x×]\s*\d+/gi, '')
+      .replace(/৳[\d,]+/g, '')
+      .replace(/[—–-]+$/, '')
+      .trim();
+  }
+
+  // Strip out summary/total lines first, keep track of blank lines for grouping
+  const lines = [];
+  rawLines.forEach(l => {
+    if (/^\s*$/.test(l)) { lines.push(''); return; }
+    if (/^(total|subtotal|delivery|advance|due|perfume total|grand total)/i.test(l)) return;
+    lines.push(l);
+  });
+
+  // Pending name-only lines waiting for a shared size (e.g. a block of names followed by "2ml each")
+  let pendingNames = [];
+
+  function flushPending(size, qty) {
+    pendingNames.forEach(rawName => {
+      const perfume = matchPerfume(rawName);
+      if (perfume && size && SIZES.includes(size)) {
+        const correctPrice = effectivePrice(perfume, size);
+        for (let i = 0; i < qty; i++) {
+          imported.push({ pid: perfume.id, size, price: correctPrice, name: displayNameOf(perfume), custom: false });
+        }
+      } else if (rawName) {
+        unresolved.push(rawName + (size ? ' ' + size + 'ml' : ''));
+      }
+    });
+    pendingNames = [];
+  }
+
+  lines.forEach((line, idx) => {
+    if (!line) return; // blank lines just separate blocks, ignore
+
+    const size = extractSize(line);
+    const price = extractPrice(line);
+    const qty = extractQty(line);
+    const name = cleanName(line);
+
+    if (size) {
+      // This line has a size mentioned
+      if (name) {
+        // "Hawas Ice 2ml" — direct line with both name and size
+        const perfume = matchPerfume(name);
+        if (perfume) {
+          const correctPrice = effectivePrice(perfume, size);
+          const unitClaimed = price && qty > 1 ? Math.round(price / qty) : price;
+          if (unitClaimed && unitClaimed !== correctPrice) {
+            mismatches.push({ name: displayNameOf(perfume), size, claimed: unitClaimed, correct: correctPrice });
+          }
+          for (let i = 0; i < qty; i++) {
+            imported.push({ pid: perfume.id, size, price: correctPrice, name: displayNameOf(perfume), custom: false });
+          }
+        } else {
+          // Unknown perfume with explicit price — add as custom
+          const p = price && qty > 1 ? Math.round(price / qty) : (price || 0);
+          for (let i = 0; i < qty; i++) {
+            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + size + 'ml', custom: true });
+          }
+        }
+      } else {
+        // Line is JUST a size (e.g. "2ml each" or "2ml") — applies to pending names above
+        flushPending(size, qty);
+      }
+    } else {
+      // No size mentioned on this line — could be a perfume name waiting for a size below
+      if (name) pendingNames.push(name);
+    }
+  });
+
+  // Any names left with no size found — report as unresolved
+  if (pendingNames.length) {
+    pendingNames.forEach(n => unresolved.push(n + ' (no size found)'));
+  }
+
+  if (!imported.length) {
+    showToast(unresolved.length ? 'Could not match: ' + unresolved.join(', ') : 'Could not read order — try again');
+    return;
+  }
+
+  order = [...order, ...imported];
+  updateBadge();
+
+  document.getElementById('paste-input').value = '';
+  document.getElementById('paste-box').style.display = 'none';
+  document.getElementById('paste-toggle-btn').style.background = 'rgba(200,169,110,0.08)';
+
+  renderOrder();
+
+  if (mismatches.length > 0) {
+    const mismatchHtml = mismatches.map(m =>
+      `<div style="padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px;">
+        <span style="color:var(--text);">${esc(m.name)} ${m.size}ml</span><br>
+        <span style="color:var(--danger);">Customer said ৳${m.claimed.toLocaleString()}</span>
+        <span style="color:var(--muted);"> → </span>
+        <span style="color:#7ec98e;">Your price ৳${m.correct.toLocaleString()}</span>
+      </div>`
+    ).join('');
+    const warning = document.createElement('div');
+    warning.id = 'mismatch-warning';
+    warning.style.cssText = 'background:rgba(224,85,85,0.08);border:0.5px solid rgba(224,85,85,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;';
+    warning.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:12px;font-weight:500;color:var(--danger);">⚠ Price mismatch (${mismatches.length})</span>
+        <button onclick="document.getElementById('mismatch-warning').remove()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">✕</button>
+      </div>
+      <div style="border-top:0.5px solid var(--border);padding-top:6px;">${mismatchHtml}</div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px;">Order filled with your correct prices.</p>`;
+    const existing = document.getElementById('mismatch-warning');
+    if (existing) existing.remove();
+    const orderList = document.getElementById('order-list');
+    orderList.parentNode.insertBefore(warning, orderList);
+    showToast('⚠ ' + mismatches.length + ' price mismatch' + (mismatches.length > 1 ? 'es' : '') + '!');
+  } else if (unresolved.length) {
+    showToast('Imported ' + imported.length + ', but missed: ' + unresolved.slice(0,3).join(', '));
+  } else {
+    showToast('Imported ' + imported.length + ' item' + (imported.length !== 1 ? 's' : '') + '!');
+  }
+}
+/* ---- CUSTOM ITEM ---- */
+function toggleCustomBox() {
+  const box = document.getElementById('custom-box');
+  const btn = document.getElementById('custom-toggle-btn');
+  const open = box.style.display === 'none';
+  box.style.display = open ? 'block' : 'none';
+  btn.style.background = open ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)';
+  btn.style.color = open ? 'var(--text)' : 'var(--muted)';
+  if (open) {
+    // Populate perfume dropdown
+    const sel = document.getElementById('custom-perfume');
+    const sorted = [...perfumes].sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b)));
+    sel.innerHTML = '<option value="">— Select perfume —</option>' +
+      sorted.map(p => `<option value="${p.id}">${esc(displayNameOf(p))}</option>`).join('');
+  }
+}
+
+function onCustomPerfumeChange() {
+  const pid = parseInt(document.getElementById('custom-perfume').value);
+  const ml = parseInt(document.getElementById('custom-ml').value);
+  if (pid && ml) {
+    const p = perfumes.find(x => x.id === pid);
+    if (p) {
+      const ep = effectivePrice(p, ml);
+      document.getElementById('custom-price').value = ep;
+      document.getElementById('custom-auto-price').textContent = '(auto)';
+    }
+  }
+}
+
+function onCustomMlChange() {
+  onCustomPerfumeChange();
+}
+
+function addCustomItem() {
+  const pid = parseInt(document.getElementById('custom-perfume').value) || null;
+  const ml = parseInt(document.getElementById('custom-ml').value) || null;
+  const price = parseInt(document.getElementById('custom-price').value) || 0;
+  const qty = parseInt(document.getElementById('custom-qty').value) || 1;
+  const note = document.getElementById('custom-note').value.trim();
+
+  if (!pid && !ml) { showToast('Select a perfume and size'); return; }
+  if (!price) { showToast('Enter a price'); return; }
+
+  const perfume = pid ? perfumes.find(x => x.id === pid) : null;
+  const baseName = perfume ? displayNameOf(perfume) : 'Custom';
+  const sizePart = ml ? ' ' + ml + 'ml' : '';
+  const notePart = note ? ' (' + note + ')' : '';
+  const itemName = baseName + sizePart + notePart;
+
+  for (let i = 0; i < qty; i++) {
+    order.push({ pid: pid || 'custom', size: ml, price, name: itemName, custom: true });
+  }
+  updateBadge();
+
+  // Clear
+  document.getElementById('custom-perfume').value = '';
+  document.getElementById('custom-ml').value = '';
+  document.getElementById('custom-price').value = '';
+  document.getElementById('custom-qty').value = '1';
+  document.getElementById('custom-note').value = '';
+  document.getElementById('custom-auto-price').textContent = '';
+
+  renderOrder();
+  showToast(itemName + ' added!');
+}
+
+function addExtraNote() {
+  const name = document.getElementById('extra-note-name').value.trim();
+  const price = parseInt(document.getElementById('extra-note-price').value) || 0;
+  if (!name) { showToast('Enter a note or item name'); return; }
+  order.push({ pid: 'note', size: null, price, name, custom: true, isNote: true });
+  updateBadge();
+  document.getElementById('extra-note-name').value = '';
+  document.getElementById('extra-note-price').value = '0';
+  renderOrder();
+  showToast('Added: ' + name);
+}
+
+
+/* ---- BATCH CODES ---- */
+function copyBatchCodes() {
+  if (!order.length) { showToast('No items in order'); return; }
+
+  const lines = [];
+  const missing = [];
+
+  order.forEach(o => {
+    if (o.custom) return;
+    const p = perfumes.find(x => x.id === o.pid);
+    if (p && p.batch) {
+      lines.push(p.batch + '\t' + o.size);
+    } else if (p) {
+      missing.push(displayNameOf(p));
+    }
+  });
+
+  if (!lines.length) {
+    showToast('No batch codes found for this order');
+    return;
+  }
+
+  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+  const grandTotal = perfumeTotal + delAmt;
+  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
+
+  const advEl = document.getElementById('advance-input');
+  const advance = advEl ? (parseFloat(advEl.value) || 0) : 0;
+  const advLine = advance > 0
+    ? `\n\nAdvance Paid: ৳${advance.toLocaleString()}\nDue Bill: ৳${Math.abs(grandTotal - advance).toLocaleString()}${(grandTotal - advance) < 0 ? ' (Overpaid)' : (grandTotal - advance) === 0 ? ' (Settled)' : ''}`
+    : '';
+
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}${advLine}`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Batch codes copied!' + (missing.length ? ' (' + missing.length + ' missing)' : '')))
+      .catch(() => fallbackCopyText(text));
+  } else {
+    fallbackCopyText(text);
+  }
+}
+
+function fallbackCopyText(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); showToast('Batch codes copied!'); }
+  catch(e) { showToast('Could not copy'); }
+  document.body.removeChild(ta);
+}
+
+/* ---- UTILS ---- */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 let toastTimer;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
 
+/* ---- INIT ---- */
 loadFromGitHub();
 </script>
 </body>
