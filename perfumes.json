@@ -876,5 +876,28 @@
       "afnan snoi",
       "not only intense"
     ]
+  },
+  {
+    "id": 45,
+    "name": "Bentley for Men Silverlake",
+    "displayName": "Bentley for Men Silverlake",
+    "prices": {
+      "2": 0,
+      "5": 340,
+      "10": 620,
+      "15": 880,
+      "30": 1860
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "silverlake",
+      "bentley silverlake",
+      "bentley for men silverlake"
+    ],
+    "batch": ""
   }
 ]
