@@ -307,7 +307,7 @@ let ghFileSha   = null;
 async function loadFromGitHub() {
   try {
     showToast('Loading...');
-    const r = await fetch('https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json?t=' + Date.now());
+    const r = await fetch('https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json?t=' + Date.now() + '&r=' + Math.random(), { cache: 'no-store', headers: { 'Cache-Control': 'no-cache, no-store' } });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const decoded = await r.json();
     perfumes = decoded.map(p => ({
