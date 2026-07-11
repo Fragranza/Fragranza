@@ -170,7 +170,6 @@ body {
   line-height: 1.3;
 }
 .p-sl { color: var(--muted); font-size: 13px; font-weight: 400; margin-right: 6px; }
-.m-sl { color: var(--muted); font-size: 12px; font-weight: 400; margin-right: 6px; flex-shrink: 0; }
 .badge {
   font-size: 10px;
   font-weight: 500;
@@ -319,102 +318,6 @@ body {
 }
 .btn-copy:active { background: rgba(200,169,110,0.2); }
 
-/* Manage tab */
-.section-label {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
-  margin-top: 20px;
-}
-.section-label:first-child { margin-top: 0; }
-
-.manage-item {
-  background: var(--bg2);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 6px;
-  overflow: hidden;
-}
-.manage-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 14px;
-}
-.manage-name {
-  flex: 1;
-  font-size: 14px;
-  color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.m-btn {
-  background: none;
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 5px 10px;
-  font-size: 11px;
-  font-family: 'DM Sans', sans-serif;
-  color: var(--muted);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-}
-.m-btn:active { border-color: var(--border2); color: var(--text); }
-.m-btn.danger:active { border-color: var(--danger); color: var(--danger); }
-.m-btn.out-active { border-color: rgba(224,85,85,0.4); color: var(--danger); }
-
-.edit-prices {
-  padding: 10px 14px 14px;
-  border-top: 0.5px solid var(--border);
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-}
-.edit-field label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 4px; }
-.edit-field input {
-  width: 100%;
-  background: var(--bg3);
-  border: 0.5px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 6px;
-  color: var(--text);
-  font-size: 12px;
-  font-family: 'DM Sans', sans-serif;
-  text-align: center;
-  outline: none;
-}
-.edit-field input:focus { border-color: var(--accent); }
-
-/* Add form */
-.add-form {
-  background: var(--bg2);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-top: 4px;
-}
-.add-form-name {
-  width: 100%;
-  background: var(--bg3);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  color: var(--text);
-  font-size: 15px;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  outline: none;
-  margin-bottom: 10px;
-}
-.add-form-name::placeholder { color: var(--muted); }
-.add-form-name:focus { border-color: var(--border2); }
-.add-form-prices {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.add-form-prices .edit-field input { padding: 8px 4px; }
 .btn-add {
   width: 100%;
   background: var(--accent);
@@ -575,7 +478,6 @@ body {
 .filter-row::-webkit-scrollbar { display: none; }
 .filter-btn { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 99px; padding: 6px 14px; font-size: 12px; color: var(--muted); cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
 .filter-btn.active { background: rgba(200,169,110,0.12); border-color: rgba(200,169,110,0.4); color: var(--accent); }
-.gender-select { background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 4px 6px; font-size: 11px; color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer; flex-shrink: 0; }
 
 .copy-price-btn {
   background: none;
@@ -599,20 +501,7 @@ body {
 /* Offer pricing */
 .price-original { text-decoration: line-through; color: var(--muted); font-size: 9px; display: block; margin-bottom: 1px; }
 .offer-badge { font-size: 9px; color: #7ec98e; display: block; margin-top: 1px; }
-.offer-clear-btn { background: none; border: 0.5px solid rgba(224,85,85,0.3); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 11px; color: var(--danger); cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .badge-offer { background: rgba(92,158,106,0.15); color: #7ec98e; border: 0.5px solid rgba(92,158,106,0.3); }
-.offer-panel { background: var(--bg3); border-top: 0.5px solid var(--border); padding: 12px 14px; }
-.offer-size-table { display: flex; flex-direction: column; gap: 6px; }
-.offer-size-header { display: grid; grid-template-columns: 36px 60px 80px 1fr 60px; gap: 6px; font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; padding: 0 4px; }
-.offer-size-row { display: grid; grid-template-columns: 36px 60px 80px 1fr 60px; gap: 6px; align-items: center; background: var(--bg2); border-radius: var(--radius-sm); padding: 8px 6px; }
-.osr-size { font-size: 12px; font-weight: 500; color: var(--text); }
-.osr-orig { font-size: 11px; color: var(--muted); }
-.osr-pct-wrap { display: flex; align-items: center; gap: 3px; }
-.osr-pct-sym { font-size: 11px; color: var(--muted); }
-.osr-input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 6px; padding: 5px 4px; color: var(--text); font-size: 12px; font-family: 'DM Sans', sans-serif; text-align: center; outline: none; }
-.osr-input:focus { border-color: var(--accent); }
-.osr-final { font-size: 12px; font-weight: 500; color: var(--muted); text-align: right; }
-.osr-final-active { color: #7ec98e; }
 
 
 /* Paste order */
@@ -635,7 +524,6 @@ body {
 <nav class="tabs">
   <button class="tab active" onclick="goTab('catalog')" id="tab-catalog">Catalog</button>
   <button class="tab" onclick="goTab('order')" id="tab-order">Order</button>
-  <button class="tab" onclick="goTab('manage')" id="tab-manage">Manage</button>
   <button class="tab" onclick="goTab('pricecard')" id="tab-pricecard">Price Card</button>
 </nav>
 
@@ -737,22 +625,6 @@ body {
     </div>
   </div>
 
-  <!-- MANAGE -->
-  <div class="page" id="page-manage">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <span class="section-label" style="margin:0;">Stock & Prices</span>
-      <button id="gh-save-btn" onclick="saveToGitHub()" style="background:none;border:0.5px solid rgba(200,169,110,0.4);border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--accent);cursor:pointer;white-space:nowrap;">Save to GitHub</button>
-    </div>
-    <p class="section-label">Stock & Prices</p>
-    <div id="manage-list"></div>
-    <p class="section-label">Add New Perfume</p>
-    <div class="add-form">
-      <input class="add-form-name" type="text" id="new-name" placeholder="Perfume name…" autocomplete="off" />
-      <div class="add-form-prices" id="add-price-fields"></div>
-      <button class="btn-add" onclick="addPerfume()">Add Perfume</button>
-    </div>
-  </div>
-
   <!-- PRICE CARD -->
   <div class="page" id="page-pricecard">
     <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Generate a price list image you can download and post to social media. Automatically includes all your current perfumes.</p>
@@ -775,63 +647,57 @@ body {
 const SIZES = [2, 5, 10, 15, 30];
 
 let perfumes = [
-  { id:36, name:'Jean Paul Gaultier Le Male Le Parfum', displayName:'Jean Paul Gaultier Le Male Le Parfum', prices:{2:0,5:490,10:950,15:1399,30:2499}, out:false, sale:false, offer:null, gender:'male', featured:true, batch:'SNOI0726', aliases:["le male le parfum", "jpg le male", "le male jpg"] },
-  { id:1, name:'Rasasi Hawas Ice', displayName:'Rasasi Hawas Ice', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Ice0626', aliases:["hawas ice", "rasasi hawas ice"] },
-  { id:2, name:'Rayhaan Tropical Vibe', displayName:'Rayhaan Tropical Vibe', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Tropical0626', aliases:[] },
-  { id:3, name:'Afnan Supremacy Collector\'s Edition', displayName:'Afnan Supremacy Collector\'s Edition', prices:{2:200,5:460,10:820,15:1180,30:2480}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'CE0626', aliases:["supremacy", "afnan supremacy", "collectors edition"] },
-  { id:4, name:'Rayhaan Aquatica', displayName:'Rayhaan Aquatica', prices:{2:100,5:220,10:380,15:540,30:1120}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Aquatica06261', aliases:[] },
-  { id:5, name:'Rasasi Hawas Black', displayName:'Rasasi Hawas Black', prices:{2:100,5:240,10:420,15:600,30:1240}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Black0626', aliases:[] },
-  { id:6, name:'Nautica Voyage', displayName:'Nautica Voyage', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Voyage0626', aliases:[] },
-  { id:7, name:'French Avenue Atlantis Extrait', displayName:'French Avenue Atlantis Extrait', prices:{2:140,5:300,10:540,15:780,30:1620}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'Atlantis0626', aliases:["atlantis", "french avenue atlantis"] },
-  { id:8, name:'Gulf Orchid Naseem', displayName:'Gulf Orchid Naseem', prices:{2:80,5:180,10:300,15:420,30:880}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'Naseem0626', aliases:["gulf orchid naseem"] },
-  { id:9, name:'Rayhaan Wolf', displayName:'Rayhaan Wolf', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Wolf0526', aliases:[] },
-  { id:10, name:'Rayhaan Obsidian', displayName:'Rayhaan Obsidian', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Obsidian0526', aliases:[] },
-  { id:11, name:'Rayhaan Lion', displayName:'Rayhaan Lion', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Lion0626', aliases:[] },
-  { id:12, name:'Lattafa Qaed Al Fursan', displayName:'Lattafa Qaed Al Fursan', prices:{2:80,5:180,10:300,15:440,30:0}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'Fursan05261', aliases:["qaed al fursan", "qaed", "al fursan"] },
-  { id:13, name:'Rasasi Hawas Kobra', displayName:'Rasasi Hawas Kobra', prices:{2:100,5:240,10:420,15:600,30:1240}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Kobra0626', aliases:[] },
-  { id:14, name:'Rasasi Fattan', displayName:'Rasasi Fattan', prices:{2:0,5:300,10:540,15:780,30:0}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Fattan0526', aliases:["fattan", "rasasi fattan"] },
-  { id:15, name:'Rayhaan Italia', displayName:'Rayhaan Italia', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Italia0626', aliases:[] },
-  { id:16, name:'Rayhaan Nocturno Elixir', displayName:'Rayhaan Nocturno Elixir', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'NocElixr0626', aliases:[] },
-  { id:17, name:'Lattafa Dynasty', displayName:'Lattafa Dynasty', prices:{2:120,5:280,10:480,15:700,30:1460}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Dynasty05261', aliases:["dynasty", "lattafa dynasty"] },
-  { id:18, name:'Rasasi Hawas For Him', displayName:'Rasasi Hawas For Him', prices:{2:100,5:240,10:420,15:600,30:1240}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'HfH0626', aliases:[] },
-  { id:19, name:'Ahmed Al Maghribi Kaaf - Extrait', displayName:'Ahmed Al Maghribi Kaaf - Extrait', prices:{2:120,5:260,10:460,15:660,30:1380}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'kaaf0626', aliases:["kaaf extrait", "ahmed al maghribi kaaf"] },
-  { id:20, name:'Lattafa Asad', displayName:'Lattafa Asad', prices:{2:80,5:200,10:360,15:500,30:1060}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'asad0626', aliases:["asad", "lattafa asad"] },
-  { id:22, name:'Lattafa Yara', displayName:'Lattafa Yara', prices:{2:80,5:200,10:360,15:520,30:1060}, out:false, sale:false, offer:null, gender:'female', featured:false, batch:'Yara0626', aliases:["yara", "lattafa yara"] },
-  { id:23, name:'Lattafa Angham', displayName:'Lattafa Angham', prices:{2:100,5:240,10:420,15:600,30:1260}, out:false, sale:false, offer:null, gender:'female', featured:false, batch:'Angham0626', aliases:["angham", "lattafa angham"] },
-  { id:24, name:'Rasasi Hawas Diva', displayName:'Rasasi Hawas Diva', prices:{2:100,5:240,10:420,15:600,30:1260}, out:false, sale:false, offer:null, gender:'female', featured:false, batch:'Diva05261', aliases:[] },
-  { id:25, name:'Blue by Ahmed Al Maghribi', displayName:'Blue by Ahmed Al Maghribi', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Blueby0626', aliases:["blue ahmed al maghribi", "ahmed al maghribi blue"] },
-  { id:26, name:'French Avenue Zenith Blue', displayName:'French Avenue Zenith Blue', prices:{2:120,5:280,10:500,15:720,30:1500}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'ZenBlue0626', aliases:["zenith", "french avenue zenith"] },
-  { id:27, name:'French Avenue Aether Extrait', displayName:'French Avenue Aether Extrait', prices:{2:140,5:300,10:540,15:780,30:1620}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'Aether0626', aliases:["aether", "french avenue aether"] },
-  { id:28, name:'Rasasi Hawas Fire', displayName:'Rasasi Hawas Fire', prices:{2:120,5:280,10:500,15:740,30:1540}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Fire0526', aliases:[] },
-  { id:29, name:'Khadlaj Island', displayName:'Khadlaj Island', prices:{2:100,5:220,10:400,15:580,30:1200}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'KdjIsland0526', aliases:["island", "khadlaj"] },
-  { id:30, name:'Khadlaj Island Dreams', displayName:'Khadlaj Island Dreams', prices:{2:100,5:220,10:400,15:580,30:1200}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'KdjDreams0626', aliases:["island dreams", "dreams", "khadlaj dreams"] },
-  { id:31, name:'Armaf Club de Nuit Intense Man EDT', displayName:'Armaf Club de Nuit Intense Man EDT', prices:{2:120,5:260,10:460,15:660,30:1380}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'CdnEDT0726', aliases:["club de nuit", "armaf club de nuit", "cdn"] },
-  { id:32, name:'Jean Paul Gaultier Le Beau EDT', displayName:'Jean Paul Gaultier Le Beau EDT', prices:{2:200,5:480,10:860,15:1220,30:2580}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'JPGLBEDT0526', aliases:["le beau", "jpg le beau", "jean paul gaultier le beau"] },
-  { id:33, name:'Lattafa Opulent Dubai', displayName:'Lattafa Opulent Dubai', prices:{2:80,5:180,10:280,15:400,30:0}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'OpulentDb0526', aliases:["opulent dubai", "opulent", "shaik opulent"] },
-  { id:34, name:'Calvin Klein CK One EDT', displayName:'Calvin Klein CK One EDT', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'Ckone0626', aliases:["ck one", "calvin klein ck one"] },
-  { id:35, name:'Rayhaan Tiger', displayName:'Rayhaan Tiger', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Tiger0626', aliases:[] },
-  { id:37, name:'Lattafa Art of Universe', displayName:'Lattafa Art of Universe', prices:{2:160,5:400,10:720,15:1020,30:2160}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'Artofuni0626', aliases:["art of universe", "universe"] },
-  { id:38, name:'Rayhaan Azul', displayName:'Rayhaan Azul', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'Azul0726', aliases:[] },
-  { id:39, name:'Armaf Dunescape', displayName:'Armaf Dunescape', prices:{2:120,5:300,10:520,15:760,30:1580}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'Dunescape0626', aliases:["dunescape", "armaf dunescape"] },
-  { id:40, name:'Bois Blanc by Arabiyat Prestige', displayName:'Bois Blanc by Arabiyat Prestige', prices:{2:120,5:280,10:500,15:720,30:1500}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'BoisB0626', aliases:["bois blanc"] },
-  { id:41, name:'Carolina Herrera 212 Men NYC', displayName:'Carolina Herrera 212 Men NYC', prices:{2:180,5:420,10:740,15:1060,30:2240}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'212M0626', aliases:["212 men", "carolina herrera 212", "212 nyc", "ch 212"] },
-  { id:42, name:'Lattafa Atheeri', displayName:'Lattafa Atheeri', prices:{2:140,5:320,10:560,15:820,30:1700}, out:false, sale:false, offer:null, gender:'female', featured:false, batch:'LaAtheeri0626', aliases:["atheeri", "lattafa atheeri"] },
-  { id:43, name:'Maison Milan Mystique', displayName:'Maison Milan Mystique', prices:{2:140,5:320,10:580,15:820,30:1740}, out:false, sale:false, offer:null, gender:'unisex', featured:false, batch:'MyMilan0626', aliases:["mystique milan", "milan mystique", "mystique", "maison milan"] },
-  { id:44, name:'Afnan Supremacy Not Only Intense', displayName:'Afnan Supremacy Not Only Intense', prices:{2:180,5:420,10:760,15:1080,30:2280}, out:false, sale:false, offer:null, gender:'male', featured:false, batch:'SNOI0726', aliases:["supremacy not only intense", "snoi", "afnan snoi", "not only intense"] },
+  { id:36, name:'Jean Paul Gaultier Le Male Le Parfum', displayName:'Jean Paul Gaultier Le Male Le Parfum', prices:{2:0,5:490,10:950,15:1399,30:2499}, out:false, sale:false, offer:null, gender:'male', featured:true, aliases:["le male le parfum", "jpg le male", "le male jpg"] },
+  { id:1, name:'Rasasi Hawas Ice', displayName:'Rasasi Hawas Ice', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["hawas ice", "rasasi hawas ice"] },
+  { id:2, name:'Rayhaan Tropical Vibe', displayName:'Rayhaan Tropical Vibe', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:3, name:'Afnan Supremacy Collector\'s Edition', displayName:'Afnan Supremacy Collector\'s Edition', prices:{2:200,5:460,10:820,15:1180,30:2480}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["supremacy", "afnan supremacy", "collectors edition"] },
+  { id:4, name:'Rayhaan Aquatica', displayName:'Rayhaan Aquatica', prices:{2:100,5:220,10:380,15:540,30:1120}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:5, name:'Rasasi Hawas Black', displayName:'Rasasi Hawas Black', prices:{2:100,5:240,10:420,15:600,30:1240}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:6, name:'Nautica Voyage', displayName:'Nautica Voyage', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:7, name:'French Avenue Atlantis Extrait', displayName:'French Avenue Atlantis Extrait', prices:{2:140,5:300,10:540,15:780,30:1620}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["atlantis", "french avenue atlantis"] },
+  { id:8, name:'Gulf Orchid Naseem', displayName:'Gulf Orchid Naseem', prices:{2:80,5:180,10:300,15:420,30:880}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["gulf orchid naseem"] },
+  { id:9, name:'Rayhaan Wolf', displayName:'Rayhaan Wolf', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:10, name:'Rayhaan Obsidian', displayName:'Rayhaan Obsidian', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:11, name:'Rayhaan Lion', displayName:'Rayhaan Lion', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:12, name:'Lattafa Qaed Al Fursan', displayName:'Lattafa Qaed Al Fursan', prices:{2:80,5:180,10:300,15:440,30:0}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["qaed al fursan", "qaed", "al fursan"] },
+  { id:13, name:'Rasasi Hawas Kobra', displayName:'Rasasi Hawas Kobra', prices:{2:100,5:240,10:420,15:600,30:1240}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:14, name:'Rasasi Fattan', displayName:'Rasasi Fattan', prices:{2:0,5:300,10:540,15:780,30:0}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["fattan", "rasasi fattan"] },
+  { id:15, name:'Rayhaan Italia', displayName:'Rayhaan Italia', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:16, name:'Rayhaan Nocturno Elixir', displayName:'Rayhaan Nocturno Elixir', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:17, name:'Lattafa Dynasty', displayName:'Lattafa Dynasty', prices:{2:120,5:280,10:480,15:700,30:1460}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["dynasty", "lattafa dynasty"] },
+  { id:18, name:'Rasasi Hawas For Him', displayName:'Rasasi Hawas For Him', prices:{2:100,5:240,10:420,15:600,30:1240}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:19, name:'Ahmed Al Maghribi Kaaf - Extrait', displayName:'Ahmed Al Maghribi Kaaf - Extrait', prices:{2:120,5:260,10:460,15:660,30:1380}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["kaaf extrait", "ahmed al maghribi kaaf"] },
+  { id:20, name:'Lattafa Asad', displayName:'Lattafa Asad', prices:{2:80,5:200,10:360,15:500,30:1060}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["asad", "lattafa asad"] },
+  { id:22, name:'Lattafa Yara', displayName:'Lattafa Yara', prices:{2:80,5:200,10:360,15:520,30:1060}, out:false, sale:false, offer:null, gender:'female', featured:false, aliases:["yara", "lattafa yara"] },
+  { id:23, name:'Lattafa Angham', displayName:'Lattafa Angham', prices:{2:100,5:240,10:420,15:600,30:1260}, out:false, sale:false, offer:null, gender:'female', featured:false, aliases:["angham", "lattafa angham"] },
+  { id:24, name:'Rasasi Hawas Diva', displayName:'Rasasi Hawas Diva', prices:{2:100,5:240,10:420,15:600,30:1260}, out:false, sale:false, offer:null, gender:'female', featured:false, aliases:[] },
+  { id:25, name:'Blue by Ahmed Al Maghribi', displayName:'Blue by Ahmed Al Maghribi', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["blue ahmed al maghribi", "ahmed al maghribi blue"] },
+  { id:26, name:'French Avenue Zenith Blue', displayName:'French Avenue Zenith Blue', prices:{2:120,5:280,10:500,15:720,30:1500}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["zenith", "french avenue zenith"] },
+  { id:27, name:'French Avenue Aether Extrait', displayName:'French Avenue Aether Extrait', prices:{2:140,5:300,10:540,15:780,30:1620}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["aether", "french avenue aether"] },
+  { id:28, name:'Rasasi Hawas Fire', displayName:'Rasasi Hawas Fire', prices:{2:120,5:280,10:500,15:740,30:1540}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:29, name:'Khadlaj Island', displayName:'Khadlaj Island', prices:{2:100,5:220,10:400,15:580,30:1200}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["island", "khadlaj"] },
+  { id:30, name:'Khadlaj Island Dreams', displayName:'Khadlaj Island Dreams', prices:{2:100,5:220,10:400,15:580,30:1200}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["island dreams", "dreams", "khadlaj dreams"] },
+  { id:31, name:'Armaf Club de Nuit Intense Man EDT', displayName:'Armaf Club de Nuit Intense Man EDT', prices:{2:120,5:260,10:460,15:660,30:1380}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["club de nuit", "armaf club de nuit", "cdn"] },
+  { id:32, name:'Jean Paul Gaultier Le Beau EDT', displayName:'Jean Paul Gaultier Le Beau EDT', prices:{2:200,5:480,10:860,15:1220,30:2580}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["le beau", "jpg le beau", "jean paul gaultier le beau"] },
+  { id:33, name:'Lattafa Opulent Dubai', displayName:'Lattafa Opulent Dubai', prices:{2:80,5:180,10:280,15:400,30:0}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["opulent dubai", "opulent", "shaik opulent"] },
+  { id:34, name:'Calvin Klein CK One EDT', displayName:'Calvin Klein CK One EDT', prices:{2:100,5:260,10:440,15:640,30:1320}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["ck one", "calvin klein ck one"] },
+  { id:35, name:'Rayhaan Tiger', displayName:'Rayhaan Tiger', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:37, name:'Lattafa Art of Universe', displayName:'Lattafa Art of Universe', prices:{2:160,5:400,10:720,15:1020,30:2160}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["art of universe", "universe"] },
+  { id:38, name:'Rayhaan Azul', displayName:'Rayhaan Azul', prices:{2:80,5:180,10:340,15:480,30:1000}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:[] },
+  { id:39, name:'Armaf Dunescape', displayName:'Armaf Dunescape', prices:{2:120,5:300,10:520,15:760,30:1580}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["dunescape", "armaf dunescape"] },
+  { id:40, name:'Bois Blanc by Arabiyat Prestige', displayName:'Bois Blanc by Arabiyat Prestige', prices:{2:120,5:280,10:500,15:720,30:1500}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["bois blanc"] },
+  { id:41, name:'Carolina Herrera 212 Men NYC', displayName:'Carolina Herrera 212 Men NYC', prices:{2:180,5:420,10:740,15:1060,30:2240}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["212 men", "carolina herrera 212", "212 nyc", "ch 212"] },
+  { id:42, name:'Lattafa Atheeri', displayName:'Lattafa Atheeri', prices:{2:140,5:320,10:560,15:820,30:1700}, out:false, sale:false, offer:null, gender:'female', featured:false, aliases:["atheeri", "lattafa atheeri"] },
+  { id:43, name:'Maison Milan Mystique', displayName:'Maison Milan Mystique', prices:{2:140,5:320,10:580,15:820,30:1740}, out:false, sale:false, offer:null, gender:'unisex', featured:false, aliases:["mystique milan", "milan mystique", "mystique", "maison milan"] },
+  { id:44, name:'Afnan Supremacy Not Only Intense', displayName:'Afnan Supremacy Not Only Intense', prices:{2:180,5:420,10:760,15:1080,30:2280}, out:false, sale:false, offer:null, gender:'male', featured:false, aliases:["supremacy not only intense", "snoi", "afnan snoi", "not only intense"] },
 ];
 let nextId = 45;
 
-// ── GitHub Sync Config ──────────────────────────────────────────────────────
-const GH_TOKEN  = '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';
-const GH_REPO   = 'Fragranza/Fragranza';
-const GH_FILE   = 'perfumes.json';
-const GH_API    = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE;
-let   ghFileSha = null; // will be fetched on load
-
+// ── GitHub Sync Config (read-only) ──────────────────────────────────────────
 async function loadFromGitHub() {
   try {
     showToast('Loading...');
-    // Use public raw URL — no token needed for reading
+    // Public raw URL — no token needed for reading
     const rawUrl = 'https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json?t=' + Date.now();
     const r = await fetch(rawUrl);
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -846,82 +712,21 @@ async function loadFromGitHub() {
       gender: p.gender || 'male',
       aliases: p.aliases || [],
       displayName: p.displayName || p.name,
-      featured: p.featured || false,
-      batch: p.batch || ''
+      featured: p.featured || false
     }));
     nextId = Math.max(...perfumes.map(p => p.id)) + 1;
-    // Also fetch SHA separately for saving (needs token)
-    fetchSha();
     showToast('Loaded ' + perfumes.length + ' perfumes!');
     renderCatalog();
-    renderManage();
   } catch(e) {
     showToast('Load failed: ' + e.message);
     // Fall back to built-in data silently
     renderCatalog();
-    renderManage();
     console.error(e);
   }
-}
-
-async function fetchSha() {
-  try {
-    const r = await fetch(GH_API, {
-      headers: { 'Authorization': 'token ' + GH_TOKEN, 'User-Agent': 'Fragranza-App' }
-    });
-    if (!r.ok) return;
-    const data = await r.json();
-    ghFileSha = data.sha;
-  } catch(e) { console.error('SHA fetch failed', e); }
-}
-
-async function saveToGitHub() {
-  try {
-    showSaveState('saving');
-    // Normalize prices to string keys for JSON
-    const data = perfumes.map(p => ({
-      id: p.id, name: p.name,
-      prices: { '2': p.prices[2]||0, '5': p.prices[5]||0, '10': p.prices[10]||0, '15': p.prices[15]||0, '30': p.prices[30]||0 },
-      out: p.out, sale: p.sale, gender: p.gender || 'male',
-      offer: p.offer ? {
-        pct: p.offer.pct || {},
-        manual: p.offer.manual ? Object.fromEntries(Object.entries(p.offer.manual).map(([k,v])=>[k,v])) : {}
-      } : null
-    }));
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-    const body = { message: 'Update perfumes via owner panel', content };
-    if (ghFileSha) body.sha = ghFileSha;
-    const r = await fetch(GH_API, {
-      method: 'PUT',
-      headers: {
-        'Authorization': 'token ' + GH_TOKEN,
-        'Content-Type': 'application/json',
-        'User-Agent': 'Fragranza-App'
-      },
-      body: JSON.stringify(body)
-    });
-    if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
-    const resp = await r.json();
-    ghFileSha = resp.content.sha;
-    showSaveState('saved');
-  } catch(e) {
-    showSaveState('error');
-    showToast('Save failed: ' + e.message);
-    console.error(e);
-  }
-}
-
-function showSaveState(state) {
-  const btn = document.getElementById('gh-save-btn');
-  if (!btn) return;
-  if (state === 'saving') { btn.textContent = 'Saving...'; btn.disabled = true; btn.style.opacity = '0.6'; }
-  else if (state === 'saved') { btn.textContent = '✓ Saved to GitHub'; btn.disabled = false; btn.style.opacity = '1'; btn.style.borderColor = 'rgba(92,158,106,0.5)'; btn.style.color = '#7ec98e'; setTimeout(() => { btn.textContent = 'Save to GitHub'; btn.style.borderColor = ''; btn.style.color = ''; }, 3000); }
-  else { btn.textContent = 'Save failed — retry'; btn.disabled = false; btn.style.opacity = '1'; btn.style.borderColor = 'rgba(224,85,85,0.5)'; btn.style.color = '#e05555'; }
 }
 
 let order = []; // [{pid, size, price, name}]
 let currentGrandTotal = 0;
-let editingId = null;
 
 /* ---- NAV ---- */
 function goTab(name) {
@@ -930,7 +735,6 @@ function goTab(name) {
   document.getElementById('tab-'+name).classList.add('active');
   document.getElementById('page-'+name).classList.add('active');
   if (name === 'order') renderOrder();
-  if (name === 'manage') renderManage();
   if (name === 'pricecard') { /* ready on demand */ }
   if (name === 'catalog') renderCatalog();
 }
@@ -1133,10 +937,6 @@ function renderOrder() {
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       Copy Full Order Summary
     </button>
-    <button class="btn-copy" onclick="copyBatchCodes()" id="copy-batch-btn" style="background:rgba(100,140,200,0.1);border-color:rgba(100,140,200,0.3);color:#8ab0e8;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      Copy Batch Codes
-    </button>
     <button class="btn-copy btn-copy-inside" onclick="copyWithTransaction()" id="copy-transaction-btn" style="display:none;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       Copy with Advance & Due
@@ -1248,122 +1048,7 @@ function copyWithTransaction() {
   navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
-/* ---- MANAGE ---- */
-function renderManage() {
-  const el = document.getElementById('manage-list');
-  el.innerHTML = [...perfumes].sort((a,b) => displayNameOf(a).localeCompare(displayNameOf(b))).map((p, idx) => {
-    const editing = editingId === p.id;
-    const offerOpen = offerPanelId === p.id;
-    const offerPct = (p.offer && p.offer.pct) ? p.offer.pct : {};
-    const offerMan = (p.offer && p.offer.manual) ? p.offer.manual : {};
-    const hasAnyOffer = p.offer && (
-      Object.values(offerPct).some(v=>v>0) || Object.values(offerMan).some(v=>v>0)
-    );
-
-    const editBlock = editing ? `<div class="edit-prices">${SIZES.map(s=>
-      `<div class="edit-field"><label>${s}ml</label><input type="number" min="0" value="${p.prices[s]||''}" oninput="setPr(${p.id},${s},this.value)" inputmode="numeric" /></div>`
-    ).join('')}</div>` : '';
-
-    const offerBlock = offerOpen ? `<div class="offer-panel">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:11px;font-weight:500;color:var(--text);">Set Offer Per Size</span>
-        <button class="offer-clear-btn" onclick="clearOffer(${p.id})">Clear All</button>
-      </div>
-      <div class="offer-size-table">
-        <div class="offer-size-header">
-          <span>Size</span><span>Original</span><span>% Off</span><span>Manual ৳</span><span>Final</span>
-        </div>
-        ${[2,5,10,15,30].map(s => {
-          const orig = p.prices[s];
-          const pct = offerPct[String(s)] || '';
-          const man = offerMan[String(s)] || '';
-          const ep = effectivePrice(p, s);
-          const changed = ep !== orig;
-          return `<div class="offer-size-row">
-            <span class="osr-size">${s}ml</span>
-            <span class="osr-orig">৳${orig.toLocaleString()}</span>
-            <div class="osr-pct-wrap">
-              <input class="osr-input" type="number" min="0" max="99" placeholder="0" value="${pct}" oninput="setSizePct(${p.id},${s},this.value)" inputmode="numeric" />
-              <span class="osr-pct-sym">%</span>
-            </div>
-            <input class="osr-input" type="number" min="0" placeholder="—" value="${man}" oninput="setSizeManual(${p.id},${s},this.value)" inputmode="numeric" />
-            <span class="osr-final ${changed ? 'osr-final-active' : ''}">৳${ep.toLocaleString()}</span>
-          </div>`;
-        }).join('')}
-      </div>
-      <p style="font-size:10px;color:var(--muted);margin-top:8px;">Manual price overrides % for that size.</p>
-    </div>` : '';
-
-    return `<div class="manage-item">
-      <div class="manage-row">
-        <span class="m-sl">${idx + 1}.</span>
-        <span class="manage-name">${esc(displayNameOf(p))}</span>
-        <select class="gender-select" onchange="setGender(${p.id},this.value)">
-          <option value="male" ${(p.gender||'male')==='male'?'selected':''}>Male</option>
-          <option value="female" ${(p.gender||'male')==='female'?'selected':''}>Female</option>
-          <option value="unisex" ${(p.gender||'male')==='unisex'?'selected':''}>Unisex</option>
-        </select>
-        <button class="m-btn" onclick="toggleEdit(${p.id})">${editing ? 'Done' : 'Prices'}</button>
-        <button class="m-btn" style="${hasAnyOffer ? 'border-color:rgba(92,158,106,0.4);color:#7ec98e;' : ''}" onclick="toggleOfferPanel(${p.id})">${hasAnyOffer ? offerBadgeText(p) : 'Offer'}</button>
-        <button class="m-btn ${p.out ? 'out-active' : ''}" onclick="toggleOut(${p.id})">${p.out ? 'Out' : 'In stock'}</button>
-        <button class="m-btn danger" onclick="deletePerfume(${p.id})">✕</button>
-      </div>
-      ${editBlock}
-      ${offerBlock}
-    </div>`;
-  }).join('');
-
-  // Build add price fields
-  const pf = document.getElementById('add-price-fields');
-  if (pf) pf.innerHTML = SIZES.map(s =>
-    `<div class="edit-field"><label>${s}ml ৳</label><input type="number" min="0" id="new-${s}" placeholder="0" inputmode="numeric" /></div>`
-  ).join('');
-}
-function setGender(id, val) {
-  const p = perfumes.find(x => x.id === id);
-  if (p) p.gender = val;
-}
-
-function toggleEdit(id) {
-  editingId = editingId === id ? null : id;
-  renderManage();
-}
-
-function setPr(id, size, val) {
-  const p = perfumes.find(x => x.id === id);
-  if (p) p.prices[size] = parseInt(val) || 0;
-}
-
-function toggleOut(id) {
-  const p = perfumes.find(x => x.id === id);
-  if (p) { p.out = !p.out; renderManage(); renderCatalog(); }
-}
-
-function deletePerfume(id) {
-  if (!confirm('Delete this perfume?')) return;
-  perfumes = perfumes.filter(x => x.id !== id);
-  order = order.filter(o => o.pid !== id);
-  updateBadge();
-  renderManage();
-  renderCatalog();
-}
-
-function addPerfume() {
-  const name = document.getElementById('new-name').value.trim();
-  if (!name) { showToast('Enter a perfume name'); return; }
-  const prices = {};
-  SIZES.forEach(s => { prices[s] = parseInt(document.getElementById('new-' + s).value) || 0; });
-  perfumes.push({ id: nextId++, name, displayName: name, prices, out: false, sale: false, offer: null, gender: 'male' });
-  document.getElementById('new-name').value = '';
-  SIZES.forEach(s => { document.getElementById('new-' + s).value = ''; });
-  showToast(name + ' added!');
-  renderManage();
-  renderCatalog();
-}
-
-/* ---- OFFER ---- */
-let offerPanelId = null;
-
+/* ---- OFFER (read-only: displays offers already set in the data) ---- */
 function effectivePrice(p, size) {
   if (!p.offer) return p.prices[size];
   const s = String(size);
@@ -1380,52 +1065,6 @@ function offerBadgeText(p) {
   if (pcts.length) { const u = [...new Set(pcts)]; return u.length === 1 ? u[0] + '% OFF' : 'OFFER'; }
   if (mans.length) return 'SPECIAL';
   return '';
-}
-
-function toggleOfferPanel(id) {
-  offerPanelId = offerPanelId === id ? null : id;
-  const p = perfumes.find(x => x.id === id);
-  if (offerPanelId && p && !p.offer) p.offer = { pct: {}, manual: {} };
-  renderManage();
-  renderCatalog();
-}
-
-function setSizePct(id, size, val) {
-  const p = perfumes.find(x => x.id === id);
-  if (!p) return;
-  if (!p.offer) p.offer = { pct: {}, manual: {} };
-  if (!p.offer.pct) p.offer.pct = {};
-  const v = parseFloat(val) || 0;
-  if (v > 0) { p.offer.pct[String(size)] = v; if (p.offer.manual) delete p.offer.manual[String(size)]; }
-  else delete p.offer.pct[String(size)];
-  cleanOffer(p);
-  renderCatalog();
-}
-
-function setSizeManual(id, size, val) {
-  const p = perfumes.find(x => x.id === id);
-  if (!p) return;
-  if (!p.offer) p.offer = { pct: {}, manual: {} };
-  if (!p.offer.manual) p.offer.manual = {};
-  const v = parseInt(val) || 0;
-  if (v > 0) { p.offer.manual[String(size)] = v; if (p.offer.pct) delete p.offer.pct[String(size)]; }
-  else delete p.offer.manual[String(size)];
-  cleanOffer(p);
-  renderCatalog();
-}
-
-function cleanOffer(p) {
-  const hasPct = p.offer && p.offer.pct && Object.values(p.offer.pct).some(v => v > 0);
-  const hasMan = p.offer && p.offer.manual && Object.values(p.offer.manual).some(v => v > 0);
-  if (!hasPct && !hasMan) p.offer = null;
-}
-
-function clearOffer(id) {
-  const p = perfumes.find(x => x.id === id);
-  if (p) p.offer = null;
-  offerPanelId = null;
-  renderManage();
-  renderCatalog();
 }
 
 /* ---- PRICE CARD ---- */
@@ -1937,63 +1576,6 @@ function addExtraNote() {
   showToast('Added: ' + name);
 }
 
-
-/* ---- BATCH CODES ---- */
-function copyBatchCodes() {
-  if (!order.length) { showToast('No items in order'); return; }
-
-  const lines = [];
-  const missing = [];
-
-  order.forEach(o => {
-    if (o.custom) return;
-    const p = perfumes.find(x => x.id === o.pid);
-    if (p && p.batch) {
-      lines.push(p.batch + '\t' + o.size);
-    } else if (p) {
-      missing.push(displayNameOf(p));
-    }
-  });
-
-  if (!lines.length) {
-    showToast('No batch codes found for this order');
-    return;
-  }
-
-  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
-  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
-  const grandTotal = perfumeTotal + delAmt;
-  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
-
-  const advEl = document.getElementById('advance-input');
-  const advance = advEl ? (parseFloat(advEl.value) || 0) : 0;
-  const advLine = advance > 0
-    ? `\n\nAdvance Paid: ৳${advance.toLocaleString()}\nDue Bill: ৳${Math.abs(grandTotal - advance).toLocaleString()}${(grandTotal - advance) < 0 ? ' (Overpaid)' : (grandTotal - advance) === 0 ? ' (Settled)' : ''}`
-    : '';
-
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}${advLine}`;
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text)
-      .then(() => showToast('Batch codes copied!' + (missing.length ? ' (' + missing.length + ' missing)' : '')))
-      .catch(() => fallbackCopyText(text));
-  } else {
-    fallbackCopyText(text);
-  }
-}
-
-function fallbackCopyText(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.position = 'fixed';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try { document.execCommand('copy'); showToast('Batch codes copied!'); }
-  catch(e) { showToast('Could not copy'); }
-  document.body.removeChild(ta);
-}
 
 /* ---- UTILS ---- */
 function esc(s) {
