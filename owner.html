@@ -1676,8 +1676,17 @@ function togglePasteBox() {
 }
 
 function importPastedOrder() {
-  const text = document.getElementById('paste-input').value.trim();
-  if (!text) { showToast('Paste an order first'); return; }
+  const rawText = document.getElementById('paste-input').value.trim();
+  if (!rawText) { showToast('Paste an order first'); return; }
+
+  // Sanitize the pasted text: text copied from other sites/apps (GitHub included)
+  // frequently carries invisible characters that are silently there but break every
+  // string match — zero-width spaces/joiners, BOM, and non-breaking spaces are the
+  // usual culprits. Strip/normalize those BEFORE any parsing happens.
+  const text = rawText
+    .normalize('NFKC')
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, '')   // zero-width space/joiner/no-break, BOM
+    .replace(/\u00A0/g, ' ');                       // non-breaking space -> normal space
 
   const rawLines = text.split('\n').map(l => l.trim());
   const imported = [];
@@ -1711,7 +1720,10 @@ function importPastedOrder() {
   }
 
   function extractPrice(line) {
-    const m = line.match(/৳([\d,]+)/);
+    // ৳ symbol (with or without a space after it), or Tk/BDT/Taka notation as a fallback —
+    // in case the currency glyph got dropped/substituted by whatever it was copied from.
+    let m = line.match(/৳\s*([\d,]+)/);
+    if (!m) m = line.match(/\b(?:tk|bdt|taka)\.?\s*([\d,]+)/i);
     return m ? parseInt(m[1].replace(/,/g, '')) : null;
   }
 
@@ -1722,11 +1734,13 @@ function importPastedOrder() {
 
   function cleanName(line) {
     return line
-      .replace(/[-•*]+/g, '')
       .replace(/\d+\s*ml/gi, '')
       .replace(/[x×]\s*\d+/gi, '')
-      .replace(/৳[\d,]+/g, '')
-      .replace(/[—–-]+$/, '')
+      .replace(/৳\s*[\d,]+/g, '')
+      .replace(/\b(?:tk|bdt|taka)\.?\s*[\d,]+/gi, '')
+      .replace(/^[\s\-•*–—‣▪●·]+/, '')   // strip leading bullets/dashes only
+      .replace(/[\s\-•*–—‣▪●·]+$/, '')   // strip trailing bullets/dashes only (handles "— ৳100" leftovers)
+      .replace(/\s+/g, ' ')
       .trim();
   }
 
