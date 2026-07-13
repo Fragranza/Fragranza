@@ -276,7 +276,7 @@
     "id": 14,
     "name": "Rasasi Fattan",
     "prices": {
-      "2": 120,
+      "2": 0,
       "5": 300,
       "10": 540,
       "15": 780,
@@ -617,6 +617,28 @@
     "batch": "CdnEDT0726"
   },
   {
+    "id": 32,
+    "name": "Jean Paul Gaultier Le Beau EDT",
+    "prices": {
+      "2": 200,
+      "5": 480,
+      "10": 860,
+      "15": 1220,
+      "30": 2580
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "displayName": "Jean Paul Gaultier Le Beau EDT",
+    "aliases": [
+      "le beau",
+      "jpg le beau",
+      "jean paul gaultier le beau"
+    ],
+    "batch": "JPGLBEDT0526"
+  },
+  {
     "id": 33,
     "name": "Lattafa Opulent Dubai",
     "prices": {
@@ -854,29 +876,6 @@
       "afnan snoi",
       "not only intense"
     ]
-  },
-  {
-    "id": 45,
-    "name": "Bentley for Men Silverlake",
-    "displayName": "Bentley for Men Silverlake",
-    "prices": {
-      "2": 0,
-      "5": 340,
-      "10": 620,
-      "15": 880,
-      "30": 1860
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "featured": false,
-    "aliases": [
-      "silverlake",
-      "bentley silverlake",
-      "bentley for men silverlake"
-    ],
-    "batch": ""
   },
   {
     "id": 46,
