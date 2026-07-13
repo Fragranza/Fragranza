@@ -1333,23 +1333,64 @@ function importPastedOrder() {
   const unresolved = [];
 
   // Helper: try to match a name string against the perfume list
+  // Generic words that appear across many product names — sharing these alone
+  // should never be enough to call it a match (e.g. "Intense", "EDT", "Prestige").
+  const GENERIC_WORDS = new Set(['edt','edp','eau','de','par','pour','homme','femme','men','man','woman','for','him','her','and','the','by','extrait','intense','parfum','perfume','collector','collectors','edition','prestige']);
+
   function matchPerfume(rawName) {
     const rn = rawName.toLowerCase().trim();
     if (!rn) return null;
-    return perfumes.find(p => {
+
+    // Tier 1: exact match on name / display name / alias — checked across the
+    // WHOLE list before anything looser is even considered.
+    let hit = perfumes.find(p => {
       const pn = p.name.toLowerCase();
       const dn = displayNameOf(p).toLowerCase();
-      const aliasMatch = (p.aliases || []).some(a => a.toLowerCase() === rn || a.toLowerCase().includes(rn) || rn.includes(a.toLowerCase()));
-      return pn === rn ||
-        dn === rn ||
-        pn.includes(rn) ||
-        dn.includes(rn) ||
-        rn.includes(pn) ||
-        rn.includes(dn) ||
-        aliasMatch ||
-        pn.split(' ').filter(w => w.length > 2 && rn.includes(w)).length >= 2 ||
-        rn.split(' ').filter(w => w.length > 2 && pn.includes(w)).length >= 2;
+      const aliasExact = (p.aliases || []).some(a => a.toLowerCase() === rn);
+      return pn === rn || dn === rn || aliasExact;
     });
+    if (hit) return hit;
+
+    // Tier 2: one name fully contains the other (substring), or alias substring —
+    // scanned across the whole list, and only returns a match if exactly one
+    // perfume qualifies. If the input is ambiguous (e.g. "Hawas" alone matches
+    // 6 different Rasasi Hawas variants), that's treated as no match rather
+    // than silently picking whichever one happens to sit first in the list.
+    const tier2Matches = perfumes.filter(p => {
+      const pn = p.name.toLowerCase();
+      const dn = displayNameOf(p).toLowerCase();
+      const aliasSub = (p.aliases || []).some(a => { const al = a.toLowerCase(); return al.includes(rn) || rn.includes(al); });
+      return pn.includes(rn) || dn.includes(rn) || rn.includes(pn) || rn.includes(dn) || aliasSub;
+    });
+    if (tier2Matches.length === 1) return tier2Matches[0];
+    if (tier2Matches.length > 1) {
+      // Among the ambiguous candidates, prefer an exact substring match on the
+      // full input over a shorter partial overlap, if that narrows it to one.
+      const exactContains = tier2Matches.filter(p => rn.includes(p.name.toLowerCase()) || p.name.toLowerCase().includes(rn));
+      if (exactContains.length === 1) return exactContains[0];
+      return null; // genuinely ambiguous — fall through to unresolved, not a guess
+    }
+
+    // Tier 3 (last resort): fuzzy word overlap. Only counts DISTINCTIVE words
+    // (skips generic terms like "EDT"/"Intense"/"Prestige" that show up on many
+    // products), scores every perfume, and only returns a match if there's a
+    // single clear winner — an ambiguous tie is treated as no match rather than
+    // guessing wrong.
+    const rnWords = rn.split(' ').filter(w => w.length > 2 && !GENERIC_WORDS.has(w));
+    let bestScore = 0, bestMatches = [];
+    perfumes.forEach(p => {
+      const pn = p.name.toLowerCase();
+      const pnWords = pn.split(' ').filter(w => w.length > 2 && !GENERIC_WORDS.has(w));
+      const score = Math.min(
+        pnWords.filter(w => rn.includes(w)).length,
+        rnWords.filter(w => pn.includes(w)).length
+      ) ? Math.max(pnWords.filter(w => rn.includes(w)).length, rnWords.filter(w => pn.includes(w)).length) : 0;
+      if (score >= 2) {
+        if (score > bestScore) { bestScore = score; bestMatches = [p]; }
+        else if (score === bestScore) { bestMatches.push(p); }
+      }
+    });
+    return bestMatches.length === 1 ? bestMatches[0] : null;
   }
 
   // Helper: extract a size token (e.g. "2ml", "2 ml", "2ml each") from a line
