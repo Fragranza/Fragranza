@@ -144,6 +144,25 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 /* Toast */
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:0.5px solid var(--border2);border-radius:99px;padding:10px 20px;font-size:13px;color:var(--text);opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;z-index:999;}
+
+.site-footer{text-align:center;padding:18px 16px 28px;max-width:480px;margin:0 auto;}
+.site-footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;font-size:11px;}
+.site-footer-links a{color:var(--muted);text-decoration:underline;text-underline-offset:2px;cursor:pointer;}
+.site-footer-links a:active{color:var(--accent);}
+.site-footer-links .sep{color:var(--border2);}
+
+.policy-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;display:none;align-items:flex-end;justify-content:center;}
+.policy-overlay.active{display:flex;}
+.policy-modal{background:var(--bg2);width:100%;max-width:480px;max-height:82vh;border-radius:16px 16px 0 0;padding:20px 20px 24px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.policy-modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:sticky;top:-20px;background:var(--bg2);padding-top:20px;margin-top:-20px;}
+.policy-modal-title{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text);}
+.policy-modal-close{background:none;border:0.5px solid var(--border);border-radius:99px;width:28px;height:28px;color:var(--muted);font-size:16px;cursor:pointer;flex-shrink:0;}
+.policy-modal-body{font-size:12.5px;line-height:1.75;color:#c8c5bf;}
+.policy-modal-body h3{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--accent);margin:16px 0 6px;font-weight:500;}
+.policy-modal-body h3:first-child{margin-top:0;}
+.policy-modal-body p{margin-bottom:8px;}
+.policy-modal-body ul{margin:0 0 8px 18px;}
+.policy-modal-body li{margin-bottom:3px;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 .page{display:none;}
@@ -201,6 +220,26 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     <div id="order-summary"></div>
   </div>
 </main>
+
+<div class="site-footer">
+  <div class="site-footer-links">
+    <a onclick="openPolicy('privacy')">Privacy Policy</a>
+    <span class="sep">•</span>
+    <a onclick="openPolicy('shipping')">Shipping Policy</a>
+    <span class="sep">•</span>
+    <a onclick="openPolicy('return')">Return, Exchange & Order Policy</a>
+  </div>
+</div>
+
+<div class="policy-overlay" id="policy-overlay" onclick="if(event.target===this) closePolicy()">
+  <div class="policy-modal">
+    <div class="policy-modal-head">
+      <span class="policy-modal-title" id="policy-title"></span>
+      <button class="policy-modal-close" onclick="closePolicy()">✕</button>
+    </div>
+    <div class="policy-modal-body" id="policy-body"></div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -431,6 +470,7 @@ function renderOrder() {
       'Send to Messenger' +
     '</button>' +
     '<p class="fb-note">Copy your order summary and send it to us, or tap Send to Messenger to open our chat directly.</p>' +
+    '<p class="fb-note" style="margin-top:-4px;">By sending your order, you agree to our <a style="color:var(--accent);text-decoration:underline;cursor:pointer;" onclick="openPolicy(\'privacy\')">Privacy Policy</a>, <a style="color:var(--accent);text-decoration:underline;cursor:pointer;" onclick="openPolicy(\'shipping\')">Shipping Policy</a> and <a style="color:var(--accent);text-decoration:underline;cursor:pointer;" onclick="openPolicy(\'return\')">Return, Exchange & Order Policy</a>.</p>' +
     '<button class="btn-clear" onclick="clearOrder()">' +
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
       'Start Over' +
@@ -525,6 +565,114 @@ function showToast(msg) {
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Policy Modal ─────────────────────────────────────────────────────────────
+const POLICIES = {
+  privacy: {
+    title: 'Privacy Policy',
+    body: `
+      <p><em>Last Updated: July 11, 2026</em></p>
+      <h3>1. Introduction</h3>
+      <p>At Fragranza, we value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, store, and protect your information when you visit our website, place an order, or communicate with us. By using our website or placing an order, you agree to this Privacy Policy.</p>
+      <h3>2. Information We Collect</h3>
+      <ul>
+        <li>Full name</li>
+        <li>Mobile phone number</li>
+        <li>Email address (if provided)</li>
+        <li>Shipping and billing address</li>
+        <li>Order details and purchase history</li>
+        <li>Payment information required to complete your order</li>
+        <li>Device, browser, IP address, and website usage information collected automatically</li>
+      </ul>
+      <h3>3. How We Use Your Information</h3>
+      <p>We use your information to process and deliver orders, verify payments when necessary, provide customer support, send order confirmations and delivery updates, respond to inquiries, improve our website and services, prevent fraud, and comply with legal requirements. We only send promotional or marketing messages if you've chosen to receive them.</p>
+      <h3>4. Information Sharing</h3>
+      <p>We do not sell, rent, or trade your personal information. It may only be shared with trusted service providers (payment processors, courier partners, hosting providers) or government/law enforcement when legally required — and only the information necessary for them to perform their service.</p>
+      <h3>5. Cookies and Analytics</h3>
+      <p>Our website may use cookies to keep the site functioning, remember preferences, and analyze usage. You can disable cookies in your browser, though some features may not work correctly.</p>
+      <h3>6. Data Security</h3>
+      <p>We use reasonable administrative, technical, and organizational measures to protect your information, though no method of electronic transmission or storage is completely secure.</p>
+      <h3>7. Data Retention</h3>
+      <p>We retain your information only as long as necessary to complete orders, provide support, meet legal/tax obligations, and resolve disputes. It is securely deleted or anonymized when no longer needed.</p>
+      <h3>8. Your Rights</h3>
+      <p>You may request to access, correct, update, or delete your personal information (subject to legal obligations) through our official customer support channels.</p>
+      <h3>9. Third-Party Links</h3>
+      <p>Our website or social pages may link to third-party sites. We are not responsible for their privacy practices or content.</p>
+      <h3>10. Children's Privacy</h3>
+      <p>Our products and services are not intended for individuals under 18. We do not knowingly collect information from children.</p>
+      <h3>11. Changes to This Policy</h3>
+      <p>Fragranza may update this Privacy Policy at any time; updates are posted here with a revised date. Continued use of the site after changes constitutes acceptance.</p>
+      <h3>12. Contact Us</h3>
+      <p>Questions about this policy or your personal information can be directed to Fragranza through our official customer support channels.</p>
+    `
+  },
+  shipping: {
+    title: 'Shipping Policy',
+    body: `
+      <p><em>Last Updated: July 11, 2026</em></p>
+      <h3>A. Introduction</h3>
+      <p>At Fragranza, we aim to deliver your fragrances and decants safely, quickly, and transparently. This policy explains our delivery coverage, charges, estimated timeframes, parcel inspection requirements, and responsibilities.</p>
+      <h3>B. Delivery Coverage</h3>
+      <p>We currently deliver only within Bangladesh. International shipping is not available at this time.</p>
+      <h3>C. Delivery Timeframes</h3>
+      <ul>
+        <li>Inside Dhaka: 1–2 business days</li>
+        <li>Outside Dhaka: 3–5 business days</li>
+        <li>Remote Areas: 5–7 business days</li>
+      </ul>
+      <p>Times are estimates and may vary due to courier delays, weather, public holidays, or other events beyond our control. Orders are dispatched according to operational capacity and courier pickup schedules.</p>
+      <h3>D. Shipping Charges</h3>
+      <p>Charges are set by our courier partner based on delivery location, generally ranging between ৳85–125. The applicable charge is confirmed before order confirmation.</p>
+      <h3>E. Delivery Attempt & Receiving Rules</h3>
+      <p>Customers must provide a complete, accurate address and an active phone number, and the recipient should be available to receive the parcel. If delivery fails due to an incorrect address, unreachable phone, or recipient unavailability, the courier may attempt re-delivery per their policy — and additional shipping charges may apply if a parcel is returned for recipient-side issues.</p>
+      <h3>F. Parcel Inspection Requirement (Mandatory)</h3>
+      <p>Customers must inspect the parcel in front of the delivery agent before accepting it — checking for visible damage, leakage, broken bottles, missing items, or incorrect products. Once a parcel is accepted, Fragranza is not responsible for issues reported afterward.</p>
+      <h3>G. Damaged or Broken Items During Shipping</h3>
+      <p>Fragranza takes responsibility only for damage verified during inspection in front of the delivery agent. If damage is found, notify the agent immediately and contact Fragranza with the details — claims made after delivery is accepted may not be eligible.</p>
+      <h3>H. Lost or Delayed Shipments</h3>
+      <p>If a shipment is delayed, we coordinate with the courier. If confirmed lost in transit, Fragranza will provide an appropriate resolution based on product availability and case verification.</p>
+      <h3>I. Customer Responsibilities</h3>
+      <p>Customers are responsible for providing accurate delivery information. Fragranza is not responsible for delivery failures caused by incorrect addresses, inaccurate contact details, or recipient unavailability.</p>
+      <h3>J. Policy Updates</h3>
+      <p>Fragranza may modify this Shipping Policy at any time; changes take effect immediately upon publication.</p>
+      <h3>K. Contact Us</h3>
+      <p>For shipping questions, please contact Fragranza through our official customer support channels.</p>
+    `
+  },
+  return: {
+    title: 'Return, Exchange & Order Policy',
+    body: `
+      <p><em>Last Updated: July 11, 2026</em></p>
+      <p>At Fragranza, all decants are carefully prepared from original full bottles with hygiene and accuracy. Please read this policy carefully before placing an order.</p>
+      <h3>Decant Policy (Strict — No Return / No Exchange)</h3>
+      <p>All decants are strictly non-returnable and non-exchangeable. Since decants are portioned from original bottles, once a product is prepared, opened, sprayed, or sniffed, it cannot be resold or reused. We do not accept returns or exchanges based on personal preference, scent dislike, or change of mind.</p>
+      <h3>Damage Policy</h3>
+      <p>If a parcel is received damaged (leakage, breakage, or missing item) and reported in front of the delivery agent at the time of delivery, we will arrange an exchange. Once the parcel is accepted and the agent leaves, no damage-related claims will be accepted.</p>
+      <h3>No Refund Policy</h3>
+      <p>We do not provide refunds under any circumstances. Approved cases (verified shipping damage only) are resolved through exchange only.</p>
+      <h3>Partial / Full Bottle Orders</h3>
+      <p>Partial bottle orders require a minimum 50% advance payment before processing. Once prepared or confirmed, these orders are also non-returnable and non-exchangeable.</p>
+      <h3>Order Cancellation</h3>
+      <p>Once an order is placed, it cannot be cancelled under any circumstances.</p>
+      <h3>Advance Payment Policy</h3>
+      <p>Any delivery charge advance or 50% advance payment for partial orders is strictly non-refundable, even if the order is cancelled or not accepted later.</p>
+      <h3>Agreement</h3>
+      <p>By placing an order, you acknowledge that you have read this policy and agree to all terms, which are strictly enforced.</p>
+    `
+  }
+};
+
+function openPolicy(key) {
+  const p = POLICIES[key];
+  if (!p) return;
+  document.getElementById('policy-title').textContent = p.title;
+  document.getElementById('policy-body').innerHTML = p.body;
+  document.getElementById('policy-overlay').classList.add('active');
+}
+
+function closePolicy() {
+  document.getElementById('policy-overlay').classList.remove('active');
 }
 
 loadPerfumes();
