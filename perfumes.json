@@ -617,28 +617,6 @@
     "batch": "CdnEDT0726"
   },
   {
-    "id": 32,
-    "name": "Jean Paul Gaultier Le Beau EDT",
-    "prices": {
-      "2": 200,
-      "5": 480,
-      "10": 860,
-      "15": 1220,
-      "30": 2580
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "displayName": "Jean Paul Gaultier Le Beau EDT",
-    "aliases": [
-      "le beau",
-      "jpg le beau",
-      "jean paul gaultier le beau"
-    ],
-    "batch": "JPGLBEDT0526"
-  },
-  {
     "id": 33,
     "name": "Lattafa Opulent Dubai",
     "prices": {
