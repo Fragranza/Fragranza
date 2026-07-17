@@ -922,5 +922,29 @@
       "liquid brun limited edition"
     ],
     "batch": ""
+  },
+  {
+    "id": 49,
+    "name": "Armaf Club de Nuit Intense Man EDP",
+    "displayName": "Armaf Club de Nuit Intense Man EDP",
+    "prices": {
+      "2": 100,
+      "5": 260,
+      "10": 460,
+      "15": 640,
+      "30": 1340
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "club de nuit edp",
+      "armaf club de nuit edp",
+      "cdn edp",
+      "club de nuit intense man edp"
+    ],
+    "batch": ""
   }
 ]
