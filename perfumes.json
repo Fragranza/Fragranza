@@ -946,5 +946,54 @@
       "club de nuit intense man edp"
     ],
     "batch": ""
+  },
+  {
+    "id": 50,
+    "name": "Afnan 9 PM",
+    "displayName": "Afnan 9 PM",
+    "prices": {
+      "2": 120,
+      "5": 300,
+      "10": 540,
+      "15": 760,
+      "30": 1580
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "9pm",
+      "9 pm",
+      "afnan 9pm",
+      "afnan 9 pm"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 51,
+    "name": "Afnan 9 PM Rebel",
+    "displayName": "Afnan 9 PM Rebel",
+    "prices": {
+      "2": 160,
+      "5": 400,
+      "10": 760,
+      "15": 1020,
+      "30": 2080
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "9pm rebel",
+      "9 pm rebel",
+      "afnan 9pm rebel",
+      "afnan rebel",
+      "rebel"
+    ],
+    "batch": ""
   }
 ]
