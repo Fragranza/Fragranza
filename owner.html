@@ -885,6 +885,11 @@ function renderOrder() {
         
         <div class="del-price">৳125</div>
       </div>
+      <div class="delivery-card" id="del-card-both" onclick="selectDelivery('both')">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">BOTH</div>
+        
+        <div class="del-price" style="font-size:15px;">৳85/125</div>
+      </div>
     </div>
 
     <!-- STEP 3: Bill breakdown -->
@@ -955,7 +960,7 @@ let genderFilter = 'all';
 
 function selectDelivery(type) {
   selectedDelivery = type;
-  ['none','inside','outside'].forEach(t => {
+  ['none','inside','outside','both'].forEach(t => {
     const c = document.getElementById('del-card-' + t);
     if (c) c.style.borderColor = t === type ? 'var(--accent)' : 'var(--border)';
   });
@@ -964,8 +969,11 @@ function selectDelivery(type) {
 
 function recalc() {
   const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const isBoth = selectedDelivery === 'both';
   const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
-  const grandTotal = perfumeTotal + delAmt;
+  const totalInside = perfumeTotal + 85;
+  const totalOutside = perfumeTotal + 125;
+  const grandTotal = isBoth ? totalInside : perfumeTotal + delAmt; // used as the default/fallback single value
   currentGrandTotal = grandTotal;
 
   // delivery row
@@ -973,7 +981,11 @@ function recalc() {
   const delLbl = document.getElementById('bb-del-lbl');
   const delVal = document.getElementById('bb-del-val');
   if (delRow) {
-    if (delAmt > 0) {
+    if (isBoth) {
+      delRow.style.display = 'flex';
+      delLbl.textContent = '🛵🚚 Inside / Outside';
+      delVal.textContent = '৳85 / ৳125';
+    } else if (delAmt > 0) {
       delRow.style.display = 'flex';
       delLbl.textContent = selectedDelivery === 'inside' ? '🛵 Inside Dhaka' : '🚚 Outside Dhaka';
       delVal.textContent = '৳' + delAmt.toLocaleString();
@@ -982,7 +994,9 @@ function recalc() {
     }
   }
   const bbTotal = document.getElementById('bb-total');
-  if (bbTotal) bbTotal.textContent = '৳' + grandTotal.toLocaleString();
+  if (bbTotal) bbTotal.textContent = isBoth
+    ? '৳' + totalInside.toLocaleString() + ' / ৳' + totalOutside.toLocaleString()
+    : '৳' + grandTotal.toLocaleString();
 
   // advance & due
   const advEl = document.getElementById('advance-input');
@@ -990,17 +1004,28 @@ function recalc() {
   const dueSection = document.getElementById('due-section');
   const copyTxBtn = document.getElementById('copy-transaction-btn');
   if (advance > 0) {
-    const due = grandTotal - advance;
     if (dueSection) dueSection.style.display = 'block';
     if (copyTxBtn) copyTxBtn.style.display = 'flex';
     const dueBillTotal = document.getElementById('due-bill-total');
     const dueAdv = document.getElementById('due-adv');
     const dueFinal = document.getElementById('due-final');
-    if (dueBillTotal) dueBillTotal.textContent = '৳' + grandTotal.toLocaleString();
-    if (dueAdv) dueAdv.textContent = '- ৳' + advance.toLocaleString();
-    if (dueFinal) {
-      dueFinal.textContent = '৳' + Math.abs(due).toLocaleString() + (due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : '');
-      dueFinal.style.color = due < 0 ? '#8ab0e8' : due === 0 ? 'var(--success)' : '#e05555';
+    if (isBoth) {
+      const dueInside = totalInside - advance;
+      const dueOutside = totalOutside - advance;
+      if (dueBillTotal) dueBillTotal.textContent = '৳' + totalInside.toLocaleString() + ' / ৳' + totalOutside.toLocaleString();
+      if (dueAdv) dueAdv.textContent = '- ৳' + advance.toLocaleString();
+      if (dueFinal) {
+        dueFinal.textContent = '৳' + Math.abs(dueInside).toLocaleString() + ' / ৳' + Math.abs(dueOutside).toLocaleString();
+        dueFinal.style.color = '';
+      }
+    } else {
+      const due = grandTotal - advance;
+      if (dueBillTotal) dueBillTotal.textContent = '৳' + grandTotal.toLocaleString();
+      if (dueAdv) dueAdv.textContent = '- ৳' + advance.toLocaleString();
+      if (dueFinal) {
+        dueFinal.textContent = '৳' + Math.abs(due).toLocaleString() + (due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : '');
+        dueFinal.style.color = due < 0 ? '#8ab0e8' : due === 0 ? 'var(--success)' : '#e05555';
+      }
     }
   } else {
     if (dueSection) dueSection.style.display = 'none';
@@ -1026,11 +1051,20 @@ function copyFull() {
   if (!order.length) return;
   const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
   const totalMl = order.reduce((s, o) => s + o.size, 0);
-  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
-  const grandTotal = perfumeTotal + delAmt;
-  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
   const lines = getOrderLines();
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\nTotal Bill: ৳${grandTotal.toLocaleString()}`;
+  let delLine, totalLine;
+  if (selectedDelivery === 'both') {
+    const totalInside = perfumeTotal + 85;
+    const totalOutside = perfumeTotal + 125;
+    delLine = `\nDelivery: ৳85 (Inside Dhaka) or ৳125 (Outside Dhaka) — please confirm your area`;
+    totalLine = `Total Bill: ৳${totalInside.toLocaleString()} (Inside Dhaka) / ৳${totalOutside.toLocaleString()} (Outside Dhaka)`;
+  } else {
+    const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+    const grandTotal = perfumeTotal + delAmt;
+    delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
+    totalLine = `Total Bill: ৳${grandTotal.toLocaleString()}`;
+  }
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\n${totalLine}`;
   navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
@@ -1038,13 +1072,26 @@ function copyWithTransaction() {
   if (!order.length) return;
   const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
   const totalMl = order.reduce((s, o) => s + o.size, 0);
-  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
-  const grandTotal = perfumeTotal + delAmt;
   const advance = parseFloat(document.getElementById('advance-input').value) || 0;
-  const due = grandTotal - advance;
-  const delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
   const lines = getOrderLines();
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\nTotal Bill: ৳${grandTotal.toLocaleString()}\n\nAdvance Paid: ৳${advance.toLocaleString()}\nDue Bill: ৳${Math.abs(due).toLocaleString()}${due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : ''}`;
+  let delLine, totalLine, dueLine;
+  if (selectedDelivery === 'both') {
+    const totalInside = perfumeTotal + 85;
+    const totalOutside = perfumeTotal + 125;
+    const dueInside = totalInside - advance;
+    const dueOutside = totalOutside - advance;
+    delLine = `\nDelivery: ৳85 (Inside Dhaka) or ৳125 (Outside Dhaka) — please confirm your area`;
+    totalLine = `Total Bill: ৳${totalInside.toLocaleString()} (Inside Dhaka) / ৳${totalOutside.toLocaleString()} (Outside Dhaka)`;
+    dueLine = `Due Bill: ৳${Math.abs(dueInside).toLocaleString()} (Inside Dhaka) / ৳${Math.abs(dueOutside).toLocaleString()} (Outside Dhaka)`;
+  } else {
+    const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
+    const grandTotal = perfumeTotal + delAmt;
+    const due = grandTotal - advance;
+    delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
+    totalLine = `Total Bill: ৳${grandTotal.toLocaleString()}`;
+    dueLine = `Due Bill: ৳${Math.abs(due).toLocaleString()}${due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : ''}`;
+  }
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n${totalLine}\n\nAdvance Paid: ৳${advance.toLocaleString()}\n${dueLine}`;
   navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
