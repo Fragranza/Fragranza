@@ -233,28 +233,6 @@
     "batch": "Lion0626"
   },
   {
-    "id": 12,
-    "name": "Lattafa Qaed Al Fursan",
-    "prices": {
-      "2": 80,
-      "5": 180,
-      "10": 300,
-      "15": 440,
-      "30": 0
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "unisex",
-    "displayName": "Lattafa Qaed Al Fursan",
-    "aliases": [
-      "qaed al fursan",
-      "qaed",
-      "al fursan"
-    ],
-    "batch": "Fursan05261"
-  },
-  {
     "id": 13,
     "name": "Rasasi Hawas Kobra",
     "prices": {
