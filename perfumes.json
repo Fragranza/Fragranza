@@ -552,27 +552,6 @@
     "batch": "Fire0526"
   },
   {
-    "id": 29,
-    "name": "Khadlaj Island",
-    "prices": {
-      "2": 100,
-      "5": 220,
-      "10": 400,
-      "15": 580,
-      "30": 1200
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "displayName": "Khadlaj Island",
-    "aliases": [
-      "island",
-      "khadlaj"
-    ],
-    "batch": "KdjIsland0526"
-  },
-  {
     "id": 30,
     "name": "Khadlaj Island Dreams",
     "prices": {
@@ -593,28 +572,6 @@
       "khadlaj dreams"
     ],
     "batch": "KdjDreams0626"
-  },
-  {
-    "id": 31,
-    "name": "Armaf Club de Nuit Intense Man EDT",
-    "prices": {
-      "2": 120,
-      "5": 260,
-      "10": 460,
-      "15": 660,
-      "30": 1380
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "displayName": "Armaf Club de Nuit Intense Man EDT",
-    "aliases": [
-      "club de nuit",
-      "armaf club de nuit",
-      "cdn"
-    ],
-    "batch": "CdnEDT0726"
   },
   {
     "id": 33,
