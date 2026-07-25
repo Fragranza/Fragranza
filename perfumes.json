@@ -930,5 +930,75 @@
       "rebel"
     ],
     "batch": ""
+  },
+  {
+    "id": 52,
+    "name": "Rasasi Hawas Malibu",
+    "displayName": "Rasasi Hawas Malibu",
+    "prices": {
+      "2": 140,
+      "5": 320,
+      "10": 560,
+      "15": 820,
+      "30": 1680
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "malibu",
+      "hawas malibu",
+      "rasasi malibu"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 53,
+    "name": "Afnan Modest Une",
+    "displayName": "Afnan Modest Une",
+    "prices": {
+      "2": 140,
+      "5": 300,
+      "10": 540,
+      "15": 780,
+      "30": 1680
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "modest une",
+      "afnan modest",
+      "modest"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 54,
+    "name": "Armaf Club de Nuit Iconic",
+    "displayName": "Armaf Club de Nuit Iconic",
+    "prices": {
+      "2": 140,
+      "5": 360,
+      "10": 640,
+      "15": 960,
+      "30": 1940
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "club de nuit iconic",
+      "cdn iconic",
+      "armaf iconic",
+      "iconic"
+    ],
+    "batch": ""
   }
 ]
