@@ -452,11 +452,11 @@
     "id": 25,
     "name": "Blue by Ahmed Al Maghribi",
     "prices": {
-      "2": 80,
-      "5": 180,
-      "10": 340,
-      "15": 480,
-      "30": 1000
+      "2": 100,
+      "5": 240,
+      "10": 460,
+      "15": 720,
+      "30": 1280
     },
     "out": false,
     "sale": false,
@@ -998,6 +998,28 @@
       "cdn iconic",
       "armaf iconic",
       "iconic"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 55,
+    "name": "Lattafa Atlas",
+    "displayName": "Lattafa Atlas",
+    "prices": {
+      "2": 180,
+      "5": 420,
+      "10": 780,
+      "15": 1120,
+      "30": 2340
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "atlas",
+      "lattafa atlas"
     ],
     "batch": ""
   }
