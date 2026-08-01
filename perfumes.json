@@ -251,27 +251,6 @@
     "batch": "Kobra0626"
   },
   {
-    "id": 14,
-    "name": "Rasasi Fattan",
-    "prices": {
-      "2": 120,
-      "5": 300,
-      "10": 540,
-      "15": 780,
-      "30": 0
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "displayName": "Rasasi Fattan",
-    "aliases": [
-      "fattan",
-      "rasasi fattan"
-    ],
-    "batch": "Fattan0526"
-  },
-  {
     "id": 15,
     "name": "Rayhaan Italia",
     "prices": {
@@ -1020,6 +999,50 @@
     "aliases": [
       "atlas",
       "lattafa atlas"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 56,
+    "name": "Rayhaan Terra",
+    "displayName": "Rayhaan Terra",
+    "prices": {
+      "2": 80,
+      "5": 180,
+      "10": 340,
+      "15": 480,
+      "30": 1000
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "terra",
+      "rayhaan terra"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 57,
+    "name": "Atralia Absolute Ice",
+    "displayName": "Atralia Absolute Ice",
+    "prices": {
+      "2": 100,
+      "5": 220,
+      "10": 380,
+      "15": 560,
+      "30": 1160
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "absolute ice",
+      "atralia ice"
     ],
     "batch": ""
   }
