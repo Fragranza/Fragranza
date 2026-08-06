@@ -1045,5 +1045,72 @@
       "atralia ice"
     ],
     "batch": ""
+  },
+  {
+    "id": 58,
+    "name": "Rayhaan Pacific Aura",
+    "displayName": "Rayhaan Pacific Aura",
+    "prices": {
+      "2": 80,
+      "5": 180,
+      "10": 340,
+      "15": 480,
+      "30": 1000
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "pacific aura",
+      "rayhaan pacific"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 59,
+    "name": "Versace Eros EDP",
+    "displayName": "Versace Eros EDP",
+    "prices": {
+      "2": 200,
+      "5": 480,
+      "10": 880,
+      "15": 1260,
+      "30": 2660
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "eros edp",
+      "versace eros"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 60,
+    "name": "Jean Paul Gaultier Le Beau EDT",
+    "displayName": "Jean Paul Gaultier Le Beau EDT",
+    "prices": {
+      "2": 0,
+      "5": 480,
+      "10": 0,
+      "15": 0,
+      "30": 0
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "le beau",
+      "jpg le beau",
+      "jean paul gaultier le beau"
+    ],
+    "batch": ""
   }
 ]
