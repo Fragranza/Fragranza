@@ -1134,5 +1134,27 @@
       "burberry touch"
     ],
     "batch": ""
+  },
+  {
+    "id": 62,
+    "name": "Versace Eros Flame",
+    "displayName": "Versace Eros Flame",
+    "prices": {
+      "2": 0,
+      "5": 580,
+      "10": 1020,
+      "15": 1480,
+      "30": 3080
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "eros flame",
+      "versace eros flame"
+    ],
+    "batch": ""
   }
 ]
