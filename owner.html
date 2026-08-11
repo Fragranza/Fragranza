@@ -645,6 +645,9 @@ body {
 
 <script>
 const SIZES = [2, 5, 10, 15, 30];
+// Display-only label map: the "2" size slot is shown to everyone as "1.5ml" now
+// (internal price key stays 2 everywhere — this only changes what's printed).
+function sizeLabel(n) { return n === 2 ? '1.5' : String(n); }
 
 let perfumes = [
   { id:36, name:'Jean Paul Gaultier Le Male Le Parfum', displayName:'Jean Paul Gaultier Le Male Le Parfum', prices:{2:0,5:490,10:950,15:1399,30:2499}, out:false, sale:false, offer:null, gender:'male', featured:true, aliases:["le male le parfum", "jpg le male", "le male jpg"] },
@@ -769,7 +772,7 @@ function renderCatalog() {
       const ep = effectivePrice(p, s);
       const isOffer = ep !== pr;
       return `<button class="size-btn" onclick="addToOrder(${p.id},${s})" ${p.out ? 'disabled' : ''}>
-        <span class="size-ml">${s}ml</span>
+        <span class="size-ml">${sizeLabel(s)}ml</span>
         ${isOffer ? `<span class="price-original">৳${pr.toLocaleString()}</span>` : ''}
         <span class="size-price">৳${ep.toLocaleString()}</span>
         ${isOffer ? `<span class="offer-badge">${offerBadgeText(p)}</span>` : ''}
@@ -831,7 +834,7 @@ function renderOrder() {
     <div class="order-item">
       <div class="oi-info">
         <div class="oi-name" style="${o.custom ? 'color:var(--accent2);' : ''}">${esc(o.name)}</div>
-        <div class="oi-size">${o.custom ? 'Custom item' : o.size + ' ml'}</div>
+        <div class="oi-size">${o.custom ? 'Custom item' : sizeLabel(o.size) + ' ml'}</div>
       </div>
       <div class="oi-price">৳${o.price.toLocaleString()}</div>
       <button class="oi-remove" onclick="removeFromOrder(${i})" aria-label="Remove">
@@ -852,7 +855,7 @@ function renderOrder() {
     else map[k].qty = (map[k].qty || 0) + 1;
   });
   const itemRows = Object.values(map).map(g =>
-    `<div class="sum-row"><span>${esc(g.name)} ${g.size}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
+    `<div class="sum-row"><span>${esc(g.name)} ${sizeLabel(g.size)}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
   ).join('');
 
   sumEl.innerHTML = `
@@ -1043,7 +1046,7 @@ function getOrderLines() {
   return Object.values(map).map(g =>
     g.custom
       ? `• ${g.name}${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
-      : `• ${g.name} ${g.size}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
+      : `• ${g.name} ${sizeLabel(g.size)}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
   );
 }
 
@@ -1440,10 +1443,16 @@ function importPastedOrder() {
     return bestMatches.length === 1 ? bestMatches[0] : null;
   }
 
-  // Helper: extract a size token (e.g. "2ml", "2 ml", "2ml each") from a line
+  // Helper: extract a size token (e.g. "2ml", "2 ml", "1.5ml", "2ml each") from a line.
+  // "1.5ml" is the customer-facing label for the internal size-2 price slot, so it
+  // maps back to 2 here — everything downstream (price lookups, imported.size, etc.)
+  // keeps using the internal numeric key.
   function extractSize(line) {
-    const m = line.match(/(\d+)\s*ml/i);
-    return m ? parseInt(m[1]) : null;
+    const m = line.match(/(\d+(?:\.\d+)?)\s*ml/i);
+    if (!m) return null;
+    const val = parseFloat(m[1]);
+    if (val === 1.5) return 2; // "1.5ml" is the label for the internal size-2 slot
+    return Math.round(val);
   }
 
   function extractPrice(line) {
@@ -1461,7 +1470,7 @@ function importPastedOrder() {
 
   function cleanName(line) {
     return line
-      .replace(/\d+\s*ml/gi, '')
+      .replace(/\d+(?:\.\d+)?\s*ml/gi, '')
       .replace(/[x×]\s*\d+/gi, '')
       .replace(/৳\s*[\d,]+/g, '')
       .replace(/\b(?:tk|bdt|taka)\.?\s*[\d,]+/gi, '')
@@ -1491,7 +1500,7 @@ function importPastedOrder() {
           imported.push({ pid: perfume.id, size, price: correctPrice, name: displayNameOf(perfume), custom: false });
         }
       } else if (rawName) {
-        unresolved.push(rawName + (size ? ' ' + size + 'ml' : ''));
+        unresolved.push(rawName + (size ? ' ' + sizeLabel(size) + 'ml' : ''));
       }
     });
     pendingNames = [];
@@ -1523,7 +1532,7 @@ function importPastedOrder() {
           // Unknown perfume with explicit price — add as custom
           const p = price && qty > 1 ? Math.round(price / qty) : (price || 0);
           for (let i = 0; i < qty; i++) {
-            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + size + 'ml', custom: true });
+            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + sizeLabel(size) + 'ml', custom: true });
           }
         }
       } else {
@@ -1558,7 +1567,7 @@ function importPastedOrder() {
   if (mismatches.length > 0) {
     const mismatchHtml = mismatches.map(m =>
       `<div style="padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px;">
-        <span style="color:var(--text);">${esc(m.name)} ${m.size}ml</span><br>
+        <span style="color:var(--text);">${esc(m.name)} ${sizeLabel(m.size)}ml</span><br>
         <span style="color:var(--danger);">Customer said ৳${m.claimed.toLocaleString()}</span>
         <span style="color:var(--muted);"> → </span>
         <span style="color:#7ec98e;">Your price ৳${m.correct.toLocaleString()}</span>
