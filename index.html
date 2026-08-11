@@ -246,6 +246,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 <script>
 const GH_RAW = 'https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json';
 const SIZES = [2,5,10,15,30];
+// Display-only label map: the "2" size slot is now shown as "1.5ml" to customers
+// (price/lookup logic still uses the internal key 2 everywhere, unchanged).
+function sizeLabel(n) { return n === 2 ? '1.5' : String(n); }
 let perfumes = [];
 let order = [];
 let activeFilter = 'all';
@@ -330,7 +333,7 @@ function renderCatalog() {
         const pr = p.prices[s];
         if (!pr || pr === 0) return '<div></div>';
         return '<button class="size-btn" onclick="addToOrder(' + p.id + ',' + s + ')" ' + (p.out ? 'disabled' : '') + '>' +
-          '<span class="size-ml">' + s + 'ml</span>' +
+          '<span class="size-ml">' + sizeLabel(s) + 'ml</span>' +
           '<span class="size-price">' + (pr > 0 ? '৳' + pr.toLocaleString() : '—') + '</span>' +
           '</button>';
       }).join('');
@@ -413,7 +416,7 @@ function renderOrder() {
 
   listEl.innerHTML = order.map((o,i) =>
     '<div class="order-item">' +
-    '<div class="oi-info"><div class="oi-name">' + esc(o.name) + '</div><div class="oi-size">' + o.size + ' ml</div></div>' +
+    '<div class="oi-info"><div class="oi-name">' + esc(o.name) + '</div><div class="oi-size">' + sizeLabel(o.size) + ' ml</div></div>' +
     '<div class="oi-price">৳' + o.price.toLocaleString() + '</div>' +
     '<button class="oi-remove" onclick="removeFromOrder(' + i + ')" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
     '</div>'
@@ -431,7 +434,7 @@ function renderOrder() {
     map[k].qty++;
   });
   const itemRows = Object.values(map).map(g =>
-    '<div class="sum-row"><span>' + esc(g.name) + ' ' + g.size + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + '</span><span>৳' + (g.price * g.qty).toLocaleString() + '</span></div>'
+    '<div class="sum-row"><span>' + esc(g.name) + ' ' + sizeLabel(g.size) + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + '</span><span>৳' + (g.price * g.qty).toLocaleString() + '</span></div>'
   ).join('');
 
   sumEl.innerHTML =
@@ -489,7 +492,7 @@ function sendToMessenger() {
     map[k].qty++;
   });
   const lines = Object.values(map).map(g =>
-    '- ' + g.name + ' ' + g.size + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
+    '- ' + g.name + ' ' + sizeLabel(g.size) + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
   );
   const perfumeTotal = order.reduce((s,o) => s + o.price, 0);
   const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
@@ -515,7 +518,7 @@ function copyOrder() {
     map[k].qty++;
   });
   const lines = Object.values(map).map(g =>
-    '- ' + g.name + ' ' + g.size + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
+    '- ' + g.name + ' ' + sizeLabel(g.size) + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
   );
   const perfumeTotal = order.reduce((s,o) => s + o.price, 0);
   const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
