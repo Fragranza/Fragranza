@@ -659,11 +659,11 @@
     "name": "Bois Blanc by Arabiyat Prestige",
     "displayName": "Bois Blanc by Arabiyat Prestige",
     "prices": {
-      "2": 120,
+      "2": 0,
       "5": 280,
-      "10": 500,
-      "15": 720,
-      "30": 1500
+      "10": 0,
+      "15": 0,
+      "30": 0
     },
     "out": false,
     "sale": false,
@@ -1155,6 +1155,50 @@
       "eros flame",
       "versace flame",
       "versace eros flame"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 63,
+    "name": "Valentino Uomo Born in Roma EDP Intense",
+    "displayName": "Valentino Uomo Born in Roma EDP Intense",
+    "prices": {
+      "2": 400,
+      "5": 980,
+      "10": 1760,
+      "15": 2540,
+      "30": 5380
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "born in roma",
+      "valentino born in roma",
+      "uomo born in roma"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 64,
+    "name": "Rayhaan Elixir",
+    "displayName": "Rayhaan Elixir",
+    "prices": {
+      "2": 80,
+      "5": 180,
+      "10": 340,
+      "15": 480,
+      "30": 1000
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "rayhaan elixir"
     ],
     "batch": ""
   }
