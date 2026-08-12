@@ -800,7 +800,7 @@ function addToOrder(pid, size) {
   if (!p || p.out) return;
   order.push({ pid, size, price: effectivePrice(p, size), origPrice: p.prices[size], name: displayNameOf(p) });
   updateBadge();
-  showToast(displayNameOf(p).split(' ')[0] + ' ' + size + 'ml added');
+  showToast(displayNameOf(p).split(' ')[0] + ' ' + sizeLabel(size) + 'ml added');
 }
 
 function removeFromOrder(idx) {
@@ -843,7 +843,7 @@ function renderOrder() {
     </div>`).join('');
 
   const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
-  const totalMl = order.reduce((s, o) => s + o.size, 0);
+  const totalMl = order.reduce((s, o) => s + parseFloat(sizeLabel(o.size)), 0);
   currentGrandTotal = perfumeTotal;
 
   // group for item list
@@ -1053,7 +1053,6 @@ function getOrderLines() {
 function copyFull() {
   if (!order.length) return;
   const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
-  const totalMl = order.reduce((s, o) => s + o.size, 0);
   const lines = getOrderLines();
   let delLine, totalLine;
   if (selectedDelivery === 'both') {
@@ -1074,7 +1073,6 @@ function copyFull() {
 function copyWithTransaction() {
   if (!order.length) return;
   const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
-  const totalMl = order.reduce((s, o) => s + o.size, 0);
   const advance = parseFloat(document.getElementById('advance-input').value) || 0;
   const lines = getOrderLines();
   let delLine, totalLine, dueLine;
@@ -1178,7 +1176,7 @@ function generateCard() {
   ];
   if (hasAnyOffer) colX.push(TABLE_X + slW + nameW + priceW*5);
 
-  const HEADERS = ['SL', 'Name', '2 ml', '5 ml', '10 ml', '15 ml', '30 ml'];
+  const HEADERS = ['SL', 'Name', '1.5 ml', '5 ml', '10 ml', '15 ml', '30 ml'];
   if (hasAnyOffer) HEADERS.push('Offer');
   const colWidths = [slW, nameW, priceW, priceW, priceW, priceW, priceW];
   if (hasAnyOffer) colWidths.push(offerW);
