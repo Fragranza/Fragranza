@@ -1320,9 +1320,9 @@ function copyPriceList(pid) {
       const ep = effectivePrice(p, s);
       const orig = p.prices[s];
       if (ep !== orig) {
-        lines.push(s + ' ml — ৳' + ep.toLocaleString() + ' (was ৳' + orig.toLocaleString() + ')');
+        lines.push(sizeLabel(s) + ' ml — ৳' + ep.toLocaleString() + ' (was ৳' + orig.toLocaleString() + ')');
       } else {
-        lines.push(s + ' ml — ৳' + orig.toLocaleString());
+        lines.push(sizeLabel(s) + ' ml — ৳' + orig.toLocaleString());
       }
     }
   });
