@@ -1163,11 +1163,11 @@
     "name": "Valentino Uomo Born in Roma EDP Intense",
     "displayName": "Valentino Uomo Born in Roma EDP Intense",
     "prices": {
-      "2": 400,
-      "5": 980,
-      "10": 1760,
-      "15": 2540,
-      "30": 5380
+      "2": 320,
+      "5": 800,
+      "10": 1420,
+      "15": 2040,
+      "30": 4300
     },
     "out": false,
     "sale": false,
