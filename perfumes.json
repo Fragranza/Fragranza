@@ -655,27 +655,6 @@
     "batch": "Dunescape0626"
   },
   {
-    "id": 40,
-    "name": "Bois Blanc by Arabiyat Prestige",
-    "displayName": "Bois Blanc by Arabiyat Prestige",
-    "prices": {
-      "2": 0,
-      "5": 280,
-      "10": 0,
-      "15": 0,
-      "30": 0
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "unisex",
-    "featured": false,
-    "aliases": [
-      "bois blanc"
-    ],
-    "batch": "BoisB0626"
-  },
-  {
     "id": 41,
     "name": "Carolina Herrera 212 Men NYC",
     "displayName": "Carolina Herrera 212 Men NYC",
