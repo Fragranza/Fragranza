@@ -1179,5 +1179,49 @@
       "lattafa khamrah"
     ],
     "batch": ""
+  },
+  {
+    "id": 66,
+    "name": "Riiffs Fareed",
+    "displayName": "Riiffs Fareed",
+    "prices": {
+      "2": 120,
+      "5": 260,
+      "10": 460,
+      "15": 680,
+      "30": 1420
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "fareed",
+      "riiffs fareed"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 67,
+    "name": "French Avenue Vulcan Feu",
+    "displayName": "French Avenue Vulcan Feu",
+    "prices": {
+      "2": 140,
+      "5": 320,
+      "10": 560,
+      "15": 800,
+      "30": 1660
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "vulcan feu",
+      "french avenue vulcan"
+    ],
+    "batch": ""
   }
 ]
