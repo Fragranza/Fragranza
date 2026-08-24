@@ -1070,29 +1070,6 @@
     "batch": ""
   },
   {
-    "id": 60,
-    "name": "Jean Paul Gaultier Le Beau EDT",
-    "displayName": "Jean Paul Gaultier Le Beau EDT",
-    "prices": {
-      "2": 0,
-      "5": 480,
-      "10": 0,
-      "15": 0,
-      "30": 0
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "featured": false,
-    "aliases": [
-      "le beau",
-      "jpg le beau",
-      "jean paul gaultier le beau"
-    ],
-    "batch": ""
-  },
-  {
     "id": 61,
     "name": "Burberry Touch",
     "displayName": "Burberry Touch",
