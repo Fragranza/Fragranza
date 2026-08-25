@@ -1203,15 +1203,15 @@
     "batch": ""
   },
   {
-    "id": 67,
-    "name": "French Avenue Vulcan Feu",
-    "displayName": "French Avenue Vulcan Feu",
+    "id": 68,
+    "name": "French Avenue Aromatix Platine Blanc",
+    "displayName": "French Avenue Aromatix Platine Blanc",
     "prices": {
-      "2": 140,
-      "5": 320,
-      "10": 560,
-      "15": 800,
-      "30": 1660
+      "2": 160,
+      "5": 360,
+      "10": 640,
+      "15": 900,
+      "30": 1880
     },
     "out": false,
     "sale": false,
@@ -1219,8 +1219,9 @@
     "gender": "unisex",
     "featured": false,
     "aliases": [
-      "vulcan feu",
-      "french avenue vulcan"
+      "aromatix platine blanc",
+      "platine blanc",
+      "french avenue aromatix"
     ],
     "batch": ""
   }
