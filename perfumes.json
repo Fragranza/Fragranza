@@ -1224,5 +1224,53 @@
       "french avenue aromatix"
     ],
     "batch": ""
+  },
+  {
+    "id": 69,
+    "name": "Armaf Club de Nuit Untold",
+    "displayName": "Armaf Club de Nuit Untold",
+    "prices": {
+      "2": 140,
+      "5": 360,
+      "10": 620,
+      "15": 900,
+      "30": 1900
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "club de nuit untold",
+      "cdn untold",
+      "armaf untold",
+      "untold"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 70,
+    "name": "Armaf Club de Nuit Sillage",
+    "displayName": "Armaf Club de Nuit Sillage",
+    "prices": {
+      "2": 140,
+      "5": 320,
+      "10": 560,
+      "15": 800,
+      "30": 1660
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "club de nuit sillage",
+      "cdn sillage",
+      "armaf sillage",
+      "sillage"
+    ],
+    "batch": ""
   }
 ]
