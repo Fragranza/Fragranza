@@ -491,24 +491,6 @@
     "batch": "Aether0626"
   },
   {
-    "id": 28,
-    "name": "Rasasi Hawas Fire",
-    "prices": {
-      "2": 120,
-      "5": 0,
-      "10": 0,
-      "15": 0,
-      "30": 0
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "displayName": "Rasasi Hawas Fire",
-    "aliases": [],
-    "batch": "Fire0526"
-  },
-  {
     "id": 30,
     "name": "Khadlaj Island Dreams",
     "prices": {
