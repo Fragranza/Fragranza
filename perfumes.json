@@ -683,30 +683,6 @@
     "batch": "LaAtheeri0626"
   },
   {
-    "id": 43,
-    "name": "Maison Milan Mystique",
-    "displayName": "Maison Milan Mystique",
-    "prices": {
-      "2": 140,
-      "5": 320,
-      "10": 580,
-      "15": 820,
-      "30": 1740
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "unisex",
-    "featured": false,
-    "aliases": [
-      "mystique milan",
-      "milan mystique",
-      "mystique",
-      "maison milan"
-    ],
-    "batch": "MyMilan0626"
-  },
-  {
     "id": 44,
     "name": "Afnan Supremacy Not Only Intense",
     "displayName": "Afnan Supremacy Not Only Intense",
@@ -1252,6 +1228,52 @@
       "cdn sillage",
       "armaf sillage",
       "sillage"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 71,
+    "name": "Khadlaj Karus Gold Absolu",
+    "displayName": "Khadlaj Karus Gold Absolu",
+    "prices": {
+      "2": 120,
+      "5": 280,
+      "10": 480,
+      "15": 700,
+      "30": 1460
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "karus gold absolu",
+      "karus gold",
+      "khadlaj karus"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 72,
+    "name": "Al Haramain Amber Oud Gold Edition",
+    "displayName": "Al Haramain Amber Oud Gold Edition",
+    "prices": {
+      "2": 160,
+      "5": 400,
+      "10": 700,
+      "15": 1020,
+      "30": 2140
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "amber oud gold edition",
+      "amber oud gold",
+      "al haramain amber oud"
     ],
     "batch": ""
   }
