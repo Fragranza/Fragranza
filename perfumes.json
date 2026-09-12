@@ -1322,5 +1322,27 @@
       "night out"
     ],
     "batch": ""
+  },
+  {
+    "id": 75,
+    "name": "Rayhaan Jungle Vibe",
+    "displayName": "Rayhaan Jungle Vibe",
+    "prices": {
+      "2": 80,
+      "5": 180,
+      "10": 340,
+      "15": 480,
+      "30": 1000
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "jungle vibe",
+      "rayhaan jungle vibe"
+    ],
+    "batch": ""
   }
 ]
