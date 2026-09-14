@@ -1360,7 +1360,7 @@
     "sale": false,
     "offer": null,
     "gender": "unisex",
-    "featured": true,
+    "featured": false,
     "aliases": [
       "bois imperial",
       "essential parfums bois imperial"
