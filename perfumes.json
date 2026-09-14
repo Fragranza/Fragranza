@@ -1366,5 +1366,27 @@
       "essential parfums bois imperial"
     ],
     "batch": ""
+  },
+  {
+    "id": 77,
+    "name": "Sanaya by Junaid Perfumes",
+    "displayName": "Sanaya by Junaid Perfumes",
+    "prices": {
+      "2": 100,
+      "5": 260,
+      "10": 460,
+      "15": 640,
+      "30": 1360
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "female",
+    "featured": false,
+    "aliases": [
+      "sanaya",
+      "junaid sanaya"
+    ],
+    "batch": ""
   }
 ]
