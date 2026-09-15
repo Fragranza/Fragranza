@@ -1350,11 +1350,11 @@
     "name": "Bois Imperial EDP by Essential Parfums",
     "displayName": "Bois Imperial EDP by Essential Parfums",
     "prices": {
-      "2": 520,
-      "5": 1250,
-      "10": 2390,
-      "15": 3590,
-      "30": 6990
+      "2": 340,
+      "5": 840,
+      "10": 1590,
+      "15": 2350,
+      "30": 4750
     },
     "out": false,
     "sale": false,
