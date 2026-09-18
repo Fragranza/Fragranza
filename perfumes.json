@@ -1388,5 +1388,27 @@
       "junaid sanaya"
     ],
     "batch": ""
+  },
+  {
+    "id": 78,
+    "name": "Rasasi Hawas Tropical",
+    "displayName": "Rasasi Hawas Tropical",
+    "prices": {
+      "2": 120,
+      "5": 280,
+      "10": 500,
+      "15": 720,
+      "30": 1500
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "hawas tropical",
+      "rasasi hawas tropical"
+    ],
+    "batch": ""
   }
 ]
