@@ -66,10 +66,10 @@
     "name": "Afnan Supremacy Collector's Edition",
     "prices": {
       "2": 220,
-      "5": 500,
-      "10": 880,
-      "15": 1280,
-      "30": 2700
+      "5": 520,
+      "10": 920,
+      "15": 1340,
+      "30": 2820
     },
     "out": false,
     "sale": false,
@@ -124,8 +124,8 @@
     "name": "Nautica Voyage",
     "prices": {
       "2": 80,
-      "5": 180,
-      "10": 340,
+      "5": 200,
+      "10": 360,
       "15": 480,
       "30": 1000
     },
@@ -516,11 +516,11 @@
     "id": 33,
     "name": "Lattafa Opulent Dubai",
     "prices": {
-      "2": 0,
-      "5": 180,
-      "10": 280,
+      "2": 80,
+      "5": 200,
+      "10": 300,
       "15": 400,
-      "30": 0
+      "30": 840
     },
     "out": false,
     "sale": false,
@@ -780,10 +780,10 @@
     "displayName": "Armaf Club de Nuit Intense Man EDP",
     "prices": {
       "2": 100,
-      "5": 240,
-      "10": 440,
-      "15": 640,
-      "30": 1320
+      "5": 260,
+      "10": 460,
+      "15": 660,
+      "30": 1340
     },
     "out": false,
     "sale": false,
@@ -1408,6 +1408,29 @@
     "aliases": [
       "hawas tropical",
       "rasasi hawas tropical"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 79,
+    "name": "Armaf Club de Nuit Intenso Fuego",
+    "displayName": "Armaf Club de Nuit Intenso Fuego",
+    "prices": {
+      "2": 180,
+      "5": 420,
+      "10": 740,
+      "15": 1060,
+      "30": 2220
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "intenso fuego",
+      "cdn intenso fuego",
+      "club de nuit intenso fuego"
     ],
     "batch": ""
   }
