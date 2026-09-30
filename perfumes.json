@@ -1433,5 +1433,26 @@
       "club de nuit intenso fuego"
     ],
     "batch": ""
+  },
+  {
+    "id": 80,
+    "name": "Sanaya 40",
+    "displayName": "Sanaya 40",
+    "prices": {
+      "2": 180,
+      "5": 420,
+      "10": 760,
+      "15": 1080,
+      "30": 2280
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "sanaya 40"
+    ],
+    "batch": ""
   }
 ]
