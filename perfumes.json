@@ -1454,5 +1454,27 @@
       "sanaya 40"
     ],
     "batch": ""
+  },
+  {
+    "id": 81,
+    "name": "Mancera Amberful",
+    "displayName": "Mancera Amberful",
+    "prices": {
+      "2": 280,
+      "5": 700,
+      "10": 1240,
+      "15": 1780,
+      "30": 3760
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "amberful",
+      "mancera amberful"
+    ],
+    "batch": ""
   }
 ]
