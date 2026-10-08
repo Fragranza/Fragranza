@@ -1476,5 +1476,51 @@
       "mancera amberful"
     ],
     "batch": ""
+  },
+  {
+    "id": 82,
+    "name": "Afnan Lynked Freedom",
+    "displayName": "Afnan Lynked Freedom",
+    "prices": {
+      "2": 200,
+      "5": 460,
+      "10": 820,
+      "15": 1180,
+      "30": 2480
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "lynked freedom",
+      "afnan lynked",
+      "lynked"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 83,
+    "name": "Lattafa Khamrah Qahwa",
+    "displayName": "Lattafa Khamrah Qahwa",
+    "prices": {
+      "2": 120,
+      "5": 300,
+      "10": 540,
+      "15": 780,
+      "30": 1660
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "khamrah qahwa",
+      "qahwa",
+      "lattafa qahwa"
+    ],
+    "batch": ""
   }
 ]
