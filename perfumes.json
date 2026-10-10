@@ -1499,5 +1499,142 @@
       "lattafa qahwa"
     ],
     "batch": ""
+  },
+  {
+    "id": 84,
+    "name": "Lattafa Asdaaf Raneen",
+    "displayName": "Lattafa Asdaaf Raneen",
+    "prices": {
+      "2": 100,
+      "5": 240,
+      "10": 420,
+      "15": 620,
+      "30": 1300
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "asdaaf raneen",
+      "raneen",
+      "lattafa raneen"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 85,
+    "name": "Lattafa His Confession",
+    "displayName": "Lattafa His Confession",
+    "prices": {
+      "2": 120,
+      "5": 320,
+      "10": 560,
+      "15": 820,
+      "30": 1700
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "his confession",
+      "lattafa his confession"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 86,
+    "name": "Lattafa Asad Bourbon",
+    "displayName": "Lattafa Asad Bourbon",
+    "prices": {
+      "2": 100,
+      "5": 240,
+      "10": 420,
+      "15": 600,
+      "30": 1240
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "asad bourbon",
+      "lattafa asad bourbon",
+      "bourbon"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 87,
+    "name": "French Avenue Vulcan Feu",
+    "displayName": "French Avenue Vulcan Feu",
+    "prices": {
+      "2": 120,
+      "5": 320,
+      "10": 560,
+      "15": 800,
+      "30": 1680
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "vulcan feu",
+      "french avenue vulcan",
+      "vulcan"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 88,
+    "name": "Lattafa Asad Elixir",
+    "displayName": "Lattafa Asad Elixir",
+    "prices": {
+      "2": 100,
+      "5": 260,
+      "10": 460,
+      "15": 660,
+      "30": 1360
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "asad elixir",
+      "lattafa asad elixir"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 89,
+    "name": "French Avenue Spectre Ghost",
+    "displayName": "French Avenue Spectre Ghost",
+    "prices": {
+      "2": 160,
+      "5": 380,
+      "10": 700,
+      "15": 980,
+      "30": 2080
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "spectre ghost",
+      "french avenue spectre",
+      "spectre",
+      "ghost"
+    ],
+    "batch": ""
   }
 ]
