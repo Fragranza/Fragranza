@@ -1636,5 +1636,28 @@
       "ghost"
     ],
     "batch": ""
+  },
+  {
+    "id": 90,
+    "name": "Afnan Turathi Blue",
+    "displayName": "Afnan Turathi Blue",
+    "prices": {
+      "2": 160,
+      "5": 360,
+      "10": 660,
+      "15": 940,
+      "30": 1980
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "turathi blue",
+      "afnan turathi",
+      "turathi"
+    ],
+    "batch": ""
   }
 ]
