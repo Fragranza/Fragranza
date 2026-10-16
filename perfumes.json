@@ -1659,5 +1659,28 @@
       "turathi"
     ],
     "batch": ""
+  },
+  {
+    "id": 91,
+    "name": "Rasasi Hawas Ice Freeze",
+    "displayName": "Rasasi Hawas Ice Freeze",
+    "prices": {
+      "2": 120,
+      "5": 280,
+      "10": 500,
+      "15": 700,
+      "30": 1460
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "hawas ice freeze",
+      "ice freeze",
+      "rasasi ice freeze"
+    ],
+    "batch": ""
   }
 ]
