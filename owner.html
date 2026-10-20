@@ -509,6 +509,42 @@ body {
 #paste-input:focus { border-color: var(--border2) !important; }
 
 .no-results { text-align: center; padding: 40px 0; color: var(--muted); font-size: 14px; }
+/* Note under perfume name (e.g. slot left) */
+.p-note { font-size: 11px; color: var(--accent); margin-top: 3px; letter-spacing: 0.02em; font-weight: 400; }
+
+/* Calc tab */
+.calc-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+.calc-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--text); }
+.calc-sub { font-size: 11px; color: var(--muted); margin: 2px 0 12px; line-height: 1.5; }
+.calc-card label { font-size: 11px; color: var(--muted); display: block; margin-bottom: 5px; }
+.calc-card .opt { font-size: 10px; color: #666; }
+.calc-card input[type=number], .calc-card input[type=text], .calc-card select {
+  width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none;
+}
+.calc-card input:focus, .calc-card select:focus { border-color: var(--accent); }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.calc-cpm { font-size: 12px; color: var(--accent); margin: 2px 0 12px; }
+.ct-head, .ct-row { display: grid; grid-template-columns: 54px 1fr 1.3fr 1fr; gap: 6px; align-items: center; }
+.ct-head { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 2px 6px; }
+.ct-row { padding: 6px 2px; border-top: 0.5px solid var(--border); font-size: 13px; }
+.ct-ml { font-weight: 500; }
+.ct-base { color: var(--muted); }
+.calc-card .ct-row input.sell { color: var(--accent); font-weight: 500; text-align: center; padding: 8px 4px; }
+.ct-profit { font-size: 12px; text-align: right; color: var(--muted); }
+.ct-profit.pos { color: #7ec98e; }
+.ct-profit.neg { color: var(--danger); }
+.cr-box { background: var(--bg3); border-radius: var(--radius-sm); padding: 10px 12px; margin: 4px 0 10px; }
+.cr-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: var(--muted); }
+.cr-row span:last-child { color: var(--text); }
+.cr-total { border-top: 0.5px solid var(--border2); margin-top: 4px; padding-top: 8px; }
+.cr-total span:last-child { color: var(--accent); font-family: 'Cormorant Garamond', serif; font-size: 20px; }
+.cr-ref { font-size: 11px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+details.calc-card > summary { cursor: pointer; font-size: 13px; color: var(--muted); letter-spacing: 0.04em; }
+.set-title { font-size: 11px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin: 14px 0 8px; }
+.set-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 4px; }
+.set-grid label { text-align: center; }
+.calc-card .set-grid input { text-align: center; padding: 8px 2px; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -525,6 +561,7 @@ body {
   <button class="tab active" onclick="goTab('catalog')" id="tab-catalog">Catalog</button>
   <button class="tab" onclick="goTab('order')" id="tab-order">Order</button>
   <button class="tab" onclick="goTab('pricecard')" id="tab-pricecard">Price Card</button>
+  <button class="tab" onclick="goTab('calc')" id="tab-calc">Calc</button>
 </nav>
 
 <main class="content">
@@ -639,6 +676,86 @@ body {
     <canvas id="price-canvas" style="display:none;"></canvas>
   </div>
 
+  <!-- CALC -->
+  <div class="page" id="page-calc">
+
+    <!-- 1) Costing calculator -->
+    <div class="calc-card">
+      <div class="calc-title">Price Calculator</div>
+      <div class="calc-sub">Market price ÷ total mL = cost per ml → base price per size → rounded sell price.</div>
+      <label>Perfume name <span class="opt">(optional, added to the copied row)</span></label>
+      <input id="c1-name" type="text" placeholder="e.g. Rayhaan Vantage" style="margin-bottom:10px;" />
+      <div class="calc-grid">
+        <div><label>Market price (৳)</label><input id="c1-market" type="number" inputmode="decimal" min="0" oninput="c1Run(true)" /></div>
+        <div><label>Total mL</label><input id="c1-ml" type="number" inputmode="decimal" min="0" oninput="c1Run(true)" /></div>
+      </div>
+      <div class="calc-grid">
+        <div><label>Purchased price (৳) <span class="opt">optional</span></label><input id="c1-buy" type="number" inputmode="decimal" min="0" oninput="c1Run(false)" /></div>
+        <div><label>Round up to</label>
+          <select id="c1-step" onchange="c1Run(true)">
+            <option value="10">৳10</option>
+            <option value="20" selected>৳20</option>
+            <option value="50">৳50</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-cpm" id="c1-cpm">Cost / ml: —</div>
+      <div id="c1-table"></div>
+      <button class="btn-copy" onclick="c1Copy()">Copy prices (tab-separated)</button>
+    </div>
+
+    <!-- 2) Custom amount / bottle -->
+    <div class="calc-card">
+      <div class="calc-title">Custom Amount / Bottle</div>
+      <div class="calc-sub">For odd amounts (2 ml or 3 ml in a 5 ml bottle) or a special decant bottle. The amount is priced from the perfume's own price list; the standard bottle cost is deducted and the chosen bottle cost is added.</div>
+      <label>Perfume</label>
+      <select id="c2-perfume" onchange="c2Run(true)" style="margin-bottom:10px;"></select>
+      <div class="calc-grid">
+        <div><label>Juice amount (ml)</label><input id="c2-ml" type="number" inputmode="decimal" step="0.5" min="0.5" value="3" oninput="c2Run(true)" /></div>
+        <div><label>Bottle</label>
+          <select id="c2-bottle" onchange="c2Run(true)">
+            <option value="auto">Standard for amount</option>
+            <option value="2">2 ml bottle</option>
+            <option value="5">5 ml bottle</option>
+            <option value="10">10 ml bottle</option>
+            <option value="15">15 ml bottle</option>
+            <option value="30">30 ml bottle</option>
+            <option value="special">Special bottle</option>
+          </select>
+        </div>
+      </div>
+      <div id="c2-special-wrap" style="display:none;margin-bottom:10px;">
+        <label>Special bottle cost (৳)</label>
+        <input id="c2-special" type="number" inputmode="numeric" min="0" value="150" oninput="c2Run(true)" />
+      </div>
+      <div class="calc-grid">
+        <div><label>Round up to</label>
+          <select id="c2-step" onchange="c2Run(true)">
+            <option value="5">৳5</option>
+            <option value="10" selected>৳10</option>
+            <option value="20">৳20</option>
+          </select>
+        </div>
+        <div><label>Final price (৳)</label><input id="c2-final" type="number" inputmode="numeric" min="0" oninput="c2Edit()" /></div>
+      </div>
+      <div id="c2-result"></div>
+      <button class="btn-add" onclick="c2Add()">Add to Order</button>
+      <button class="btn-copy" onclick="c2Copy()">Copy line for customer</button>
+    </div>
+
+    <!-- 3) Settings -->
+    <details class="calc-card" id="calc-settings">
+      <summary>Formula &amp; bottle settings</summary>
+      <div class="set-title">Price multiplier per ml (× cost/ml)</div>
+      <div class="set-grid" id="set-mult"></div>
+      <div class="set-title">Standard bottle cost (৳)</div>
+      <div class="set-grid" id="set-bottle"></div>
+      <div class="calc-sub" style="margin-top:8px;">Base price = cost/ml × ml × multiplier. These are saved in this browser only.</div>
+      <button class="btn-clear" onclick="resetCalcCfg()">Reset to defaults</button>
+    </details>
+
+  </div>
+
 </main>
 
 <div class="toast" id="toast"></div>
@@ -647,7 +764,7 @@ body {
 const SIZES = [2, 5, 10, 15, 30];
 // Display-only label map: the "2" size slot is shown to everyone as "1.5ml" now
 // (internal price key stays 2 everywhere — this only changes what's printed).
-function sizeLabel(n) { return n === 2 ? '1.5' : String(n); }
+function sizeLabel(n) { if (n === null || n === undefined) return ''; return n === 2 ? '1.5' : String(n); }
 
 let perfumes = [
   { id:36, name:'Jean Paul Gaultier Le Male Le Parfum', displayName:'Jean Paul Gaultier Le Male Le Parfum', prices:{2:0,5:490,10:950,15:1399,30:2499}, out:false, sale:false, offer:null, gender:'male', featured:true, aliases:["le male le parfum", "jpg le male", "le male jpg"] },
@@ -754,6 +871,7 @@ function goTab(name) {
   if (name === 'order') renderOrder();
   if (name === 'pricecard') { /* ready on demand */ }
   if (name === 'catalog') renderCatalog();
+  if (name === 'calc') initCalc();
 }
 
 /* ---- Name helper ---- */
@@ -794,7 +912,7 @@ function renderCatalog() {
     }).join('');
     return `<div class="p-card ${p.out ? 'out-of-stock' : ''}">
       <div class="p-header">
-        <div class="p-name"><span class="p-sl">${idx + 1}.</span>${esc(displayNameOf(p))}</div>
+        <div class="p-name"><span class="p-sl">${idx + 1}.</span>${esc(displayNameOf(p))}${p.note ? `<div class="p-note">${esc(p.note)}</div>` : ''}</div>
         <div style="display:flex;align-items:center;gap:6px;">
           ${badges}
           <button class="copy-price-btn" onclick="copyPriceList(${p.id})">
@@ -857,7 +975,7 @@ function renderOrder() {
     </div>`).join('');
 
   const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
-  const totalMl = order.reduce((s, o) => s + parseFloat(sizeLabel(o.size)), 0);
+  const totalMl = Math.round(order.reduce((s, o) => s + (o.ml != null ? o.ml : (o.size ? parseFloat(sizeLabel(o.size)) : 0)), 0) * 10) / 10;
   currentGrandTotal = perfumeTotal;
 
   // group for item list
@@ -869,7 +987,7 @@ function renderOrder() {
     else map[k].qty = (map[k].qty || 0) + 1;
   });
   const itemRows = Object.values(map).map(g =>
-    `<div class="sum-row"><span>${esc(g.name)} ${sizeLabel(g.size)}ml${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
+    `<div class="sum-row"><span>${esc(g.name)}${g.custom ? '' : ' ' + sizeLabel(g.size) + 'ml'}${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
   ).join('');
 
   sumEl.innerHTML = `
@@ -1056,9 +1174,9 @@ function recalc() {
 
 function getOrderLines() {
   const map = {};
-  order.forEach(o => {
-    const k = o.pid + '-' + o.size;
-    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
+  order.forEach((o, i) => {
+    const k = o.custom ? 'custom-' + i : o.pid + '-' + o.size;
+    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0, custom: o.custom };
     map[k].qty++;
   });
   return Object.values(map).map(g =>
@@ -1117,9 +1235,11 @@ function copyWithTransaction() {
 /* ---- COPY FOR GOOGLE SHEET (name <tab> size, one row per item) ---- */
 function copyForSheet() {
   const rows = order.filter(o => !o.isNote).map(o => {
-    let name = o.name;
+    let name = o.baseName || o.name;
     let size = '';
-    if (o.size) {
+    if (o.ml != null) {
+      size = String(o.ml);
+    } else if (o.size) {
       size = sizeLabel(o.size);
       if (o.custom) name = name.replace(' ' + o.size + 'ml', '');
     }
@@ -1706,6 +1826,248 @@ function addExtraNote() {
   showToast('Added: ' + name);
 }
 
+
+/* ---- CALC TAB ---- */
+// Sell-size slots. ml = real juice amount, cap = the decant bottle normally used.
+const SIZE_DEFS = [
+  { ml: 1.5, cap: 2,  key: '1.5' },
+  { ml: 5,   cap: 5,  key: '5'   },
+  { ml: 10,  cap: 10, key: '10'  },
+  { ml: 15,  cap: 15, key: '15'  },
+  { ml: 30,  cap: 30, key: '30'  }
+];
+// Multipliers are per-ml (× cost/ml). Derived from the costing sheet:
+// 1.5ml = cost/ml × 3, 5ml × 7.5, 10ml × 13.5, 15ml × 19.5, 30ml × 41.25
+const CALC_DEFAULTS = {
+  mult:   { '1.5': 2, '5': 1.5, '10': 1.35, '15': 1.3, '30': 1.375 },
+  bottle: { '2': 13, '5': 35, '10': 40, '15': 43, '30': 100 }
+};
+const CALC_STORE_KEY = 'fragranza_calc_cfg';
+
+function loadCalcCfg() {
+  const d = JSON.parse(JSON.stringify(CALC_DEFAULTS));
+  try {
+    const raw = localStorage.getItem(CALC_STORE_KEY);
+    if (raw) {
+      const o = JSON.parse(raw);
+      ['mult', 'bottle'].forEach(k => {
+        if (o && o[k]) Object.keys(d[k]).forEach(x => {
+          const n = parseFloat(o[k][x]);
+          if (n > 0) d[k][x] = n;
+        });
+      });
+    }
+  } catch (e) {}
+  return d;
+}
+function saveCalcCfg() {
+  try { localStorage.setItem(CALC_STORE_KEY, JSON.stringify(calcCfg)); } catch (e) {}
+}
+let calcCfg = loadCalcCfg();
+let c1Manual = [false, false, false, false, false];
+let c2Manual = false;
+
+function $c(id) { return document.getElementById(id); }
+function ceilTo(x, step) { return Math.ceil(x / step - 1e-9) * step; }
+function money(n) { return '৳' + Math.round(n).toLocaleString(); }
+
+function initCalc() {
+  buildCalcRows();
+  buildCalcSettings();
+  c2Populate();
+  c1Run(false);
+  c2Run(false);
+}
+
+/* --- 1) Price calculator --- */
+function buildCalcRows() {
+  const t = $c('c1-table');
+  if (!t || t.dataset.built) return;
+  let h = '<div class="ct-head"><span>Size</span><span>Base</span><span style="text-align:center;">Sell ৳</span><span style="text-align:right;">Profit</span></div>';
+  SIZE_DEFS.forEach((d, i) => {
+    h += '<div class="ct-row">' +
+      '<span class="ct-ml">' + d.key + ' ml</span>' +
+      '<span class="ct-base" id="c1-base-' + i + '">—</span>' +
+      '<input class="sell" id="c1-sell-' + i + '" type="number" inputmode="numeric" min="0" oninput="c1Edit(' + i + ')" />' +
+      '<span class="ct-profit" id="c1-profit-' + i + '">—</span>' +
+      '</div>';
+  });
+  t.innerHTML = h;
+  t.dataset.built = '1';
+}
+
+function c1Edit(i) { c1Manual[i] = true; c1Run(false); }
+
+function c1Run(reset) {
+  if (!$c('c1-table') || !$c('c1-table').dataset.built) return;
+  if (reset) c1Manual = [false, false, false, false, false];
+  const market = parseFloat($c('c1-market').value) || 0;
+  const tot = parseFloat($c('c1-ml').value) || 0;
+  const buy = parseFloat($c('c1-buy').value) || 0;
+  const step = parseInt($c('c1-step').value) || 20;
+  const cpm = tot > 0 ? market / tot : 0;
+  $c('c1-cpm').textContent = cpm ? 'Cost / ml: ৳' + (Math.round(cpm * 100) / 100) : 'Cost / ml: —';
+
+  SIZE_DEFS.forEach((d, i) => {
+    const base = cpm ? Math.round(cpm * d.ml * calcCfg.mult[d.key]) : 0;
+    $c('c1-base-' + i).textContent = base ? '৳' + base.toLocaleString() : '—';
+    const sellEl = $c('c1-sell-' + i);
+    if (!c1Manual[i]) sellEl.value = base ? ceilTo(base, step) : '';
+    const sell = parseFloat(sellEl.value) || 0;
+    const pEl = $c('c1-profit-' + i);
+    if (buy > 0 && tot > 0 && sell > 0) {
+      const cost = (buy / tot) * d.ml + calcCfg.bottle[String(d.cap)];
+      const profit = sell - cost;
+      pEl.textContent = (profit < 0 ? '-' : '') + '৳' + Math.abs(Math.round(profit)).toLocaleString();
+      pEl.className = 'ct-profit ' + (profit < 0 ? 'neg' : 'pos');
+    } else {
+      pEl.textContent = '—';
+      pEl.className = 'ct-profit';
+    }
+  });
+}
+
+function c1Copy() {
+  const sells = SIZE_DEFS.map((d, i) => parseFloat($c('c1-sell-' + i).value) || 0);
+  if (!sells.some(v => v > 0)) { showToast('Enter market price & total mL first'); return; }
+  const name = $c('c1-name').value.trim();
+  const row = (name ? name + '\t' : '') + sells.join('\t');
+  navigator.clipboard.writeText(row)
+    .then(() => showToast('Prices copied!'))
+    .catch(() => showToast('Could not copy'));
+}
+
+/* --- 2) Custom amount / bottle --- */
+function c2Populate() {
+  const sel = $c('c2-perfume');
+  if (!sel) return;
+  const cur = sel.value;
+  const sorted = [...perfumes].sort((a, b) => displayNameOf(a).localeCompare(displayNameOf(b)));
+  sel.innerHTML = '<option value="">— Select perfume —</option>' +
+    sorted.map(p => `<option value="${p.id}">${esc(displayNameOf(p))}</option>`).join('');
+  if (cur) sel.value = cur;
+}
+
+function c2Edit() { c2Manual = true; c2Run(false); }
+
+function pricePoints(p) {
+  return SIZES.map(s => ({ ml: s === 2 ? 1.5 : s, price: effectivePrice(p, s) }))
+              .filter(x => x.price > 0);
+}
+
+function interpPrice(pts, v) {
+  const first = pts[0], last = pts[pts.length - 1];
+  if (pts.length === 1 || v <= first.ml) return first.price * v / first.ml;
+  if (v >= last.ml) return last.price * v / last.ml;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], b = pts[i + 1];
+    if (v >= a.ml && v <= b.ml) return a.price + (b.price - a.price) * (v - a.ml) / (b.ml - a.ml);
+  }
+  return last.price * v / last.ml;
+}
+
+function defaultCap(v) { return [2, 5, 10, 15, 30].find(c => v <= c) || 30; }
+
+let c2State = null;
+
+function c2Run(reset) {
+  if (!$c('c2-perfume')) return;
+  if (reset) c2Manual = false;
+  const res = $c('c2-result');
+  const bottleSel = $c('c2-bottle').value;
+  $c('c2-special-wrap').style.display = bottleSel === 'special' ? 'block' : 'none';
+  const p = perfumes.find(x => x.id === parseInt($c('c2-perfume').value));
+  const v = parseFloat($c('c2-ml').value) || 0;
+  const step = parseInt($c('c2-step').value) || 10;
+  c2State = null;
+  if (!p || v <= 0) { res.innerHTML = ''; if (!c2Manual) $c('c2-final').value = ''; return; }
+
+  const pts = pricePoints(p);
+  if (!pts.length) {
+    res.innerHTML = '<div class="cr-ref">This perfume has no prices on the list.</div>';
+    return;
+  }
+
+  const juice = interpPrice(pts, v);
+  const defCap = defaultCap(v);
+  const stdBottle = calcCfg.bottle[String(defCap)];
+  let chosenCost, chosenLabel, changed;
+  if (bottleSel === 'auto') {
+    chosenCost = stdBottle; chosenLabel = defCap + ' ml bottle'; changed = false;
+  } else if (bottleSel === 'special') {
+    chosenCost = parseFloat($c('c2-special').value) || 0; chosenLabel = 'special bottle'; changed = true;
+  } else {
+    const cap = parseInt(bottleSel);
+    chosenCost = calcCfg.bottle[String(cap)]; chosenLabel = cap + ' ml bottle'; changed = cap !== defCap;
+  }
+  const exact = juice - stdBottle + chosenCost;
+  const rounded = ceilTo(exact, step);
+  if (!c2Manual) $c('c2-final').value = rounded;
+
+  let rows = '<div class="cr-row"><span>' + v + ' ml (from price list)</span><span>' + money(juice) + '</span></div>';
+  if (changed) {
+    rows += '<div class="cr-row"><span>− standard bottle (' + defCap + ' ml)</span><span>−' + money(stdBottle) + '</span></div>' +
+            '<div class="cr-row"><span>+ ' + chosenLabel + '</span><span>+' + money(chosenCost) + '</span></div>';
+  }
+  rows += '<div class="cr-row cr-total"><span>Total, rounded up to ৳' + step + '</span><span>' + money(rounded) + '</span></div>';
+  const ref = pts.map(x => x.ml + 'ml ' + money(x.price)).join(' · ');
+  res.innerHTML = '<div class="cr-box">' + rows + '</div>' +
+                  '<div class="cr-ref">Price list: ' + ref + '</div>';
+  c2State = { p, v, suffix: changed ? ' (' + chosenLabel + ')' : '' };
+}
+
+function c2Add() {
+  const price = parseFloat($c('c2-final').value) || 0;
+  if (!c2State || price <= 0) { showToast('Pick a perfume, amount & price'); return; }
+  const { p, v, suffix } = c2State;
+  order.push({
+    pid: p.id, size: null, ml: v, price,
+    name: displayNameOf(p) + ' ' + v + 'ml' + suffix,
+    baseName: displayNameOf(p), custom: true
+  });
+  updateBadge();
+  showToast(displayNameOf(p).split(' ')[0] + ' ' + v + 'ml added');
+}
+
+function c2Copy() {
+  const price = parseFloat($c('c2-final').value) || 0;
+  if (!c2State || price <= 0) { showToast('Pick a perfume, amount & price'); return; }
+  const { p, v, suffix } = c2State;
+  const text = displayNameOf(p) + ' ' + v + 'ml' + suffix + ' — ৳' + price.toLocaleString();
+  navigator.clipboard.writeText(text)
+    .then(() => showToast('Copied!'))
+    .catch(() => showToast('Could not copy'));
+}
+
+/* --- 3) Settings --- */
+function buildCalcSettings() {
+  const m = $c('set-mult'), b = $c('set-bottle');
+  if (!m || !b) return;
+  m.innerHTML = SIZE_DEFS.map(d =>
+    '<div><label>' + d.key + 'ml</label><input type="number" step="0.01" min="0" value="' + calcCfg.mult[d.key] +
+    '" onchange="setCalcVal(\'mult\',\'' + d.key + '\',this.value)" /></div>').join('');
+  b.innerHTML = SIZE_DEFS.map(d =>
+    '<div><label>' + d.cap + 'ml btl</label><input type="number" step="1" min="0" value="' + calcCfg.bottle[String(d.cap)] +
+    '" onchange="setCalcVal(\'bottle\',\'' + d.cap + '\',this.value)" /></div>').join('');
+}
+
+function setCalcVal(group, key, val) {
+  const n = parseFloat(val);
+  if (!(n > 0)) { buildCalcSettings(); return; }
+  calcCfg[group][key] = n;
+  saveCalcCfg();
+  c1Run(true);
+  c2Run(true);
+}
+
+function resetCalcCfg() {
+  calcCfg = JSON.parse(JSON.stringify(CALC_DEFAULTS));
+  saveCalcCfg();
+  buildCalcSettings();
+  c1Run(true);
+  c2Run(true);
+  showToast('Settings reset');
+}
 
 /* ---- UTILS ---- */
 function esc(s) {
