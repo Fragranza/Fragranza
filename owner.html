@@ -707,7 +707,7 @@ details.calc-card > summary { cursor: pointer; font-size: 13px; color: var(--mut
     <!-- 2) Custom amount / bottle -->
     <div class="calc-card">
       <div class="calc-title">Custom Amount / Bottle</div>
-      <div class="calc-sub">For odd amounts (2 ml or 3 ml in a 5 ml bottle) or a special decant bottle. The amount is priced from the perfume's own price list; the standard bottle cost is deducted and the chosen bottle cost is added.</div>
+      <div class="calc-sub">For odd amounts (2 ml or 3 ml in a 5 ml bottle) or a special decant bottle. Juice is priced per ml from the perfume's own price list (listed price minus its bottle cost), then the chosen bottle cost is added.</div>
       <label>Perfume</label>
       <select id="c2-perfume" onchange="c2Run(true)" style="margin-bottom:10px;"></select>
       <div class="calc-grid">
@@ -1955,17 +1955,6 @@ function pricePoints(p) {
               .filter(x => x.price > 0);
 }
 
-function interpPrice(pts, v) {
-  const first = pts[0], last = pts[pts.length - 1];
-  if (pts.length === 1 || v <= first.ml) return first.price * v / first.ml;
-  if (v >= last.ml) return last.price * v / last.ml;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const a = pts[i], b = pts[i + 1];
-    if (v >= a.ml && v <= b.ml) return a.price + (b.price - a.price) * (v - a.ml) / (b.ml - a.ml);
-  }
-  return last.price * v / last.ml;
-}
-
 function defaultCap(v) { return [2, 5, 10, 15, 30].find(c => v <= c) || 30; }
 
 let c2State = null;
@@ -1988,7 +1977,15 @@ function c2Run(reset) {
     return;
   }
 
-  const juice = interpPrice(pts, v);
+  // Juice-only price per ml = (listed price - that size's bottle) / ml, taken from the
+  // smallest listed size that holds the amount (bigger than 30 ml uses the 30 ml size).
+  const tiers = SIZE_DEFS.map(d => ({ d, price: effectivePrice(p, d.ml === 1.5 ? 2 : d.ml) })).filter(t => t.price > 0);
+  const tier = tiers.find(t => t.d.ml >= v) || tiers[tiers.length - 1];
+  const tierBottle = calcCfg.bottle[String(tier.d.cap)];
+  const tierJuice = Math.max(tier.price - tierBottle, 0);
+  const perMl = tierJuice / tier.d.ml;
+  const juice = perMl * v;
+
   const defCap = defaultCap(v);
   const stdBottle = calcCfg.bottle[String(defCap)];
   let chosenCost, chosenLabel, changed;
@@ -2000,15 +1997,13 @@ function c2Run(reset) {
     const cap = parseInt(bottleSel);
     chosenCost = calcCfg.bottle[String(cap)]; chosenLabel = cap + ' ml bottle'; changed = cap !== defCap;
   }
-  const exact = juice - stdBottle + chosenCost;
+  const exact = juice + chosenCost;
   const rounded = ceilTo(exact, step);
   if (!c2Manual) $c('c2-final').value = rounded;
 
-  let rows = '<div class="cr-row"><span>' + v + ' ml (from price list)</span><span>' + money(juice) + '</span></div>';
-  if (changed) {
-    rows += '<div class="cr-row"><span>− standard bottle (' + defCap + ' ml)</span><span>−' + money(stdBottle) + '</span></div>' +
-            '<div class="cr-row"><span>+ ' + chosenLabel + '</span><span>+' + money(chosenCost) + '</span></div>';
-  }
+  let rows = '<div class="cr-row"><span>' + tier.d.key + ' ml juice (' + money(tier.price) + ' − ' + money(tierBottle) + ' bottle)</span><span>' + money(tierJuice) + '</span></div>' +
+             '<div class="cr-row"><span>' + v + ' ml juice (৳' + (Math.round(perMl * 100) / 100) + '/ml)</span><span>' + money(juice) + '</span></div>' +
+             '<div class="cr-row"><span>+ ' + chosenLabel + '</span><span>+' + money(chosenCost) + '</span></div>';
   rows += '<div class="cr-row cr-total"><span>Total, rounded up to ৳' + step + '</span><span>' + money(rounded) + '</span></div>';
   const ref = pts.map(x => x.ml + 'ml ' + money(x.price)).join(' · ');
   res.innerHTML = '<div class="cr-box">' + rows + '</div>' +
