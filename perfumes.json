@@ -1682,5 +1682,75 @@
       "rasasi ice freeze"
     ],
     "batch": ""
+  },
+  {
+    "id": 92,
+    "name": "Rayhaan Vantage",
+    "displayName": "Rayhaan Vantage",
+    "prices": {
+      "2": 100,
+      "5": 240,
+      "10": 420,
+      "15": 600,
+      "30": 1240
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "vantage",
+      "rayhaan vantage"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 93,
+    "name": "Lattafa Badee Al Oud - Oud for Glory",
+    "displayName": "Lattafa Badee Al Oud - Oud for Glory",
+    "prices": {
+      "2": 100,
+      "5": 260,
+      "10": 460,
+      "15": 660,
+      "30": 1320
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "badee al oud",
+      "oud for glory",
+      "lattafa oud for glory",
+      "lattafa badee al oud"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 94,
+    "name": "Armaf Club de Nuit Preciuex",
+    "displayName": "Armaf Club de Nuit Preciuex",
+    "prices": {
+      "2": 300,
+      "5": 720,
+      "10": 1280,
+      "15": 1860,
+      "30": 3900
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "club de nuit preciuex",
+      "cdn preciuex",
+      "armaf preciuex",
+      "preciuex"
+    ],
+    "batch": ""
   }
 ]
