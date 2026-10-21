@@ -26,7 +26,8 @@
       "le male jpg"
     ],
     "batch": "",
-    "note": "Last Slot"
+    "note": "Last Slot",
+    "pinned": true
   },
   {
     "id": 1,
