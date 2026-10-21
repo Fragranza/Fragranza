@@ -12,16 +12,21 @@
     },
     "out": false,
     "sale": false,
-    "offer": null,
+    "offer": {
+      "pct": {},
+      "manual": {
+        "10": 890
+      }
+    },
     "gender": "male",
-    "featured": true,
+    "featured": false,
     "aliases": [
       "le male le parfum",
       "jpg le male",
       "le male jpg"
     ],
     "batch": "",
-    "note": "1 slot left of 24 batch"
+    "note": "Last Slot"
   },
   {
     "id": 1,
@@ -1755,8 +1760,8 @@
   },
   {
     "id": 94,
-    "name": "Armaf Club de Nuit Preciuex",
-    "displayName": "Armaf Club de Nuit Preciuex",
+    "name": "Armaf Club de Nuit Precieux I",
+    "displayName": "Armaf Club de Nuit Precieux I",
     "prices": {
       "2": 300,
       "5": 720,
@@ -1770,9 +1775,12 @@
     "gender": "unisex",
     "featured": false,
     "aliases": [
-      "club de nuit preciuex",
-      "cdn preciuex",
-      "armaf preciuex",
+      "club de nuit precieux",
+      "club de nuit precieux i",
+      "cdn precieux",
+      "armaf precieux",
+      "precieux",
+      "precieux i",
       "preciuex"
     ],
     "batch": ""
