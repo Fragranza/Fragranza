@@ -187,9 +187,10 @@ body {
 
 .size-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
 }
+.size-var { font-size: 9px; color: var(--muted); display: block; margin-top: 1px; letter-spacing: 0.02em; }
 .size-btn {
   background: var(--bg3);
   border: 0.5px solid var(--border);
@@ -762,6 +763,10 @@ details.calc-card > summary { cursor: pointer; font-size: 13px; color: var(--mut
 
 <script>
 const SIZES = [2, 5, 10, 15, 30];
+// 1.5ml comes as Roll-on or Spray (same price)
+const VARIANTS = { roll: 'Roll-on', spray: 'Spray' };
+const VARIANT_RE = /\b(?:roll[\s-]?on|rollon|spray(?:er)?)\b/i;
+function sizeText(o) { return sizeLabel(o.size) + 'ml' + (o.variant ? ' ' + VARIANTS[o.variant] : ''); }
 // Display-only label map: the "2" size slot is shown to everyone as "1.5ml" now
 // (internal price key stays 2 everywhere — this only changes what's printed).
 function sizeLabel(n) { if (n === null || n === undefined) return ''; return n === 2 ? '1.5' : String(n); }
@@ -900,15 +905,17 @@ function renderCatalog() {
     const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
     const btns = SIZES.map(s => {
       const pr = p.prices[s];
-      if (!pr) return `<div></div>`;
+      if (!pr) return s === 2 ? `<div></div><div></div>` : `<div></div>`;
       const ep = effectivePrice(p, s);
       const isOffer = ep !== pr;
-      return `<button class="size-btn" onclick="addToOrder(${p.id},${s})" ${p.out ? 'disabled' : ''}>
+      const variants = s === 2 ? ['roll', 'spray'] : [null];
+      return variants.map(v => `<button class="size-btn" onclick="addToOrder(${p.id},${s},${v ? "'" + v + "'" : 'null'})" ${p.out ? 'disabled' : ''}>
         <span class="size-ml">${sizeLabel(s)}ml</span>
+        ${v ? `<span class="size-var">${VARIANTS[v]}</span>` : ''}
         ${isOffer ? `<span class="price-original">৳${pr.toLocaleString()}</span>` : ''}
         <span class="size-price">৳${ep.toLocaleString()}</span>
         ${isOffer ? `<span class="offer-badge">${offerBadgeText(p)}</span>` : ''}
-      </button>`;
+      </button>`).join('');
     }).join('');
     return `<div class="p-card ${p.out ? 'out-of-stock' : ''}">
       <div class="p-header">
@@ -927,12 +934,12 @@ function renderCatalog() {
 }
 
 /* ---- ORDER ---- */
-function addToOrder(pid, size) {
+function addToOrder(pid, size, variant) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, price: effectivePrice(p, size), origPrice: p.prices[size], name: displayNameOf(p) });
+  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size), origPrice: p.prices[size], name: displayNameOf(p) });
   updateBadge();
-  showToast(displayNameOf(p).split(' ')[0] + ' ' + sizeLabel(size) + 'ml added');
+  showToast(displayNameOf(p).split(' ')[0] + ' ' + sizeText({ size, variant }) + ' added');
 }
 
 function removeFromOrder(idx) {
@@ -966,7 +973,7 @@ function renderOrder() {
     <div class="order-item">
       <div class="oi-info">
         <div class="oi-name" style="${o.custom ? 'color:var(--accent2);' : ''}">${esc(o.name)}</div>
-        <div class="oi-size">${o.custom ? 'Custom item' : sizeLabel(o.size) + ' ml'}</div>
+        <div class="oi-size">${o.custom ? 'Custom item' : sizeLabel(o.size) + ' ml' + (o.variant ? ' · ' + VARIANTS[o.variant] : '')}</div>
       </div>
       <div class="oi-price">৳${o.price.toLocaleString()}</div>
       <button class="oi-remove" onclick="removeFromOrder(${i})" aria-label="Remove">
@@ -981,13 +988,13 @@ function renderOrder() {
   // group for item list
   const map = {};
   order.forEach((o, i) => {
-    const k = o.custom ? 'custom-' + i + '-' + o.price : o.pid + '-' + o.size;
-    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0, custom: o.custom };
+    const k = o.custom ? 'custom-' + i + '-' + o.price : o.pid + '-' + o.size + '-' + (o.variant || '');
+    if (!map[k]) map[k] = { name: o.name, size: o.size, variant: o.variant, price: o.price, qty: 0, custom: o.custom };
     if (!o.custom) map[k].qty++;
     else map[k].qty = (map[k].qty || 0) + 1;
   });
   const itemRows = Object.values(map).map(g =>
-    `<div class="sum-row"><span>${esc(g.name)}${g.custom ? '' : ' ' + sizeLabel(g.size) + 'ml'}${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
+    `<div class="sum-row"><span>${esc(g.name)}${g.custom ? '' : ' ' + sizeText(g)}${g.qty > 1 ? ' ×'+g.qty : ''}</span><span>৳${(g.price * g.qty).toLocaleString()}</span></div>`
   ).join('');
 
   sumEl.innerHTML = `
@@ -1175,14 +1182,14 @@ function recalc() {
 function getOrderLines() {
   const map = {};
   order.forEach((o, i) => {
-    const k = o.custom ? 'custom-' + i : o.pid + '-' + o.size;
-    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0, custom: o.custom };
+    const k = o.custom ? 'custom-' + i : o.pid + '-' + o.size + '-' + (o.variant || '');
+    if (!map[k]) map[k] = { name: o.name, size: o.size, variant: o.variant, price: o.price, qty: 0, custom: o.custom };
     map[k].qty++;
   });
   return Object.values(map).map(g =>
     g.custom
       ? `• ${g.name}${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
-      : `• ${g.name} ${sizeLabel(g.size)}ml${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
+      : `• ${g.name} ${sizeText(g)}${g.qty > 1 ? ' ×' + g.qty : ''} — ৳${(g.price * g.qty).toLocaleString()}`
   );
 }
 
@@ -1243,7 +1250,7 @@ function copyForSheet() {
       size = sizeLabel(o.size);
       if (o.custom) name = name.replace(' ' + o.size + 'ml', '');
     }
-    return name + '\t' + size;
+    return name + '\t' + size + (o.variant ? '\t' + VARIANTS[o.variant] : '');
   });
   if (!rows.length) { showToast('Nothing to copy'); return; }
   navigator.clipboard.writeText(rows.join('\n'))
@@ -1266,7 +1273,7 @@ function offerBadgeText(p) {
   const mans = p.offer.manual ? Object.values(p.offer.manual).filter(v => v > 0) : [];
   if (pcts.length && mans.length) return 'OFFER';
   if (pcts.length) { const u = [...new Set(pcts)]; return u.length === 1 ? u[0] + '% OFF' : 'OFFER'; }
-  if (mans.length) return 'SPECIAL';
+  if (mans.length) return 'Discounted';
   return '';
 }
 
@@ -1475,9 +1482,9 @@ function copyPriceList(pid) {
       const ep = effectivePrice(p, s);
       const orig = p.prices[s];
       if (ep !== orig) {
-        lines.push(sizeLabel(s) + ' ml — ৳' + ep.toLocaleString() + ' (was ৳' + orig.toLocaleString() + ')');
+        lines.push(sizeLabel(s) + (s === 2 ? ' ml (roll-on / spray)' : ' ml') + ' — ৳' + ep.toLocaleString() + ' (was ৳' + orig.toLocaleString() + ')');
       } else {
-        lines.push(sizeLabel(s) + ' ml — ৳' + orig.toLocaleString());
+        lines.push(sizeLabel(s) + (s === 2 ? ' ml (roll-on / spray)' : ' ml') + ' — ৳' + orig.toLocaleString());
       }
     }
   });
@@ -1644,13 +1651,13 @@ function importPastedOrder() {
   // Pending name-only lines waiting for a shared size (e.g. a block of names followed by "2ml each")
   let pendingNames = [];
 
-  function flushPending(size, qty) {
+  function flushPending(size, qty, variant) {
     pendingNames.forEach(rawName => {
       const perfume = matchPerfume(rawName);
       if (perfume && size && SIZES.includes(size)) {
         const correctPrice = effectivePrice(perfume, size);
         for (let i = 0; i < qty; i++) {
-          imported.push({ pid: perfume.id, size, price: correctPrice, name: displayNameOf(perfume), custom: false });
+          imported.push({ pid: perfume.id, size, variant: size === 2 ? variant : null, price: correctPrice, name: displayNameOf(perfume), custom: false });
         }
       } else if (rawName) {
         unresolved.push(rawName + (size ? ' ' + sizeLabel(size) + 'ml' : ''));
@@ -1662,10 +1669,14 @@ function importPastedOrder() {
   lines.forEach((line, idx) => {
     if (!line) return; // blank lines just separate blocks, ignore
 
-    const size = extractSize(line);
-    const price = extractPrice(line);
-    const qty = extractQty(line);
-    const name = cleanName(line);
+    // Roll-on / Spray wording is read off the line first so it never ends up in the perfume name
+    const vm = line.match(VARIANT_RE);
+    const lineNoVar = vm ? line.replace(VARIANT_RE, ' ') : line;
+    const variant = vm ? (/roll/i.test(vm[0]) ? 'roll' : 'spray') : null;
+    const size = extractSize(lineNoVar);
+    const price = extractPrice(lineNoVar);
+    const qty = extractQty(lineNoVar);
+    const name = cleanName(lineNoVar);
 
     if (size) {
       // This line has a size mentioned
@@ -1679,18 +1690,18 @@ function importPastedOrder() {
             mismatches.push({ name: displayNameOf(perfume), size, claimed: unitClaimed, correct: correctPrice });
           }
           for (let i = 0; i < qty; i++) {
-            imported.push({ pid: perfume.id, size, price: correctPrice, name: displayNameOf(perfume), custom: false });
+            imported.push({ pid: perfume.id, size, variant: size === 2 ? variant : null, price: correctPrice, name: displayNameOf(perfume), custom: false });
           }
         } else {
           // Unknown perfume with explicit price — add as custom
           const p = price && qty > 1 ? Math.round(price / qty) : (price || 0);
           for (let i = 0; i < qty; i++) {
-            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + sizeLabel(size) + 'ml', custom: true });
+            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + sizeLabel(size) + 'ml' + (size === 2 && variant ? ' ' + VARIANTS[variant] : ''), custom: true });
           }
         }
       } else {
         // Line is JUST a size (e.g. "2ml each" or "2ml") — applies to pending names above
-        flushPending(size, qty);
+        flushPending(size, qty, variant);
       }
     } else {
       // No size mentioned on this line — could be a perfume name waiting for a size below
