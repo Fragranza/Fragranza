@@ -63,12 +63,16 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .badge-out{background:rgba(224,85,85,0.1);color:var(--danger);border:0.5px solid rgba(224,85,85,0.3);}
 
 /* Size buttons */
-.size-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
-.size-btn{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 4px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text);font-family:'DM Sans',sans-serif;}
+.size-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
+.size-btn{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 2px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text);font-family:'DM Sans',sans-serif;}
 .size-btn:active{transform:scale(0.95);background:rgba(200,169,110,0.15);border-color:var(--accent);}
 .size-btn:disabled{opacity:0.3;cursor:not-allowed;}
 .size-ml{font-size:12px;font-weight:500;display:block;}
 .size-price{font-size:10px;color:var(--accent);display:block;margin-top:2px;}
+.size-var{font-size:9px;color:var(--muted);display:block;margin-top:1px;letter-spacing:0.02em;}
+.size-spr{font-size:8px;color:#7d7a74;display:block;margin-top:3px;line-height:1.3;}
+.btn-whatsapp{width:100%;background:rgba(37,211,102,0.12);border:0.5px solid rgba(37,211,102,0.3);border-radius:var(--radius-sm);padding:14px;color:#25d366;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500;transition:all 0.2s;}
+.btn-whatsapp:active{background:rgba(37,211,102,0.22);}
 
 /* Order tab */
 .order-empty{text-align:center;padding:60px 20px;color:var(--muted);}
@@ -247,6 +251,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 <script>
 const GH_RAW = 'https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json';
 const SIZES = [2,5,10,15,30];
+// 1.5ml comes as Roll-on or Spray (same price)
+const VARIANTS = { roll: 'Roll-on', spray: 'Spray' };
+// Approx. spray counts, shown on the site only (never added to the order text)
+const SPRAYS = { 2: '20+', 5: '75+', 10: '150+', 15: '225+', 30: '450+' };
+function sizeText(o) { return sizeLabel(o.size) + 'ml' + (o.variant ? ' ' + VARIANTS[o.variant] : ''); }
 // Display-only label map: the "2" size slot is now shown as "1.5ml" to customers
 // (price/lookup logic still uses the internal key 2 everywhere, unchanged).
 function sizeLabel(n) { return n === 2 ? '1.5' : String(n); }
@@ -334,14 +343,19 @@ function renderCatalog() {
       const badges = (p.featured ? '<span class="badge badge-featured">Featured</span>' : '') + (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
       const btns = SIZES.map(s => {
         const pr = p.prices[s];
-        if (!pr || pr === 0) return '<div></div>';
+        if (!pr || pr === 0) return s === 2 ? '<div></div><div></div>' : '<div></div>';
         const ep = effectivePrice(p, s);
-        return '<button class="size-btn" onclick="addToOrder(' + p.id + ',' + s + ')" ' + (p.out ? 'disabled' : '') + '>' +
-          '<span class="size-ml">' + sizeLabel(s) + 'ml</span>' +
-          (ep !== pr ? '<span class="price-original">৳' + pr.toLocaleString() + '</span>' : '') +
-          '<span class="size-price">৳' + ep.toLocaleString() + '</span>' +
-          (ep !== pr ? '<span class="offer-badge-sm">discounted</span>' : '') +
-          '</button>';
+        const variants = s === 2 ? ['roll', 'spray'] : [null];
+        return variants.map(v =>
+          '<button class="size-btn" onclick="addToOrder(' + p.id + ',' + s + ',' + (v ? "'" + v + "'" : 'null') + ')" ' + (p.out ? 'disabled' : '') + '>' +
+            '<span class="size-ml">' + sizeLabel(s) + 'ml</span>' +
+            (v ? '<span class="size-var">' + VARIANTS[v] + '</span>' : '') +
+            (ep !== pr ? '<span class="price-original">৳' + pr.toLocaleString() + '</span>' : '') +
+            '<span class="size-price">৳' + ep.toLocaleString() + '</span>' +
+            (ep !== pr ? '<span class="offer-badge-sm">discounted</span>' : '') +
+            (v !== 'roll' ? '<span class="size-spr">' + SPRAYS[s] + ' sprays</span>' : '') +
+          '</button>'
+        ).join('');
       }).join('');
       return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + (p.featured ? ' featured-card' : '') + '">' +
         '<div class="p-header">' +
@@ -356,12 +370,12 @@ function renderCatalog() {
 }
 
 // ── Order ────────────────────────────────────────────────────────────────────
-function addToOrder(pid, size) {
+function addToOrder(pid, size, variant) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, price: effectivePrice(p, size), name: p.name });
+  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size), name: p.name });
   updateBadge();
-  showToast(p.name.split(' ')[0] + ' ' + size + 'ml added');
+  showToast(p.name.split(' ')[0] + ' ' + sizeText({ size, variant }) + ' added');
 }
 
 function removeFromOrder(idx) {
@@ -423,25 +437,25 @@ function renderOrder() {
 
   listEl.innerHTML = order.map((o,i) =>
     '<div class="order-item">' +
-    '<div class="oi-info"><div class="oi-name">' + esc(o.name) + '</div><div class="oi-size">' + sizeLabel(o.size) + ' ml</div></div>' +
+    '<div class="oi-info"><div class="oi-name">' + esc(o.name) + '</div><div class="oi-size">' + sizeLabel(o.size) + ' ml' + (o.variant ? ' · ' + VARIANTS[o.variant] : '') + '</div></div>' +
     '<div class="oi-price">৳' + o.price.toLocaleString() + '</div>' +
     '<button class="oi-remove" onclick="removeFromOrder(' + i + ')" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
     '</div>'
   ).join('');
 
   const perfumeTotal = order.reduce((s,o) => s + o.price, 0);
-  const totalMl = order.reduce((s,o) => s + o.size, 0);
+  const totalMl = Math.round(order.reduce((s,o) => s + parseFloat(sizeLabel(o.size)), 0) * 10) / 10;
   currentGrandTotal = perfumeTotal;
 
   // Group items for summary
   const map = {};
   order.forEach(o => {
-    const k = o.pid + '-' + o.size;
-    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
+    const k = o.pid + '-' + o.size + '-' + (o.variant || '');
+    if (!map[k]) map[k] = { name: o.name, size: o.size, variant: o.variant, price: o.price, qty: 0 };
     map[k].qty++;
   });
   const itemRows = Object.values(map).map(g =>
-    '<div class="sum-row"><span>' + esc(g.name) + ' ' + sizeLabel(g.size) + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + '</span><span>৳' + (g.price * g.qty).toLocaleString() + '</span></div>'
+    '<div class="sum-row"><span>' + esc(g.name) + ' ' + sizeText(g) + (g.qty > 1 ? ' x' + g.qty : '') + '</span><span>৳' + (g.price * g.qty).toLocaleString() + '</span></div>'
   ).join('');
 
   sumEl.innerHTML =
@@ -479,7 +493,11 @@ function renderOrder() {
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.872 1.397 5.444 3.59 7.14V22l3.268-1.793c.872.242 1.797.372 2.742.372 5.523 0 10-4.145 10-9.243C22 6.145 17.523 2 12 2zm1.018 12.443l-2.545-2.714-4.97 2.714 5.467-5.801 2.608 2.714 4.908-2.714-5.468 5.801z"/></svg>' +
       'Send to Messenger' +
     '</button>' +
-    '<p class="fb-note">Copy your order summary and send it to us, or tap Send to Messenger to open our chat directly.</p>' +
+    '<button class="btn-whatsapp" onclick="sendToWhatsApp()">' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.38 8.38 0 1 1 21 11.5z"/></svg>' +
+      'Send to WhatsApp' +
+    '</button>' +
+    '<p class="fb-note">Copy your order summary and send it to us, or tap Send to Messenger / Send to WhatsApp to open our chat directly.</p>' +
     '<p class="fb-note" style="margin-top:-4px;">By sending your order, you agree to our <a style="color:var(--accent);text-decoration:underline;cursor:pointer;" onclick="openPolicy(\'privacy\')">Privacy Policy</a>, <a style="color:var(--accent);text-decoration:underline;cursor:pointer;" onclick="openPolicy(\'shipping\')">Shipping Policy</a> and <a style="color:var(--accent);text-decoration:underline;cursor:pointer;" onclick="openPolicy(\'return\')">Return, Exchange & Order Policy</a>.</p>' +
     '<button class="btn-clear" onclick="clearOrder()">' +
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
@@ -490,22 +508,27 @@ function renderOrder() {
   setTimeout(recalc, 0);
 }
 
-function sendToMessenger() {
-  // Copy order first then open Messenger
+function buildOrderText() {
   const map = {};
   order.forEach(o => {
-    const k = o.pid + '-' + o.size;
-    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
+    const k = o.pid + '-' + o.size + '-' + (o.variant || '');
+    if (!map[k]) map[k] = { name: o.name, size: o.size, variant: o.variant, price: o.price, qty: 0 };
     map[k].qty++;
   });
   const lines = Object.values(map).map(g =>
-    '- ' + g.name + ' ' + sizeLabel(g.size) + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
+    '- ' + g.name + ' ' + sizeText(g) + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
   );
   const perfumeTotal = order.reduce((s,o) => s + o.price, 0);
   const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
   const grandTotal = perfumeTotal + delAmt;
   const delLine = delAmt > 0 ? '\nDelivery (' + (selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka') + '): ৳' + delAmt : '';
-  const text = 'Fragranza Order\n\n' + lines.join('\n') + '\n\nPerfume Total: ৳' + perfumeTotal.toLocaleString() + delLine + '\n\nTotal Bill: ৳' + grandTotal.toLocaleString();
+  return 'Fragranza Order\n\n' + lines.join('\n') + '\n\nPerfume Total: ৳' + perfumeTotal.toLocaleString() + delLine + '\n\nTotal Bill: ৳' + grandTotal.toLocaleString();
+}
+
+function sendToMessenger() {
+  if (!order.length) return;
+  // Copy order first then open Messenger
+  const text = buildOrderText();
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).finally(() => {
       window.open('https://m.me/fragranzabdofficial', '_blank');
@@ -516,23 +539,15 @@ function sendToMessenger() {
   showToast('Opening Messenger...');
 }
 
+function sendToWhatsApp() {
+  if (!order.length) return;
+  window.open('https://wa.me/8801704710769?text=' + encodeURIComponent(buildOrderText()), '_blank');
+  showToast('Opening WhatsApp...');
+}
+
 function copyOrder() {
   if (!order.length) return;
-  const map = {};
-  order.forEach(o => {
-    const k = o.pid + '-' + o.size;
-    if (!map[k]) map[k] = { name: o.name, size: o.size, price: o.price, qty: 0 };
-    map[k].qty++;
-  });
-  const lines = Object.values(map).map(g =>
-    '- ' + g.name + ' ' + sizeLabel(g.size) + 'ml' + (g.qty > 1 ? ' x' + g.qty : '') + ' — ৳' + (g.price * g.qty).toLocaleString()
-  );
-  const perfumeTotal = order.reduce((s,o) => s + o.price, 0);
-  const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
-  const grandTotal = perfumeTotal + delAmt;
-  const delLine = delAmt > 0 ? '\nDelivery (' + (selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka') + '): ৳' + delAmt : '';
-  const text = 'Fragranza Order\n\n' + lines.join('\n') + '\n\nPerfume Total: ৳' + perfumeTotal.toLocaleString() + delLine + '\n\nTotal Bill: ৳' + grandTotal.toLocaleString();
-  navigator.clipboard.writeText(text).then(() => showToast('Copied! Paste on our Facebook page')).catch(() => showToast('Could not copy'));
+  navigator.clipboard.writeText(buildOrderText()).then(() => showToast('Copied! Paste on our Facebook page')).catch(() => showToast('Could not copy'));
 }
 
 
