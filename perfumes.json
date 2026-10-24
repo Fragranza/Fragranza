@@ -366,27 +366,6 @@
     "batch": "Yara0626"
   },
   {
-    "id": 23,
-    "name": "Lattafa Angham",
-    "prices": {
-      "2": 100,
-      "5": 240,
-      "10": 420,
-      "15": 600,
-      "30": 1260
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "female",
-    "displayName": "Lattafa Angham",
-    "aliases": [
-      "angham",
-      "lattafa angham"
-    ],
-    "batch": "Angham0626"
-  },
-  {
     "id": 24,
     "name": "Rasasi Hawas Diva",
     "prices": {
@@ -636,28 +615,6 @@
       "ch 212"
     ],
     "batch": "212M0626"
-  },
-  {
-    "id": 42,
-    "name": "Lattafa Atheeri",
-    "displayName": "Lattafa Atheeri",
-    "prices": {
-      "2": 140,
-      "5": 320,
-      "10": 560,
-      "15": 820,
-      "30": 1700
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "female",
-    "featured": false,
-    "aliases": [
-      "atheeri",
-      "lattafa atheeri"
-    ],
-    "batch": "LaAtheeri0626"
   },
   {
     "id": 44,
@@ -1514,7 +1471,7 @@
     "out": false,
     "sale": false,
     "offer": null,
-    "gender": "unisex",
+    "gender": "female",
     "featured": false,
     "aliases": [
       "asdaaf raneen",
