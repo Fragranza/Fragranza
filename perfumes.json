@@ -1712,5 +1712,30 @@
       "preciuex"
     ],
     "batch": ""
+  },
+  {
+    "id": 95,
+    "name": "Emporio Armani Stronger With You Intensely",
+    "displayName": "Emporio Armani Stronger With You Intensely",
+    "prices": {
+      "2": 340,
+      "5": 840,
+      "10": 1520,
+      "15": 2190,
+      "30": 4260
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "stronger with you intensely",
+      "swy intensely",
+      "armani stronger with you",
+      "stronger with you",
+      "emporio armani swy"
+    ],
+    "batch": ""
   }
 ]
