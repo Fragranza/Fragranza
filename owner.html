@@ -1496,6 +1496,11 @@ function copyPriceList(pid) {
       } else {
         lines.push(sizeLabel(s) + (s === 2 ? ' ml (roll-on / spray)' : ' ml') + ' — ৳' + orig.toLocaleString());
       }
+      // 10 ml also comes in the Premium Twisted Atomizer (10 ml price + ATOMIZER_EXTRA)
+      if (s === 10) {
+        const aOrig = orig + ATOMIZER_EXTRA, aEp = ep + ATOMIZER_EXTRA;
+        lines.push('10 ml ' + VARIANTS.atomizer + ' — ৳' + aEp.toLocaleString() + (aEp !== aOrig ? ' (was ৳' + aOrig.toLocaleString() + ')' : ''));
+      }
     }
   });
   const badge = offerBadgeText(p);
