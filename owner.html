@@ -187,9 +187,11 @@ body {
 
 .size-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
   gap: 5px;
 }
+.size-rows { display: flex; flex-direction: column; gap: 5px; }
+.size-grid.g3 { grid-template-columns: repeat(3, 1fr); }
+.size-grid.g4 { grid-template-columns: repeat(4, 1fr); }
 .size-var { font-size: 9px; color: var(--muted); display: block; margin-top: 1px; letter-spacing: 0.02em; }
 .size-btn {
   background: var(--bg3);
@@ -764,8 +766,11 @@ details.calc-card > summary { cursor: pointer; font-size: 13px; color: var(--mut
 <script>
 const SIZES = [2, 5, 10, 15, 30];
 // 1.5ml comes as Roll-on or Spray (same price)
-const VARIANTS = { roll: 'Roll-on', spray: 'Spray' };
-const VARIANT_RE = /\b(?:roll[\s-]?on|rollon|spray(?:er)?)\b/i;
+const VARIANTS = { roll: 'Roll-on', spray: 'Spray', atomizer: 'Premium Twisted Atomizer' };
+// Premium Twisted Atomizer = 10ml price + this amount
+const ATOMIZER_EXTRA = 160;
+function cleanVariant(size, v) { return ((size === 2 && (v === 'roll' || v === 'spray')) || (size === 10 && v === 'atomizer')) ? v : null; }
+const VARIANT_RE = /\b(?:roll[\s-]?on|rollon|spray(?:er)?|premium\s+twisted\s+atomi[sz]er|atomi[sz]er)\b/i;
 function sizeText(o) { return sizeLabel(o.size) + 'ml' + (o.variant ? ' ' + VARIANTS[o.variant] : ''); }
 // Display-only label map: the "2" size slot is shown to everyone as "1.5ml" now
 // (internal price key stays 2 everywhere — this only changes what's printed).
@@ -903,20 +908,25 @@ function renderCatalog() {
   if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
   el.innerHTML = list.map((p, idx) => {
     const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
-    const btns = SIZES.map(s => {
-      const pr = p.prices[s];
-      if (!pr) return s === 2 ? `<div></div><div></div>` : `<div></div>`;
-      const ep = effectivePrice(p, s);
+    const mkBtn = (s, v) => {
+      const extra = v === 'atomizer' ? ATOMIZER_EXTRA : 0;
+      const pr = p.prices[s] + extra;
+      const ep = effectivePrice(p, s) + extra;
       const isOffer = ep !== pr;
-      const variants = s === 2 ? ['roll', 'spray'] : [null];
-      return variants.map(v => `<button class="size-btn" onclick="addToOrder(${p.id},${s},${v ? "'" + v + "'" : 'null'})" ${p.out ? 'disabled' : ''}>
+      return `<button class="size-btn" onclick="addToOrder(${p.id},${s},${v ? "'" + v + "'" : 'null'})" ${p.out ? 'disabled' : ''}>
         <span class="size-ml">${sizeLabel(s)}ml</span>
         ${v ? `<span class="size-var">${VARIANTS[v]}</span>` : ''}
         ${isOffer ? `<span class="price-original">৳${pr.toLocaleString()}</span>` : ''}
         <span class="size-price">৳${ep.toLocaleString()}</span>
         ${isOffer ? `<span class="offer-badge">${offerBadgeText(p)}</span>` : ''}
-      </button>`).join('');
-    }).join('');
+      </button>`;
+    };
+    const slot = (s, v) => (p.prices[s] > 0) ? mkBtn(s, v) : '<div></div>';
+    const rowHtml = (arr, cls) => arr.some(x => x.indexOf('<button') === 0) ? '<div class="size-grid ' + cls + '">' + arr.join('') + '</div>' : '';
+    const btns = '<div class="size-rows">' +
+      rowHtml([slot(2,'roll'), slot(2,'spray'), slot(5,null)], 'g3') +
+      rowHtml([slot(10,null), slot(10,'atomizer'), slot(15,null), slot(30,null)], 'g4') +
+      '</div>';
     return `<div class="p-card ${p.out ? 'out-of-stock' : ''}">
       <div class="p-header">
         <div class="p-name"><span class="p-sl">${idx + 1}.</span>${esc(displayNameOf(p))}${p.note ? `<div class="p-note">${esc(p.note)}</div>` : ''}</div>
@@ -928,7 +938,7 @@ function renderCatalog() {
           </button>
         </div>
       </div>
-      <div class="size-grid">${btns}</div>
+      ${btns}
     </div>`;
   }).join('');
 }
@@ -937,7 +947,7 @@ function renderCatalog() {
 function addToOrder(pid, size, variant) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size), origPrice: p.prices[size], name: displayNameOf(p) });
+  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size) + (variant === 'atomizer' ? ATOMIZER_EXTRA : 0), origPrice: p.prices[size], name: displayNameOf(p) });
   updateBadge();
   showToast(displayNameOf(p).split(' ')[0] + ' ' + sizeText({ size, variant }) + ' added');
 }
@@ -1655,9 +1665,9 @@ function importPastedOrder() {
     pendingNames.forEach(rawName => {
       const perfume = matchPerfume(rawName);
       if (perfume && size && SIZES.includes(size)) {
-        const correctPrice = effectivePrice(perfume, size);
+        const correctPrice = effectivePrice(perfume, size) + (cleanVariant(size, variant) === 'atomizer' ? ATOMIZER_EXTRA : 0);
         for (let i = 0; i < qty; i++) {
-          imported.push({ pid: perfume.id, size, variant: size === 2 ? variant : null, price: correctPrice, name: displayNameOf(perfume), custom: false });
+          imported.push({ pid: perfume.id, size, variant: cleanVariant(size, variant), price: correctPrice, name: displayNameOf(perfume), custom: false });
         }
       } else if (rawName) {
         unresolved.push(rawName + (size ? ' ' + sizeLabel(size) + 'ml' : ''));
@@ -1672,7 +1682,7 @@ function importPastedOrder() {
     // Roll-on / Spray wording is read off the line first so it never ends up in the perfume name
     const vm = line.match(VARIANT_RE);
     const lineNoVar = vm ? line.replace(VARIANT_RE, ' ') : line;
-    const variant = vm ? (/roll/i.test(vm[0]) ? 'roll' : 'spray') : null;
+    const variant = vm ? (/roll/i.test(vm[0]) ? 'roll' : /atomi/i.test(vm[0]) ? 'atomizer' : 'spray') : null;
     const size = extractSize(lineNoVar);
     const price = extractPrice(lineNoVar);
     const qty = extractQty(lineNoVar);
@@ -1684,19 +1694,19 @@ function importPastedOrder() {
         // "Hawas Ice 2ml" — direct line with both name and size
         const perfume = matchPerfume(name);
         if (perfume) {
-          const correctPrice = effectivePrice(perfume, size);
+          const correctPrice = effectivePrice(perfume, size) + (cleanVariant(size, variant) === 'atomizer' ? ATOMIZER_EXTRA : 0);
           const unitClaimed = price && qty > 1 ? Math.round(price / qty) : price;
           if (unitClaimed && unitClaimed !== correctPrice) {
             mismatches.push({ name: displayNameOf(perfume), size, claimed: unitClaimed, correct: correctPrice });
           }
           for (let i = 0; i < qty; i++) {
-            imported.push({ pid: perfume.id, size, variant: size === 2 ? variant : null, price: correctPrice, name: displayNameOf(perfume), custom: false });
+            imported.push({ pid: perfume.id, size, variant: cleanVariant(size, variant), price: correctPrice, name: displayNameOf(perfume), custom: false });
           }
         } else {
           // Unknown perfume with explicit price — add as custom
           const p = price && qty > 1 ? Math.round(price / qty) : (price || 0);
           for (let i = 0; i < qty; i++) {
-            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + sizeLabel(size) + 'ml' + (size === 2 && variant ? ' ' + VARIANTS[variant] : ''), custom: true });
+            imported.push({ pid: 'custom', size, price: p, name: name + ' ' + sizeLabel(size) + 'ml' + (cleanVariant(size, variant) ? ' ' + VARIANTS[variant] : ''), custom: true });
           }
         }
       } else {
