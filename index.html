@@ -63,7 +63,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .badge-out{background:rgba(224,85,85,0.1);color:var(--danger);border:0.5px solid rgba(224,85,85,0.3);}
 
 /* Size buttons */
-.size-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
+.size-rows{display:flex;flex-direction:column;gap:6px;}
+.size-grid{display:grid;gap:6px;}
+.size-grid.g3{grid-template-columns:repeat(3,1fr);}
+.size-grid.g4{grid-template-columns:repeat(4,1fr);}
 .size-btn{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 2px;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text);font-family:'DM Sans',sans-serif;}
 .size-btn:active{transform:scale(0.95);background:rgba(200,169,110,0.15);border-color:var(--accent);}
 .size-btn:disabled{opacity:0.3;cursor:not-allowed;}
@@ -252,7 +255,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 const GH_RAW = 'https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json';
 const SIZES = [2,5,10,15,30];
 // 1.5ml comes as Roll-on or Spray (same price)
-const VARIANTS = { roll: 'Roll-on', spray: 'Spray' };
+const VARIANTS = { roll: 'Roll-on', spray: 'Spray', atomizer: 'Premium Twisted Atomizer' };
+// Premium Twisted Atomizer = 10ml price + this amount
+const ATOMIZER_EXTRA = 160;
 // Approx. spray counts, shown on the site only (never added to the order text)
 const SPRAYS = { 2: '20+', 5: '75+', 10: '150+', 15: '225+', 30: '450+' };
 function sizeText(o) { return sizeLabel(o.size) + 'ml' + (o.variant ? ' ' + VARIANTS[o.variant] : ''); }
@@ -341,22 +346,25 @@ function renderCatalog() {
   el.innerHTML = '<div class="count-label">' + list.length + ' perfume' + (list.length !== 1 ? 's' : '') + '</div>' +
     list.map((p, idx) => {
       const badges = (p.featured ? '<span class="badge badge-featured">Featured</span>' : '') + (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
-      const btns = SIZES.map(s => {
-        const pr = p.prices[s];
-        if (!pr || pr === 0) return s === 2 ? '<div></div><div></div>' : '<div></div>';
-        const ep = effectivePrice(p, s);
-        const variants = s === 2 ? ['roll', 'spray'] : [null];
-        return variants.map(v =>
-          '<button class="size-btn" onclick="addToOrder(' + p.id + ',' + s + ',' + (v ? "'" + v + "'" : 'null') + ')" ' + (p.out ? 'disabled' : '') + '>' +
-            '<span class="size-ml">' + sizeLabel(s) + 'ml</span>' +
-            (v ? '<span class="size-var">' + VARIANTS[v] + '</span>' : '') +
-            (ep !== pr ? '<span class="price-original">৳' + pr.toLocaleString() + '</span>' : '') +
-            '<span class="size-price">৳' + ep.toLocaleString() + '</span>' +
-            (ep !== pr ? '<span class="offer-badge-sm">discounted</span>' : '') +
-            (v !== 'roll' ? '<span class="size-spr">' + SPRAYS[s] + ' sprays</span>' : '') +
-          '</button>'
-        ).join('');
-      }).join('');
+      const mkBtn = (s, v) => {
+        const extra = v === 'atomizer' ? ATOMIZER_EXTRA : 0;
+        const base = p.prices[s] + extra;
+        const eff = effectivePrice(p, s) + extra;
+        return '<button class="size-btn" onclick="addToOrder(' + p.id + ',' + s + ',' + (v ? "'" + v + "'" : 'null') + ')" ' + (p.out ? 'disabled' : '') + '>' +
+          '<span class="size-ml">' + sizeLabel(s) + 'ml</span>' +
+          (v ? '<span class="size-var">' + VARIANTS[v] + '</span>' : '') +
+          (eff !== base ? '<span class="price-original">৳' + base.toLocaleString() + '</span>' : '') +
+          '<span class="size-price">৳' + eff.toLocaleString() + '</span>' +
+          (eff !== base ? '<span class="offer-badge-sm">discounted</span>' : '') +
+          (v !== 'roll' ? '<span class="size-spr">' + SPRAYS[s] + ' sprays</span>' : '') +
+        '</button>';
+      };
+      const slot = (s, v) => (p.prices[s] > 0) ? mkBtn(s, v) : '<div></div>';
+      const rowHtml = (arr, cls) => arr.some(x => x.indexOf('<button') === 0) ? '<div class="size-grid ' + cls + '">' + arr.join('') + '</div>' : '';
+      const btns = '<div class="size-rows">' +
+        rowHtml([slot(2,'roll'), slot(2,'spray'), slot(5,null)], 'g3') +
+        rowHtml([slot(10,null), slot(10,'atomizer'), slot(15,null), slot(30,null)], 'g4') +
+        '</div>';
       return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + (p.featured ? ' featured-card' : '') + '">' +
         '<div class="p-header">' +
           '<div style="flex:1;min-width:0;">' +
@@ -365,7 +373,7 @@ function renderCatalog() {
           '</div>' +
           (badges ? '<div class="badges" style="flex-shrink:0;">' + badges + '</div>' : '') +
         '</div>' +
-        '<div class="size-grid">' + btns + '</div></div>';
+        btns + '</div>';
     }).join('');
 }
 
@@ -373,7 +381,7 @@ function renderCatalog() {
 function addToOrder(pid, size, variant) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size), name: p.name });
+  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size) + (variant === 'atomizer' ? ATOMIZER_EXTRA : 0), name: p.name });
   updateBadge();
   showToast(p.name.split(' ')[0] + ' ' + sizeText({ size, variant }) + ' added');
 }
