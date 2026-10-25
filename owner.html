@@ -1260,7 +1260,7 @@ function copyForSheet() {
       size = sizeLabel(o.size);
       if (o.custom) name = name.replace(' ' + o.size + 'ml', '');
     }
-    return name + '\t' + size + (o.variant ? '\t' + VARIANTS[o.variant] : '');
+    return name + '\t' + size + (o.variant ? '\t' + VARIANTS[o.variant] + '\t' + o.price : '');
   });
   if (!rows.length) { showToast('Nothing to copy'); return; }
   navigator.clipboard.writeText(rows.join('\n'))
