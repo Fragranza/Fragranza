@@ -253,13 +253,13 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 <script>
 const GH_RAW = 'https://raw.githubusercontent.com/Fragranza/Fragranza/main/perfumes.json';
-const SIZES = [2,5,10,15,30];
+const SIZES = [2,5,10,15,20,30];
 // 1.5ml comes as Roll-on or Spray (same price)
 const VARIANTS = { roll: 'Roll-on', spray: 'Spray', atomizer: 'Premium Twisted Atomizer' };
 // Premium Twisted Atomizer = 10ml price + this amount
 const ATOMIZER_EXTRA = 160;
 // Approx. spray counts, shown on the site only (never added to the order text)
-const SPRAYS = { 2: '20+', 5: '75+', 10: '150+', 15: '225+', 30: '450+' };
+const SPRAYS = { 2: '20+', 5: '75+', 10: '150+', 15: '225+', 20: '300+', 30: '450+' };
 function sizeText(o) { return sizeLabel(o.size) + 'ml' + (o.variant ? ' ' + VARIANTS[o.variant] : ''); }
 // Display-only label map: the "2" size slot is now shown as "1.5ml" to customers
 // (price/lookup logic still uses the internal key 2 everywhere, unchanged).
@@ -280,7 +280,7 @@ async function loadPerfumes() {
     const data = await r.json();
     perfumes = data.map(p => ({
       ...p,
-      prices: {2:p.prices['2']||0, 5:p.prices['5']||0, 10:p.prices['10']||0, 15:p.prices['15']||0, 30:p.prices['30']||0},
+      prices: {2:p.prices['2']||0, 5:p.prices['5']||0, 10:p.prices['10']||0, 15:p.prices['15']||0, 20:p.prices['20']||0, 30:p.prices['30']||0},
       offer: p.offer ? { pct: p.offer.pct || {}, manual: p.offer.manual || {} } : null,
       gender: p.gender || 'male',
       displayName: p.displayName || p.name,
@@ -289,7 +289,7 @@ async function loadPerfumes() {
   } catch(e) {
     perfumes = FALLBACK.map(p => ({
       ...p,
-      prices: {2:p.prices['2']||0, 5:p.prices['5']||0, 10:p.prices['10']||0, 15:p.prices['15']||0, 30:p.prices['30']||0},
+      prices: {2:p.prices['2']||0, 5:p.prices['5']||0, 10:p.prices['10']||0, 15:p.prices['15']||0, 20:p.prices['20']||0, 30:p.prices['30']||0},
       offer: p.offer ? { pct: p.offer.pct || {}, manual: p.offer.manual || {} } : null,
       gender: p.gender || 'male',
       displayName: p.displayName || p.name,
@@ -363,7 +363,8 @@ function renderCatalog() {
       const rowHtml = (arr, cls) => arr.some(x => x.indexOf('<button') === 0) ? '<div class="size-grid ' + cls + '">' + arr.join('') + '</div>' : '';
       const btns = '<div class="size-rows">' +
         rowHtml([slot(2,'roll'), slot(2,'spray'), slot(5,null)], 'g3') +
-        rowHtml([slot(10,null), slot(10,'atomizer'), slot(15,null), slot(30,null)], 'g4') +
+        rowHtml([slot(10,null), slot(10,'atomizer'), slot(15,null)], 'g3') +
+        rowHtml([slot(20,null), slot(30,null), '<div></div>'], 'g3') +
         '</div>';
       return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + (p.featured ? ' featured-card' : '') + '">' +
         '<div class="p-header">' +
