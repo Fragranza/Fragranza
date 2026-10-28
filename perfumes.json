@@ -1817,5 +1817,30 @@
       "emporio armani swy"
     ],
     "batch": ""
+  },
+  {
+    "id": 96,
+    "name": "Armaf Club de Nuit Elite",
+    "displayName": "Armaf Club de Nuit Elite",
+    "prices": {
+      "2": 180,
+      "5": 440,
+      "10": 800,
+      "15": 1140,
+      "20": 1580,
+      "30": 2400
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "club de nuit elite",
+      "cdn elite",
+      "armaf elite",
+      "elite"
+    ],
+    "batch": ""
   }
 ]
