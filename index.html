@@ -359,7 +359,7 @@ function renderCatalog() {
           (v !== 'roll' ? '<span class="size-spr">' + SPRAYS[s] + ' sprays</span>' : '') +
         '</button>';
       };
-      const slot = (s, v) => (p.prices[s] > 0) ? mkBtn(s, v) : '<div></div>';
+      const slot = (s, v) => { if (v && (p.hideVariants || []).includes(v)) return ''; return (p.prices[s] > 0) ? mkBtn(s, v) : '<div></div>'; };
       const rowHtml = (arr, cls) => arr.some(x => x.indexOf('<button') === 0) ? '<div class="size-grid ' + cls + '">' + arr.join('') + '</div>' : '';
       const btns = '<div class="size-rows">' +
         rowHtml([slot(2,'roll'), slot(2,'spray'), slot(5,null)], 'g3') +
