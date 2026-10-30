@@ -871,29 +871,6 @@
     "batch": ""
   },
   {
-    "id": 55,
-    "name": "Lattafa Atlas",
-    "displayName": "Lattafa Atlas",
-    "prices": {
-      "2": 180,
-      "5": 420,
-      "10": 780,
-      "15": 1120,
-      "20": 1550,
-      "30": 2340
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "unisex",
-    "featured": false,
-    "aliases": [
-      "atlas",
-      "lattafa atlas"
-    ],
-    "batch": ""
-  },
-  {
     "id": 56,
     "name": "Rayhaan Terra",
     "displayName": "Rayhaan Terra",
