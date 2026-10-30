@@ -914,7 +914,10 @@
       "absolute ice",
       "atralia ice"
     ],
-    "batch": ""
+    "batch": "",
+    "hideVariants": [
+      "roll"
+    ]
   },
   {
     "id": 58,
@@ -1006,30 +1009,6 @@
       "eros flame",
       "versace flame",
       "versace eros flame"
-    ],
-    "batch": ""
-  },
-  {
-    "id": 63,
-    "name": "Valentino Uomo Born in Roma EDP Intense",
-    "displayName": "Valentino Uomo Born in Roma EDP Intense",
-    "prices": {
-      "2": 320,
-      "5": 800,
-      "10": 1420,
-      "15": 2040,
-      "20": 2780,
-      "30": 4300
-    },
-    "out": true,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "featured": false,
-    "aliases": [
-      "born in roma",
-      "valentino born in roma",
-      "uomo born in roma"
     ],
     "batch": ""
   },
