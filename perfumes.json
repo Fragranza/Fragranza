@@ -404,28 +404,6 @@
     "batch": "Diva05261"
   },
   {
-    "id": 25,
-    "name": "Blue by Ahmed Al Maghribi",
-    "prices": {
-      "2": 100,
-      "5": 240,
-      "10": 460,
-      "15": 720,
-      "20": 1020,
-      "30": 1280
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "displayName": "Blue by Ahmed Al Maghribi",
-    "aliases": [
-      "blue ahmed al maghribi",
-      "ahmed al maghribi blue"
-    ],
-    "batch": "Blueby0626"
-  },
-  {
     "id": 26,
     "name": "French Avenue Zenith Blue",
     "prices": {
