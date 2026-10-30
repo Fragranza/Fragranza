@@ -1246,7 +1246,8 @@ function copyForSheet() {
       size = sizeLabel(o.size);
       if (o.custom) name = name.replace(' ' + o.size + 'ml', '');
     }
-    return name + '\t' + size + (o.variant ? '\t' + VARIANTS[o.variant] + '\t' + o.price : '');
+    // Roll-on / Spray are not written to the sheet; only the atomizer carries its label and price
+    return name + '\t' + size + (o.variant === 'atomizer' ? '\t' + VARIANTS[o.variant] + '\t' + o.price : '');
   });
   if (!rows.length) { showToast('Nothing to copy'); return; }
   navigator.clipboard.writeText(rows.join('\n'))
