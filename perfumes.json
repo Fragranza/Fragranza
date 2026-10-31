@@ -989,30 +989,6 @@
     "batch": ""
   },
   {
-    "id": 62,
-    "name": "Versace Eros Flame",
-    "displayName": "Versace Eros Flame",
-    "prices": {
-      "2": 240,
-      "5": 580,
-      "10": 1020,
-      "15": 1480,
-      "20": 2030,
-      "30": 3080
-    },
-    "out": true,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "featured": false,
-    "aliases": [
-      "eros flame",
-      "versace flame",
-      "versace eros flame"
-    ],
-    "batch": ""
-  },
-  {
     "id": 64,
     "name": "Rayhaan Elixir",
     "displayName": "Rayhaan Elixir",
@@ -1774,6 +1750,77 @@
       "cdn elite",
       "armaf elite",
       "elite"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 97,
+    "name": "Rayhaan Amazonica",
+    "displayName": "Rayhaan Amazonica",
+    "prices": {
+      "2": 100,
+      "5": 240,
+      "10": 420,
+      "15": 620,
+      "20": 880,
+      "30": 1300
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "amazonica",
+      "rayhaan amazonica"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 98,
+    "name": "French Avenue Veneno",
+    "displayName": "French Avenue Veneno",
+    "prices": {
+      "2": 140,
+      "5": 360,
+      "10": 640,
+      "15": 900,
+      "20": 1260,
+      "30": 1900
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "veneno",
+      "french avenue veneno"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 99,
+    "name": "Royal Blend Sequoia - Extrait",
+    "displayName": "Royal Blend Sequoia - Extrait",
+    "prices": {
+      "2": 140,
+      "5": 320,
+      "10": 560,
+      "15": 800,
+      "20": 1120,
+      "30": 1660
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "sequoia",
+      "royal blend sequoia",
+      "sequoia extrait",
+      "royal blend"
     ],
     "batch": ""
   }
