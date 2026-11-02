@@ -966,29 +966,6 @@
     "batch": ""
   },
   {
-    "id": 61,
-    "name": "Burberry Touch",
-    "displayName": "Burberry Touch",
-    "prices": {
-      "2": 140,
-      "5": 340,
-      "10": 600,
-      "15": 840,
-      "20": 1180,
-      "30": 1780
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "unisex",
-    "featured": false,
-    "aliases": [
-      "touch",
-      "burberry touch"
-    ],
-    "batch": ""
-  },
-  {
     "id": 64,
     "name": "Rayhaan Elixir",
     "displayName": "Rayhaan Elixir",
