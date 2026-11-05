@@ -1938,5 +1938,54 @@
       "mykonos conquer"
     ],
     "batch": ""
+  },
+  {
+    "id": 106,
+    "name": "Lattafa Badee Al Oud - Honor & Glory",
+    "displayName": "Lattafa Badee Al Oud - Honor & Glory",
+    "prices": {
+      "2": 120,
+      "5": 260,
+      "10": 440,
+      "15": 640,
+      "20": 960,
+      "30": 1400
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "honor & glory",
+      "honor and glory",
+      "badee al oud honor & glory",
+      "lattafa honor & glory"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 107,
+    "name": "Lattafa Badee Al Oud - Amethyst",
+    "displayName": "Lattafa Badee Al Oud - Amethyst",
+    "prices": {
+      "2": 120,
+      "5": 260,
+      "10": 440,
+      "15": 640,
+      "20": 960,
+      "30": 1400
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "amethyst",
+      "badee al oud amethyst",
+      "lattafa amethyst"
+    ],
+    "batch": ""
   }
 ]
