@@ -2078,5 +2078,30 @@
       "rayhaan equinox"
     ],
     "batch": ""
+  },
+  {
+    "id": 113,
+    "name": "Rasasi Shuhrah Boisee",
+    "displayName": "Rasasi Shuhrah Boisee",
+    "prices": {
+      "2": 120,
+      "5": 300,
+      "10": 540,
+      "15": 780,
+      "20": 1100,
+      "30": 1660
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "shuhrah boisee",
+      "shuhrah",
+      "boisee",
+      "rasasi shuhrah"
+    ],
+    "batch": ""
   }
 ]
