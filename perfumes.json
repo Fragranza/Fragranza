@@ -2103,5 +2103,30 @@
       "rasasi shuhrah"
     ],
     "batch": ""
+  },
+  {
+    "id": 114,
+    "name": "Al Wataniah Kayaan Classic",
+    "displayName": "Al Wataniah Kayaan Classic",
+    "prices": {
+      "2": 100,
+      "5": 240,
+      "10": 440,
+      "15": 640,
+      "20": 920,
+      "30": 1320
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "kayaan classic",
+      "kayaan",
+      "al wataniah kayaan",
+      "wataniah kayaan classic"
+    ],
+    "batch": ""
   }
 ]
