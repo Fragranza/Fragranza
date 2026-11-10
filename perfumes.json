@@ -943,29 +943,6 @@
     "batch": ""
   },
   {
-    "id": 59,
-    "name": "Versace Eros EDP",
-    "displayName": "Versace Eros EDP",
-    "prices": {
-      "2": 0,
-      "5": 480,
-      "10": 0,
-      "15": 0,
-      "20": 0,
-      "30": 0
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "featured": false,
-    "aliases": [
-      "eros edp",
-      "versace eros"
-    ],
-    "batch": ""
-  },
-  {
     "id": 64,
     "name": "Rayhaan Elixir",
     "displayName": "Rayhaan Elixir",
@@ -2126,6 +2103,56 @@
       "kayaan",
       "al wataniah kayaan",
       "wataniah kayaan classic"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 115,
+    "name": "Mahd Al Dhahab by Arabiyat Prestige",
+    "displayName": "Mahd Al Dhahab by Arabiyat Prestige",
+    "prices": {
+      "2": 140,
+      "5": 340,
+      "10": 620,
+      "15": 880,
+      "20": 1240,
+      "30": 1860
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "mahd al dhahab",
+      "mahd",
+      "arabiyat mahd al dhahab",
+      "mahd al dhahab arabiyat prestige"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 116,
+    "name": "Riiffs Ateeq Nusuk",
+    "displayName": "Riiffs Ateeq Nusuk",
+    "prices": {
+      "2": 120,
+      "5": 280,
+      "10": 500,
+      "15": 720,
+      "20": 1020,
+      "30": 1500
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "ateeq nusuk",
+      "nusuk",
+      "riiffs nusuk",
+      "riiffs ateeq"
     ],
     "batch": ""
   }
