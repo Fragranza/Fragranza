@@ -32,7 +32,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -174,7 +174,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -193,7 +193,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -212,7 +212,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -250,7 +250,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -269,7 +269,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -351,7 +351,7 @@
       "20": 720,
       "30": 1060
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -526,7 +526,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -569,7 +569,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
@@ -882,7 +882,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "unisex",
@@ -931,7 +931,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "unisex",
@@ -954,7 +954,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "unisex",
@@ -1168,7 +1168,7 @@
       "20": 700,
       "30": 1000
     },
-    "out": false,
+    "out": true,
     "sale": false,
     "offer": null,
     "gender": "male",
