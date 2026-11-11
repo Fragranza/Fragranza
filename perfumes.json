@@ -2155,5 +2155,29 @@
       "riiffs ateeq"
     ],
     "batch": ""
+  },
+  {
+    "id": 117,
+    "name": "Rayhaan Vanilla Vibe",
+    "displayName": "Rayhaan Vanilla Vibe",
+    "prices": {
+      "2": 100,
+      "5": 220,
+      "10": 380,
+      "15": 540,
+      "20": 780,
+      "30": 1120
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "vanilla vibe",
+      "rayhaan vanilla",
+      "vanilla"
+    ],
+    "batch": ""
   }
 ]
