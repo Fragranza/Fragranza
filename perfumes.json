@@ -651,30 +651,6 @@
     ]
   },
   {
-    "id": 46,
-    "name": "Kenzo Homme EDT Intense",
-    "displayName": "Kenzo Homme EDT Intense",
-    "prices": {
-      "2": 200,
-      "5": 480,
-      "10": 860,
-      "15": 1260,
-      "20": 1740,
-      "30": 2640
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "male",
-    "featured": false,
-    "aliases": [
-      "kenzo homme",
-      "kenzo homme intense",
-      "kenzo edt intense"
-    ],
-    "batch": ""
-  },
-  {
     "id": 47,
     "name": "Arabiyat Prestige Marwa",
     "displayName": "Arabiyat Prestige Marwa",
