@@ -548,6 +548,28 @@ details.calc-card > summary { cursor: pointer; font-size: 13px; color: var(--mut
 .set-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 4px; }
 .set-grid label { text-align: center; }
 .calc-card .set-grid input { text-align: center; padding: 8px 2px; font-size: 13px; }
+/* Order steps (bill / advance / due) + discount */
+.step-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; }
+.step-label .opt { text-transform: none; letter-spacing: 0; color: #666; font-size: 11px; margin-left: 6px; }
+.bill-breakdown, .due-breakdown { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 14px; }
+.bb-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+.bb-row:last-child { border-bottom: none; }
+.bb-lbl { color: var(--muted); }
+.bb-val { color: var(--text); font-weight: 500; }
+.bb-total-row { padding-top: 10px; }
+.bb-total-lbl { font-size: 14px; font-weight: 500; color: var(--text); }
+.bb-total-val { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--accent); }
+.advance-input-row { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 4px 12px; }
+.adv-currency { color: var(--muted); }
+.adv-input { flex: 1; background: none; border: none; outline: none; color: var(--accent); font-size: 18px; font-weight: 500; font-family: 'DM Sans', sans-serif; padding: 9px 0; }
+.due-section { margin-top: 10px; }
+.disc-wrap { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.disc-input { width: 100%; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 11px 12px; color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; outline: none; }
+.disc-input:focus { border-color: var(--accent); }
+.disc-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.disc-chip { background: var(--bg3); border: 0.5px solid var(--border); border-radius: 99px; padding: 6px 13px; font-size: 12px; color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer; }
+.disc-chip:active { border-color: var(--accent); color: var(--accent); }
+.disc-hint { font-size: 12px; color: var(--muted); margin-top: 9px; min-height: 16px; }
 </style>
 </head>
 <body>
@@ -946,6 +968,7 @@ function removeFromOrder(idx) {
 
 function clearOrder() {
   order = [];
+  discountStr = '';
   updateBadge();
   renderOrder();
 }
@@ -1030,12 +1053,30 @@ function renderOrder() {
       </div>
     </div>
 
+    <!-- STEP 2b: Discount -->
+    <div class="step-label">Discount<span class="opt">optional · 10% or an amount like 200</span></div>
+    <div class="disc-wrap">
+      <input class="disc-input" id="discount-input" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10%  or  200" value="${esc(discountStr)}" oninput="discountStr=this.value;recalc()" />
+      <div class="disc-chips">
+        <button class="disc-chip" onclick="setDiscount('5%')">5%</button>
+        <button class="disc-chip" onclick="setDiscount('10%')">10%</button>
+        <button class="disc-chip" onclick="setDiscount('15%')">15%</button>
+        <button class="disc-chip" onclick="setDiscount('20%')">20%</button>
+        <button class="disc-chip" onclick="setDiscount('')">Clear</button>
+      </div>
+      <div class="disc-hint" id="disc-hint"></div>
+    </div>
+
     <!-- STEP 3: Bill breakdown -->
     <div class="step-label">Bill</div>
     <div class="bill-breakdown">
       <div class="bb-row">
         <span class="bb-lbl">Perfume total</span>
         <span class="bb-val">৳${perfumeTotal.toLocaleString()}</span>
+      </div>
+      <div class="bb-row" id="bb-disc-row" style="display:none;">
+        <span class="bb-lbl" id="bb-disc-lbl">Discount</span>
+        <span class="bb-val" id="bb-disc-val" style="color:#7ec98e;">—</span>
       </div>
       <div class="bb-row" id="bb-del-row" style="display:none;">
         <span class="bb-lbl" id="bb-del-lbl">Delivery</span>
@@ -1109,14 +1150,62 @@ function selectDelivery(type) {
   recalc();
 }
 
+/* ---- DISCOUNT: "10%" = percent, "200" = flat amount (taken off the perfume total, not delivery) ---- */
+let discountStr = '';
+function parseDiscount(str, base) {
+  const t = String(str || '').replace(/[,\s\u09f3]/g, '').replace(/tk$/i, '');
+  if (!t) return { amount: 0, label: '', valid: true, empty: true };
+  const m = t.match(/^(\d+(?:\.\d+)?)(%?)$/);
+  if (!m) return { amount: 0, label: '', valid: false };
+  const n = parseFloat(m[1]);
+  if (m[2] === '%') {
+    const pct = Math.min(n, 100);
+    return { amount: Math.round(base * pct / 100), label: ' (' + pct + '%)', valid: true };
+  }
+  return { amount: Math.min(Math.round(n), base), label: '', valid: true };
+}
+function billInfo() {
+  const gross = order.reduce((s, o) => s + o.price, 0);
+  const d = parseDiscount(discountStr, gross);
+  return { gross, disc: d.amount, discLabel: d.label, valid: d.valid, empty: !!d.empty, net: gross - d.amount };
+}
+function discountLine(bill) {
+  return bill.disc > 0 ? '\nDiscount' + bill.discLabel + ': -\u09f3' + bill.disc.toLocaleString() : '';
+}
+function setDiscount(v) {
+  discountStr = v;
+  const el = document.getElementById('discount-input');
+  if (el) el.value = v;
+  recalc();
+}
+
 function recalc() {
-  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const bill = billInfo();
+  const perfumeTotal = bill.net; // perfume total AFTER discount
   const isBoth = selectedDelivery === 'both';
   const delAmt = selectedDelivery === 'inside' ? 85 : selectedDelivery === 'outside' ? 125 : 0;
   const totalInside = perfumeTotal + 85;
   const totalOutside = perfumeTotal + 125;
   const grandTotal = isBoth ? totalInside : perfumeTotal + delAmt; // used as the default/fallback single value
   currentGrandTotal = grandTotal;
+
+  // discount row + hint
+  const discRow = document.getElementById('bb-disc-row');
+  if (discRow) {
+    if (bill.disc > 0) {
+      discRow.style.display = 'flex';
+      document.getElementById('bb-disc-lbl').textContent = 'Discount' + bill.discLabel;
+      document.getElementById('bb-disc-val').textContent = '-৳' + bill.disc.toLocaleString();
+    } else {
+      discRow.style.display = 'none';
+    }
+  }
+  const hint = document.getElementById('disc-hint');
+  if (hint) {
+    if (!bill.valid) { hint.style.color = 'var(--danger)'; hint.textContent = 'Type a percent like 10% or an amount like 200'; }
+    else if (bill.disc > 0) { hint.style.color = '#7ec98e'; hint.textContent = '-৳' + bill.disc.toLocaleString() + '  →  perfume total ৳' + bill.net.toLocaleString(); }
+    else { hint.style.color = ''; hint.textContent = ''; }
+  }
 
   // delivery row
   const delRow = document.getElementById('bb-del-row');
@@ -1191,7 +1280,8 @@ function getOrderLines() {
 
 function copyFull() {
   if (!order.length) return;
-  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const bill = billInfo();
+  const perfumeTotal = bill.net; // after discount
   const lines = getOrderLines();
   let delLine, totalLine;
   if (selectedDelivery === 'both') {
@@ -1205,13 +1295,14 @@ function copyFull() {
     delLine = delAmt > 0 ? `\nDelivery (${selectedDelivery === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'}): ৳${delAmt}` : '';
     totalLine = `Total Bill: ৳${grandTotal.toLocaleString()}`;
   }
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n\n${totalLine}`;
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${bill.gross.toLocaleString()}${discountLine(bill)}${delLine}\n\n${totalLine}`;
   navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
 function copyWithTransaction() {
   if (!order.length) return;
-  const perfumeTotal = order.reduce((s, o) => s + o.price, 0);
+  const bill = billInfo();
+  const perfumeTotal = bill.net; // after discount
   const advance = parseFloat(document.getElementById('advance-input').value) || 0;
   const lines = getOrderLines();
   let delLine, totalLine, dueLine;
@@ -1231,7 +1322,7 @@ function copyWithTransaction() {
     totalLine = `Total Bill: ৳${grandTotal.toLocaleString()}`;
     dueLine = `Due Bill: ৳${Math.abs(due).toLocaleString()}${due < 0 ? ' (Overpaid)' : due === 0 ? ' (Settled)' : ''}`;
   }
-  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${perfumeTotal.toLocaleString()}${delLine}\n${totalLine}\n\nAdvance Paid: ৳${advance.toLocaleString()}\n${dueLine}`;
+  const text = `*Fragranza Order*\n\n${lines.join('\n')}\n\nPerfume Total: ৳${bill.gross.toLocaleString()}${discountLine(bill)}${delLine}\n${totalLine}\n\nAdvance Paid: ৳${advance.toLocaleString()}\n${dueLine}`;
   navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Could not copy'));
 }
 
