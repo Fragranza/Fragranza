@@ -2155,5 +2155,78 @@
       "vanilla"
     ],
     "batch": ""
+  },
+  {
+    "id": 118,
+    "name": "French Avenue Royal Blend Nero",
+    "displayName": "French Avenue Royal Blend Nero",
+    "prices": {
+      "2": 140,
+      "5": 320,
+      "10": 560,
+      "15": 800,
+      "20": 1120,
+      "30": 1660
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "royal blend nero",
+      "nero",
+      "french avenue nero",
+      "french avenue royal blend"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 119,
+    "name": "Brandy Ambre Leather",
+    "displayName": "Brandy Ambre Leather",
+    "prices": {
+      "2": 100,
+      "5": 200,
+      "10": 320,
+      "15": 460,
+      "20": 720,
+      "30": 920
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "unisex",
+    "featured": false,
+    "aliases": [
+      "ambre leather",
+      "brandy ambre",
+      "brandy leather"
+    ],
+    "batch": ""
+  },
+  {
+    "id": 120,
+    "name": "Ahmed Al Maghribi Kaaf Noir",
+    "displayName": "Ahmed Al Maghribi Kaaf Noir",
+    "prices": {
+      "2": 120,
+      "5": 300,
+      "10": 520,
+      "15": 760,
+      "20": 1080,
+      "30": 1580
+    },
+    "out": false,
+    "sale": false,
+    "offer": null,
+    "gender": "male",
+    "featured": false,
+    "aliases": [
+      "kaaf noir",
+      "ahmed al maghribi kaaf noir",
+      "al maghribi kaaf noir"
+    ],
+    "batch": ""
   }
 ]
