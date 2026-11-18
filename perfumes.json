@@ -1156,29 +1156,6 @@
     "batch": ""
   },
   {
-    "id": 76,
-    "name": "Bois Imperial EDP by Essential Parfums",
-    "displayName": "Bois Imperial EDP by Essential Parfums",
-    "prices": {
-      "2": 340,
-      "5": 840,
-      "10": 1590,
-      "15": 2350,
-      "20": 0,
-      "30": 4750
-    },
-    "out": false,
-    "sale": false,
-    "offer": null,
-    "gender": "unisex",
-    "featured": false,
-    "aliases": [
-      "bois imperial",
-      "essential parfums bois imperial"
-    ],
-    "batch": ""
-  },
-  {
     "id": 77,
     "name": "Sanaya by Junaid Perfumes",
     "displayName": "Sanaya by Junaid Perfumes",
