@@ -570,9 +570,6 @@ details.calc-card > summary { cursor: pointer; font-size: 13px; color: var(--mut
 .disc-chip { background: var(--bg3); border: 0.5px solid var(--border); border-radius: 99px; padding: 6px 13px; font-size: 12px; color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer; }
 .disc-chip:active { border-color: var(--accent); color: var(--accent); }
 .disc-hint { font-size: 12px; color: var(--muted); margin-top: 9px; min-height: 16px; }
-.disc-mode { display: flex; gap: 6px; margin-bottom: 10px; }
-.disc-mode-btn { flex: 1; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 9px; font-size: 13px; color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer; }
-.disc-mode-btn.active { background: rgba(200,169,110,0.12); border-color: rgba(200,169,110,0.4); color: var(--accent); }
 </style>
 </head>
 <body>
@@ -1031,46 +1028,46 @@ function renderOrder() {
       </div>
     </div>
 
-    <!-- STEP 2: Discount -->
-    <div class="step-label">Discount<span class="opt">optional · any % or amount</span></div>
-    <div class="disc-wrap">
-      <div class="disc-mode">
-        <button class="disc-mode-btn ${discountMode === 'pct' ? 'active' : ''}" id="dm-pct" onclick="setDiscountMode('pct')">Percent %</button>
-        <button class="disc-mode-btn ${discountMode === 'amt' ? 'active' : ''}" id="dm-amt" onclick="setDiscountMode('amt')">Amount ৳</button>
+    <!-- STEP 2: Delivery -->
+    <div class="step-label">Select Delivery</div>
+    <div class="delivery-opts">
+      <div class="delivery-card" id="del-card-none" onclick="selectDelivery('none')" style="border-color:var(--accent);">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">PICKUP</div>
+        
+        <div class="del-price">৳0</div>
       </div>
-      <input class="disc-input" id="discount-input" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 11" value="${esc(discountStr)}" oninput="discountStr=this.value;recalc()" />
+      <div class="delivery-card" id="del-card-inside" onclick="selectDelivery('inside')">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">INSIDE</div>
+        
+        <div class="del-price">৳85</div>
+      </div>
+      <div class="delivery-card" id="del-card-outside" onclick="selectDelivery('outside')">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">OUTSIDE</div>
+        
+        <div class="del-price">৳125</div>
+      </div>
+      <div class="delivery-card" id="del-card-both" onclick="selectDelivery('both')">
+        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">BOTH</div>
+        
+        <div class="del-price" style="font-size:15px;">৳85/125</div>
+      </div>
+    </div>
+
+    <!-- STEP 2b: Discount -->
+    <div class="step-label">Discount<span class="opt">optional · 10% or an amount like 200</span></div>
+    <div class="disc-wrap">
+      <input class="disc-input" id="discount-input" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 10%  or  200" value="${esc(discountStr)}" oninput="discountStr=this.value;recalc()" />
       <div class="disc-chips">
-        <button class="disc-chip" onclick="setDiscount('5','pct')">5%</button>
-        <button class="disc-chip" onclick="setDiscount('10','pct')">10%</button>
-        <button class="disc-chip" onclick="setDiscount('15','pct')">15%</button>
-        <button class="disc-chip" onclick="setDiscount('20','pct')">20%</button>
+        <button class="disc-chip" onclick="setDiscount('5%')">5%</button>
+        <button class="disc-chip" onclick="setDiscount('10%')">10%</button>
+        <button class="disc-chip" onclick="setDiscount('15%')">15%</button>
+        <button class="disc-chip" onclick="setDiscount('20%')">20%</button>
         <button class="disc-chip" onclick="setDiscount('')">Clear</button>
       </div>
       <div class="disc-hint" id="disc-hint"></div>
     </div>
 
-    <!-- STEP 3: Delivery -->
-    <div class="step-label">Select Delivery</div>
-    <div class="delivery-opts">
-      <div class="delivery-card" id="del-card-none" onclick="selectDelivery('none')" style="border-color:var(--accent);">
-        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">PICKUP</div>
-        <div class="del-price">৳0</div>
-      </div>
-      <div class="delivery-card" id="del-card-inside" onclick="selectDelivery('inside')">
-        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">INSIDE</div>
-        <div class="del-price">৳85</div>
-      </div>
-      <div class="delivery-card" id="del-card-outside" onclick="selectDelivery('outside')">
-        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">OUTSIDE</div>
-        <div class="del-price">৳125</div>
-      </div>
-      <div class="delivery-card" id="del-card-both" onclick="selectDelivery('both')">
-        <div class="del-icon" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">BOTH</div>
-        <div class="del-price" style="font-size:15px;">৳85/125</div>
-      </div>
-    </div>
-
-    <!-- STEP 3b: Bill breakdown -->
+    <!-- STEP 3: Bill breakdown -->
     <div class="step-label">Bill</div>
     <div class="bill-breakdown">
       <div class="bb-row">
@@ -1080,10 +1077,6 @@ function renderOrder() {
       <div class="bb-row" id="bb-disc-row" style="display:none;">
         <span class="bb-lbl" id="bb-disc-lbl">Discount</span>
         <span class="bb-val" id="bb-disc-val" style="color:#7ec98e;">—</span>
-      </div>
-      <div class="bb-row" id="bb-net-row" style="display:none;">
-        <span class="bb-lbl">After discount</span>
-        <span class="bb-val" id="bb-net-val">—</span>
       </div>
       <div class="bb-row" id="bb-del-row" style="display:none;">
         <span class="bb-lbl" id="bb-del-lbl">Delivery</span>
@@ -1157,17 +1150,15 @@ function selectDelivery(type) {
   recalc();
 }
 
-/* ---- DISCOUNT: any percent (e.g. 11) or flat amount, taken off the perfume total only, never delivery ---- */
+/* ---- DISCOUNT: "10%" = percent, "200" = flat amount (taken off the perfume total, not delivery) ---- */
 let discountStr = '';
-let discountMode = 'pct'; // 'pct' = percent, 'amt' = flat taka amount
 function parseDiscount(str, base) {
-  const t = String(str || '').replace(/[^\d.%]/g, '');
-  const num = t.replace(/%/g, '');
-  if (!num) return { amount: 0, label: '', valid: true, empty: true };
-  const n = parseFloat(num);
-  if (isNaN(n)) return { amount: 0, label: '', valid: false };
-  const isPct = t.indexOf('%') !== -1 || discountMode === 'pct'; // typing a % also works
-  if (isPct) {
+  const t = String(str || '').replace(/[,\s\u09f3]/g, '').replace(/tk$/i, '');
+  if (!t) return { amount: 0, label: '', valid: true, empty: true };
+  const m = t.match(/^(\d+(?:\.\d+)?)(%?)$/);
+  if (!m) return { amount: 0, label: '', valid: false };
+  const n = parseFloat(m[1]);
+  if (m[2] === '%') {
     const pct = Math.min(n, 100);
     return { amount: Math.round(base * pct / 100), label: ' (' + pct + '%)', valid: true };
   }
@@ -1179,26 +1170,12 @@ function billInfo() {
   return { gross, disc: d.amount, discLabel: d.label, valid: d.valid, empty: !!d.empty, net: gross - d.amount };
 }
 function discountLine(bill) {
-  return bill.disc > 0
-    ? '\nDiscount' + bill.discLabel + ': -\u09f3' + bill.disc.toLocaleString() + '\nPerfume Total After Discount: \u09f3' + bill.net.toLocaleString()
-    : '';
+  return bill.disc > 0 ? '\nDiscount' + bill.discLabel + ': -\u09f3' + bill.disc.toLocaleString() : '';
 }
-function syncDiscountMode() {
-  const a = document.getElementById('dm-pct'), b = document.getElementById('dm-amt');
-  if (a) a.classList.toggle('active', discountMode === 'pct');
-  if (b) b.classList.toggle('active', discountMode === 'amt');
-}
-function setDiscountMode(m) {
-  discountMode = m;
-  syncDiscountMode();
-  recalc();
-}
-function setDiscount(v, mode) {
-  if (mode) discountMode = mode;
+function setDiscount(v) {
   discountStr = v;
   const el = document.getElementById('discount-input');
   if (el) el.value = v;
-  syncDiscountMode();
   recalc();
 }
 
@@ -1212,24 +1189,20 @@ function recalc() {
   const grandTotal = isBoth ? totalInside : perfumeTotal + delAmt; // used as the default/fallback single value
   currentGrandTotal = grandTotal;
 
-  // discount row + after-discount row + hint
+  // discount row + hint
   const discRow = document.getElementById('bb-disc-row');
-  const netRow = document.getElementById('bb-net-row');
-  if (discRow && netRow) {
+  if (discRow) {
     if (bill.disc > 0) {
       discRow.style.display = 'flex';
-      netRow.style.display = 'flex';
       document.getElementById('bb-disc-lbl').textContent = 'Discount' + bill.discLabel;
       document.getElementById('bb-disc-val').textContent = '-৳' + bill.disc.toLocaleString();
-      document.getElementById('bb-net-val').textContent = '৳' + bill.net.toLocaleString();
     } else {
       discRow.style.display = 'none';
-      netRow.style.display = 'none';
     }
   }
   const hint = document.getElementById('disc-hint');
   if (hint) {
-    if (!bill.valid) { hint.style.color = 'var(--danger)'; hint.textContent = 'Type a number, e.g. 11'; }
+    if (!bill.valid) { hint.style.color = 'var(--danger)'; hint.textContent = 'Type a percent like 10% or an amount like 200'; }
     else if (bill.disc > 0) { hint.style.color = '#7ec98e'; hint.textContent = '-৳' + bill.disc.toLocaleString() + '  →  perfume total ৳' + bill.net.toLocaleString(); }
     else { hint.style.color = ''; hint.textContent = ''; }
   }
@@ -1548,14 +1521,19 @@ function importPastedOrder() {
   }
 
   function extractQty(line) {
-    const m = line.match(/[x×]\s*(\d+)/i);
+    // "x2" / "× 2" after the item, or "2x" in front of it. The x must stand alone,
+    // otherwise names ending in x (Rayhaan Equinox 10ml) get read as a quantity.
+    let m = line.match(/(?:^|[\s(,])[x×]\s*(\d+)(?!\w)/i);
+    if (m) return parseInt(m[1]);
+    m = line.match(/(?:^|[\s(,])(\d+)\s*[x×](?=\s|$)/i);
     return m ? parseInt(m[1]) : 1;
   }
 
   function cleanName(line) {
     return line
       .replace(/\d+(?:\.\d+)?\s*ml/gi, '')
-      .replace(/[x×]\s*\d+/gi, '')
+      .replace(/(^|[\s(,])[x×]\s*\d+(?!\w)/gi, '$1')
+      .replace(/(^|[\s(,])\d+\s*[x×](?=\s|$)/gi, '$1')
       .replace(/৳\s*[\d,]+/g, '')
       .replace(/\b(?:tk|bdt|taka)\.?\s*[\d,]+/gi, '')
       .replace(/^[\s\-•*–—‣▪●·]+/, '')   // strip leading bullets/dashes only
@@ -1568,7 +1546,7 @@ function importPastedOrder() {
   const lines = [];
   rawLines.forEach(l => {
     if (/^\s*$/.test(l)) { lines.push(''); return; }
-    if (/^(total|subtotal|delivery|advance|due|perfume total|grand total)/i.test(l)) return;
+    if (/^[*\s]*(total|subtotal|delivery|advance|due|perfume total|grand total|discount|fragranza\s+order|phone|mobile|contact|address|name\s*:|payment|bkash|nagad|note|thank)/i.test(l)) return;
     lines.push(l);
   });
 
