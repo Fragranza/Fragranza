@@ -258,6 +258,8 @@ const SIZES = [2,5,10,15,20,30];
 const VARIANTS = { roll: 'Roll-on', spray: 'Spray', atomizer: 'Premium Twisted Atomizer' };
 // Premium Twisted Atomizer = 10ml price + this amount
 const ATOMIZER_EXTRA = 160;
+// A perfume can carry its own premium price (field "premium10"); otherwise it is 10 ml price + ATOMIZER_EXTRA
+function atomExtra(p) { return p && p.premium10 > 0 ? p.premium10 - p.prices[10] : ATOMIZER_EXTRA; }
 // Approx. spray counts, shown on the site only (never added to the order text)
 const SPRAYS = { 2: '20+', 5: '75+', 10: '150+', 15: '225+', 20: '300+', 30: '450+' };
 function sizeText(o) { return sizeLabel(o.size) + 'ml' + (o.variant ? ' ' + VARIANTS[o.variant] : ''); }
@@ -345,9 +347,9 @@ function renderCatalog() {
   if (!list.length) { el.innerHTML = '<div class="no-results">No perfumes found</div>'; return; }
   el.innerHTML = '<div class="count-label">' + list.length + ' perfume' + (list.length !== 1 ? 's' : '') + '</div>' +
     list.map((p, idx) => {
-      const badges = (p.featured ? '<span class="badge badge-featured">Featured</span>' : '') + (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
+      const badges = (p.tag ? '<span class="badge badge-featured">' + esc(p.tag) + '</span>' : '') + (p.featured ? '<span class="badge badge-featured">Featured</span>' : '') + (p.offer ? '<span class="badge badge-offer">' + offerBadgeText(p) + '</span>' : '') + (p.sale ? '<span class="badge badge-sale">Sale</span>' : '') + (p.out ? '<span class="badge badge-out">Out of Stock</span>' : '');
       const mkBtn = (s, v) => {
-        const extra = v === 'atomizer' ? ATOMIZER_EXTRA : 0;
+        const extra = v === 'atomizer' ? atomExtra(p) : 0;
         const base = p.prices[s] + extra;
         const eff = effectivePrice(p, s) + extra;
         return '<button class="size-btn" onclick="addToOrder(' + p.id + ',' + s + ',' + (v ? "'" + v + "'" : 'null') + ')" ' + (p.out ? 'disabled' : '') + '>' +
@@ -366,7 +368,7 @@ function renderCatalog() {
         rowHtml([slot(10,null), slot(10,'atomizer'), slot(15,null)], 'g3') +
         rowHtml([slot(20,null), slot(30,null), '<div></div>'], 'g3') +
         '</div>';
-      return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + (p.featured ? ' featured-card' : '') + '">' +
+      return '<div class="p-card ' + (p.out ? 'out-of-stock' : '') + ((p.featured || p.tag) ? ' featured-card' : '') + '">' +
         '<div class="p-header">' +
           '<div style="flex:1;min-width:0;">' +
             '<div class="p-display-name"><span class="p-sl">' + (idx + 1) + '.</span>' + esc(p.displayName || p.name) + '</div>' +
@@ -382,7 +384,7 @@ function renderCatalog() {
 function addToOrder(pid, size, variant) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size) + (variant === 'atomizer' ? ATOMIZER_EXTRA : 0), name: p.name });
+  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size) + (variant === 'atomizer' ? atomExtra(p) : 0), name: p.name });
   updateBadge();
   showToast(p.name.split(' ')[0] + ' ' + sizeText({ size, variant }) + ' added');
 }
