@@ -777,6 +777,8 @@ const SIZES = [2, 5, 10, 15, 20, 30];
 const VARIANTS = { roll: 'Roll-on', spray: 'Spray', atomizer: 'Premium Twisted Atomizer' };
 // Premium Twisted Atomizer = 10ml price + this amount
 const ATOMIZER_EXTRA = 160;
+// A perfume can carry its own premium price (field "premium10"); otherwise it is 10 ml price + ATOMIZER_EXTRA
+function atomExtra(p) { return p && p.premium10 > 0 ? p.premium10 - p.prices[10] : ATOMIZER_EXTRA; }
 function cleanVariant(size, v) { return ((size === 2 && (v === 'roll' || v === 'spray')) || (size === 10 && v === 'atomizer')) ? v : null; }
 const VARIANT_RE = /\b(?:roll[\s-]?on|rollon|spray(?:er)?|premium\s+twisted\s+atomi[sz]er|atomi[sz]er)\b/i;
 function sizeText(o) { return sizeLabel(o.size) + 'ml' + (o.variant ? ' ' + VARIANTS[o.variant] : ''); }
@@ -916,7 +918,7 @@ function renderCatalog() {
   el.innerHTML = list.map((p, idx) => {
     const badges = (p.sale ? '<span class="badge badge-sale">SALE</span>' : '') + (p.out ? '<span class="badge badge-out">OUT</span>' : '');
     const mkBtn = (s, v) => {
-      const extra = v === 'atomizer' ? ATOMIZER_EXTRA : 0;
+      const extra = v === 'atomizer' ? atomExtra(p) : 0;
       const pr = p.prices[s] + extra;
       const ep = effectivePrice(p, s) + extra;
       const isOffer = ep !== pr;
@@ -955,7 +957,7 @@ function renderCatalog() {
 function addToOrder(pid, size, variant) {
   const p = perfumes.find(x => x.id === pid);
   if (!p || p.out) return;
-  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size) + (variant === 'atomizer' ? ATOMIZER_EXTRA : 0), origPrice: p.prices[size], name: displayNameOf(p) });
+  order.push({ pid, size, variant: variant || null, price: effectivePrice(p, size) + (variant === 'atomizer' ? atomExtra(p) : 0), origPrice: p.prices[size], name: displayNameOf(p) });
   updateBadge();
   showToast(displayNameOf(p).split(' ')[0] + ' ' + sizeText({ size, variant }) + ' added');
 }
@@ -1380,7 +1382,7 @@ function copyPriceList(pid) {
       }
       // 10 ml also comes in the Premium Twisted Atomizer (10 ml price + ATOMIZER_EXTRA)
       if (s === 10) {
-        const aOrig = orig + ATOMIZER_EXTRA, aEp = ep + ATOMIZER_EXTRA;
+        const aOrig = orig + atomExtra(p), aEp = ep + atomExtra(p);
         lines.push('10 ml ' + VARIANTS.atomizer + ' — ৳' + aEp.toLocaleString() + (aEp !== aOrig ? ' (was ৳' + aOrig.toLocaleString() + ')' : ''));
       }
     }
@@ -1557,7 +1559,7 @@ function importPastedOrder() {
     pendingNames.forEach(rawName => {
       const perfume = matchPerfume(rawName);
       if (perfume && size && SIZES.includes(size)) {
-        const correctPrice = effectivePrice(perfume, size) + (cleanVariant(size, variant) === 'atomizer' ? ATOMIZER_EXTRA : 0);
+        const correctPrice = effectivePrice(perfume, size) + (cleanVariant(size, variant) === 'atomizer' ? atomExtra(perfume) : 0);
         for (let i = 0; i < qty; i++) {
           imported.push({ pid: perfume.id, size, variant: cleanVariant(size, variant), price: correctPrice, name: displayNameOf(perfume), custom: false });
         }
@@ -1586,7 +1588,7 @@ function importPastedOrder() {
         // "Hawas Ice 2ml" — direct line with both name and size
         const perfume = matchPerfume(name);
         if (perfume) {
-          const correctPrice = effectivePrice(perfume, size) + (cleanVariant(size, variant) === 'atomizer' ? ATOMIZER_EXTRA : 0);
+          const correctPrice = effectivePrice(perfume, size) + (cleanVariant(size, variant) === 'atomizer' ? atomExtra(perfume) : 0);
           const unitClaimed = price && qty > 1 ? Math.round(price / qty) : price;
           if (unitClaimed && unitClaimed !== correctPrice) {
             mismatches.push({ name: displayNameOf(perfume), size, claimed: unitClaimed, correct: correctPrice });
